@@ -3,15 +3,12 @@ import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
   Trash2, 
-  Download, 
   Radio, 
   LayoutGrid, 
   User, 
   Calendar, 
-  Eye, 
   Clock, 
-  ExternalLink,
-  Sparkles
+  ExternalLink
 } from 'lucide-react';
 import { ScreenId, HistoryItem } from '../types';
 
@@ -105,7 +102,7 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate }) 
           Minhas Homenagens Salvas
         </h1>
         <p className="mt-2 text-sm sm:text-base text-zinc-400">
-          Todas as vinhetas, artes de feed, stories e fotos de perfil geradas ficam guardadas localmente no seu aparelho.
+          Todas as vinhetas, artes de feed, stories e fotos de perfil geradas ficam guardadas localmente no seu aparelho em cards formato pílula.
         </p>
       </div>
 
@@ -127,71 +124,68 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate }) 
           </button>
         </div>
       ) : (
-        /* History Grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <motion.div
-              key={item.id}
-              whileHover={{ y: -3 }}
-              onClick={() => setSelectedItem(item)}
-              className="group relative flex flex-col justify-between p-6 rounded-2xl bg-[#16161B]/90 border border-white/10 hover:border-red-500/40 shadow-[0_0_20px_rgba(0,0,0,0.4)] transition-all cursor-pointer overflow-hidden backdrop-blur-xl"
-            >
-              <div>
-                {/* Header Tag + Action */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
-                    {item.type === 'vinheta' && <Radio className="w-3 h-3" />}
-                    {item.type === 'post-duplo' && <LayoutGrid className="w-3 h-3" />}
-                    {item.type === 'foto-perfil' && <User className="w-3 h-3" />}
-                    {item.type === 'vinheta' ? 'Vinheta Áudio' : item.type === 'post-duplo' ? 'Post Duplo' : 'Foto Perfil'}
-                  </span>
+        /* History Pill-shaped Cards List */
+        <div className="flex flex-col gap-4">
+          {items.map((item, index) => {
+            const isRecent = index === 0;
+            return (
+              <motion.div
+                key={item.id}
+                whileHover={{ scale: 1.01 }}
+                onClick={() => setSelectedItem(item)}
+                className={`group relative flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 rounded-full bg-[#16161B]/90 border backdrop-blur-xl transition-all cursor-pointer overflow-hidden ${
+                  isRecent 
+                    ? 'border-red-500/70 shadow-[0_0_25px_rgba(220,38,38,0.35)]' 
+                    : 'border-white/10 hover:border-red-500/40 shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                }`}
+              >
+                {/* Solene Badge Glow for most recent */}
+                {isRecent && (
+                  <div className="absolute top-2 right-6 sm:static sm:mr-3">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/40 text-red-300 text-xs font-semibold shadow-[0_0_15px_rgba(220,38,38,0.3)]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping" />
+                      Mais Recente
+                    </span>
+                  </div>
+                )}
 
+                <div className="flex items-center gap-4">
+                  {/* Icon Avatar */}
+                  <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-500/40 flex items-center justify-center text-red-400 shrink-0">
+                    {item.type === 'vinheta' && <Radio className="w-5 h-5" />}
+                    {item.type === 'post-duplo' && <LayoutGrid className="w-5 h-5" />}
+                    {item.type === 'foto-perfil' && <User className="w-5 h-5" />}
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-[11px] font-semibold text-red-400">
+                        {item.type === 'vinheta' ? 'Vinheta Áudio' : item.type === 'post-duplo' ? 'Post Duplo' : 'Foto Perfil'}
+                      </span>
+                      <span className="text-zinc-600">•</span>
+                      <span className="text-xs text-zinc-400">{item.dateStr}</span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-white font-serif group-hover:text-red-400 transition-colors">
+                      {item.name}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 mt-3 sm:mt-0 self-end sm:self-auto">
+                  <span className="text-xs text-zinc-400 group-hover:text-white transition-colors flex items-center gap-1">
+                    Ver detalhes <ExternalLink className="w-3.5 h-3.5" />
+                  </span>
                   <button
                     onClick={(e) => handleDeleteItem(item.id, e)}
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-white/5 transition-colors"
+                    className="p-2 rounded-full text-zinc-500 hover:text-red-400 hover:bg-white/5 transition-colors"
                     title="Excluir item"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-
-                {/* Preview Thumbnail if present */}
-                {item.previewUrl && (
-                  <div className="w-full h-36 rounded-xl overflow-hidden bg-black/50 border border-white/10 mb-4 flex items-center justify-center">
-                    <img
-                      src={item.previewUrl}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-
-                {/* Name */}
-                <h3 className="text-lg font-bold text-white font-serif mb-1 group-hover:text-red-400 transition-colors">
-                  {item.name}
-                </h3>
-
-                {/* Date */}
-                <p className="text-xs text-zinc-400 flex items-center gap-1.5 mb-3">
-                  <Calendar className="w-3.5 h-3.5 text-zinc-500" />
-                  <span>{item.dateStr}</span>
-                </p>
-
-                {/* Details snippet */}
-                {item.details?.mensagem && (
-                  <p className="text-xs text-zinc-300 italic line-clamp-2">
-                    {item.details.mensagem}
-                  </p>
-                )}
-              </div>
-
-              {/* Bottom CTA */}
-              <div className="flex items-center justify-between pt-4 mt-4 border-t border-white/5 text-xs text-zinc-400 group-hover:text-white transition-colors">
-                <span>Ver Detalhes</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       )}
 
