@@ -22,6 +22,7 @@ import {
 import { ScreenId, ChatMessage, HistoryItem } from '../types';
 import { DynamicOrb } from '../components/DynamicOrb';
 import { TutorialModal } from '../components/TutorialModal';
+import { ImageTouchModal } from '../components/ImageTouchModal';
 import { drawFeedImage, drawStoryImage, createSolemnAudioBlob, MemorialData } from '../utils/canvasHelper';
 
 interface ChatScreenProps {
@@ -43,6 +44,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   
   // Tutorial modal state
   const [showTutorial, setShowTutorial] = useState(false);
+
+  // Photo touch/pinch crop modal state
+  const [rawPhotoToCrop, setRawPhotoToCrop] = useState<string | null>(null);
 
   // Voice recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -80,7 +84,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   useEffect(() => {
     const welcomeText = mode === 'vinheta'
       ? `Olá. Meus mais sinceros sentimentos por sua perda. Estou aqui para ajudar você a criar uma **vinheta solene em áudio** com muito respeito e carinho.\n\nPor favor, me informe:\n• **Nome completo** do ente querido\n• **Data de nascimento e falecimento**\n• **Local e horário do velório e sepultamento**\n• Uma **frase especial** ou mensagem de despedida que gostaria de incluir.\n\nVocê pode **escrever aqui** ou simplesmente **tocar no microfone** para me contar por voz.`
-      : `Olá. Nossos sentimentos fraternos neste momento. Vamos preparar as **artes de homenagem e luto** para suas redes sociais (Feed 3:4 e Stories 9:16).\n\nPara começarmos, envie os dados:\n• **Nome do homenageado**\n• **Datas de nascimento e partida**\n• **Informações da cerimônia de despedida** (velório/missa)\n• Se desejar, anexe uma foto com o botão de anexo (+) abaixo.\n\nVocê pode digitar ou falar pelo microfone.`;
+      : `Olá. Nossos sentimentos fraternos neste momento. Vamos preparar as **artes de homenagem e luto** para suas redes sociais (Feed 3:4 e Stories 9:16).\n\nPara começarmos, envie os dados:\n• **Nome do homenageado**\n• **Datas de nascimento e partida**\n• **Informações da cerimônia de despedida** (velório/missa)\n• Se desejar, anexe uma foto com o botão de anexo (+) abaixo para ajustar o enquadramento.\n\nVocê pode digitar ou falar pelo microfone.`;
 
     setMessages([
       {
@@ -117,16 +121,17 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     return `${mins.toString().padStart(2, '0')}:${remainder.toString().padStart(2, '0')}`;
   };
 
-  // Handle Photo Attachment
+  // Handle Photo Attachment with Touch/Pinch Modal
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setAttachedPhoto(event.target?.result as string);
+        setRawPhotoToCrop(event.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
+    if (e.target) e.target.value = '';
   };
 
   // Send User Message
@@ -136,7 +141,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     const userMsg: ChatMessage = {
       id: `msg_user_${Date.now()}`,
       sender: 'user',
-      text: inputText.trim() || '(Foto anexada para homenagem)',
+      text: inputText.trim() || '(Foto ajustada anexada para a homenagem)',
       timestamp: Date.now()
     };
 
@@ -297,7 +302,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       return;
     }
 
-    // Stop current
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -313,11 +317,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       setPlayingMessageId(null);
     };
 
-    audio.play().catch(() => {
-      // Audio autoplay policy fallback
-    });
+    audio.play().catch(() => {});
 
-    // Optional synthesized solemn narration
+    // Solemn narration
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(
         `Nota de falecimento e homenagem solene a ${title || 'nosso ente querido'}. Que descanse em paz na luz eterna.`
@@ -354,38 +356,49 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-4rem)] md:h-screen max-w-4xl mx-auto bg-[#0C0C0F] relative overflow-hidden select-none">
+    <div className="flex flex-col w-full h-[calc(100vh-4rem)] md:h-screen max-w-4xl mx-auto bg-[#0C0C0F] relative overflow-hidden select-none font-sans">
       {/* Tutorial Modal */}
       <TutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
 
+      {/* Image Touch / Pinch Crop Modal */}
+      <ImageTouchModal
+        isOpen={Boolean(rawPhotoToCrop)}
+        imageSrc={rawPhotoToCrop || ''}
+        onConfirm={(croppedUrl) => {
+          setAttachedPhoto(croppedUrl);
+          setRawPhotoToCrop(null);
+        }}
+        onClose={() => setRawPhotoToCrop(null)}
+      />
+
       {/* Top Header Bar */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 bg-[#16161B]/90 border-b border-white/5 backdrop-blur-xl z-20">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 bg-[#16161B]/95 border-b border-white/10 backdrop-blur-xl z-20">
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNavigate('home')}
-            className="p-2 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+            className="p-2 rounded-xl btn-tactile text-zinc-400 hover:text-white transition-all cursor-pointer font-sans"
             title="Voltar ao Início"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 text-red-400" />
           </button>
           <div>
-            <h2 className="text-sm sm:text-base font-bold text-white font-serif tracking-tight flex items-center gap-2">
+            <h2 className="text-sm sm:text-base font-bold text-white font-sans tracking-tight flex items-center gap-2">
               <span>Assistente Solene</span>
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </h2>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-zinc-400 font-sans">
               {mode === 'vinheta' ? 'Modo: Vinheta em Áudio' : 'Modo: Artes para Redes'}
             </p>
           </div>
         </div>
 
         {/* Mode Switcher Pill */}
-        <div className="flex items-center gap-1.5 p-1 rounded-full bg-[#0C0C0F] border border-white/10 text-xs">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#0C0C0F] border border-white/10 text-xs card-tactile">
           <button
             onClick={() => setMode('vinheta')}
-            className={`px-3 py-1.5 rounded-full font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all font-sans cursor-pointer ${
               mode === 'vinheta'
-                ? 'bg-gradient-to-r from-red-800 to-red-600 text-white shadow-[0_0_12px_rgba(220,38,38,0.4)]'
+                ? 'btn-tactile-red text-white'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -393,9 +406,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           </button>
           <button
             onClick={() => setMode('artes')}
-            className={`px-3 py-1.5 rounded-full font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all font-sans cursor-pointer ${
               mode === 'artes'
-                ? 'bg-gradient-to-r from-red-800 to-red-600 text-white shadow-[0_0_12px_rgba(220,38,38,0.4)]'
+                ? 'btn-tactile-red text-white'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -412,197 +425,192 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           return (
             <div
               key={msg.id}
-              className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} animate-fade-in`}
+              className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} animate-fade-in font-sans`}
             >
               {/* Balloon */}
               <div
-                className={`max-w-[92%] sm:max-w-[80%] p-4 sm:p-5 rounded-3xl ${
+                className={`max-w-[92%] sm:max-w-[80%] p-4 sm:p-5 rounded-2xl ${
                   isUser
-                    ? 'bg-white text-[#111111] rounded-br-sm shadow-lg'
-                    : 'bg-[#1C1C22] text-white border border-white/10 rounded-bl-sm shadow-[0_0_20px_rgba(0,0,0,0.5)]'
+                    ? 'btn-tactile-red text-white rounded-br-sm'
+                    : 'bg-[#16161D] border border-white/10 text-zinc-200 rounded-bl-sm card-tactile'
                 }`}
               >
-                {/* Assistant Dove Icon Header */}
-                {!isUser && (
-                  <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/10">
-                    <div className="w-6 h-6 rounded-lg bg-red-900/40 border border-red-500/30 flex items-center justify-center p-1">
-                      <img
-                        src="/assets/dove-red-flower.svg"
-                        alt="Memorial"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <span className="text-xs font-semibold tracking-wider text-red-400">
-                      MEMORIAL
-                    </span>
-                  </div>
-                )}
+                <div className="text-sm sm:text-base leading-relaxed whitespace-pre-line font-sans">
+                  {msg.text}
+                </div>
 
-                {/* Message Text */}
-                {msg.text && (
-                  <div className={`text-base sm:text-lg leading-relaxed whitespace-pre-wrap ${isUser ? 'font-sans' : 'font-sans'}`}>
-                    {msg.text}
-                  </div>
-                )}
-
-                {/* Confirmation Card */}
+                {/* Structured Confirmation Card */}
                 {msg.isConfirmationCard && msg.confirmationData && (
-                  <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-[#141418] border border-red-500/40 text-white shadow-[0_0_25px_rgba(220,38,38,0.2)]">
-                    <div className="flex items-center gap-2 text-xs font-bold text-red-400 uppercase tracking-wider mb-3">
-                      <Sparkles className="w-4 h-4" />
-                      <span>Resumo das Informações Extraídas</span>
+                  <div className="mt-4 p-4 rounded-xl bg-black/40 border border-white/10 space-y-2 card-tactile font-sans">
+                    <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                      <span className="text-xs font-semibold text-red-400 uppercase tracking-wider font-sans">
+                        Dados Extraídos
+                      </span>
+                      <span className="text-[11px] text-zinc-400 font-sans">Etapa de Verificação</span>
                     </div>
 
-                    <div className="space-y-2 text-sm text-zinc-300 mb-5">
+                    <div className="text-xs sm:text-sm space-y-1.5 text-zinc-300 font-sans">
                       <p><strong className="text-white">Nome:</strong> {msg.confirmationData.nome}</p>
-                      <p><strong className="text-white">Datas:</strong> ★ {msg.confirmationData.nascimento} • ✝ {msg.confirmationData.falecimento}</p>
+                      <p><strong className="text-white">Nascimento:</strong> {msg.confirmationData.nascimento}</p>
+                      <p><strong className="text-white">Falecimento:</strong> {msg.confirmationData.falecimento}</p>
                       <p><strong className="text-white">Velório:</strong> {msg.confirmationData.velorio}</p>
                       <p><strong className="text-white">Sepultamento:</strong> {msg.confirmationData.sepultamento}</p>
-                      <p><strong className="text-white">Mensagem:</strong> {msg.confirmationData.mensagem}</p>
+                      <p className="italic text-zinc-400 pt-1 border-t border-white/5">
+                        {msg.confirmationData.mensagem}
+                      </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                    <div className="pt-3 flex flex-col sm:flex-row gap-2">
                       <button
-                        onClick={() => handleConfirmAndGenerate(msg.confirmationData as MemorialData)}
-                        className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white text-sm font-semibold shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all active:scale-95 cursor-pointer"
+                        onClick={() => handleConfirmAndGenerate(msg.confirmationData!)}
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl btn-tactile-red text-white text-xs sm:text-sm font-semibold transition-all cursor-pointer font-sans"
                       >
                         <CheckCircle2 className="w-4 h-4" />
-                        <span>Tudo certo, gerar agora</span>
+                        <span>Confirmar & Gerar Homenagem</span>
                       </button>
-
                       <button
-                        onClick={() => {
-                          setInputText(`Gostaria de corrigir: o nome é ${msg.confirmationData?.nome}...`);
-                        }}
-                        className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer"
+                        onClick={() => setInputText(`Corrigir nome para ${msg.confirmationData?.nome}: `)}
+                        className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl btn-tactile text-zinc-300 hover:text-white text-xs font-medium transition-colors cursor-pointer font-sans"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
-                        <span>Alterar dados</span>
+                        <span>Ajustar</span>
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Audio Deliverable Player */}
+                {/* Audio Deliverable Card */}
                 {msg.isAudioResult && (
-                  <div className="mt-4 p-5 rounded-2xl bg-[#141418] border border-red-500/40 text-white shadow-[0_0_25px_rgba(220,38,38,0.2)]">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-900 to-red-600 flex items-center justify-center shadow-[0_0_15px_rgba(220,38,38,0.4)]">
-                          <Radio className="w-5 h-5 text-white" />
+                  <div className="mt-4 p-4 sm:p-5 rounded-xl bg-black/60 border border-red-500/40 shadow-[0_4px_25px_rgba(220,38,38,0.25)] card-tactile font-sans">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-red-950/80 border border-red-500/50 flex items-center justify-center text-red-400 card-tactile">
+                          <Volume2 className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="text-sm font-bold text-white font-serif">{msg.audioTitle}</h4>
-                          <span className="text-xs text-zinc-400">Voz Solene + Fundo Musical</span>
+                          <h4 className="text-xs sm:text-sm font-bold text-white font-sans">
+                            {msg.audioTitle || 'Vinheta Solene em Áudio'}
+                          </h4>
+                          <span className="text-[11px] text-zinc-400 font-sans">Duração: {msg.audioDuration || '00:42'}</span>
                         </div>
                       </div>
-                      <span className="text-xs font-mono text-zinc-400">{msg.audioDuration}</span>
+
+                      <button
+                        onClick={() => handlePlayAudio(msg.id, msg.audioTitle)}
+                        className="w-10 h-10 rounded-xl btn-tactile-red flex items-center justify-center text-white transition-all cursor-pointer"
+                        title={playingMessageId === msg.id ? 'Pausar áudio' : 'Ouvir vinheta'}
+                      >
+                        {playingMessageId === msg.id ? (
+                          <Pause className="w-4 h-4 fill-white" />
+                        ) : (
+                          <Play className="w-4 h-4 fill-white translate-x-0.5" />
+                        )}
+                      </button>
                     </div>
 
-                    {/* Waveform / Visualizer Mock */}
-                    <div className="flex items-center justify-between gap-1 h-8 px-3 rounded-lg bg-black/40 mb-4">
-                      {Array.from({ length: 28 }).map((_, i) => (
-                        <span
+                    {/* Audio Waveform visualization bar */}
+                    <div className="flex items-center gap-1 h-6 py-1 px-2 rounded-lg bg-white/5 mb-3 card-tactile">
+                      {Array.from({ length: 24 }).map((_, i) => (
+                        <div
                           key={i}
-                          className={`w-1 rounded-full transition-all ${
+                          className={`flex-1 rounded-full transition-all duration-300 ${
                             playingMessageId === msg.id
                               ? 'bg-red-500 animate-pulse'
-                              : 'bg-zinc-700'
+                              : 'bg-zinc-600'
                           }`}
                           style={{
-                            height: `${Math.max(20, (Math.sin(i * 0.5) * 40 + 50))}%`
+                            height: playingMessageId === msg.id
+                              ? `${Math.max(20, Math.sin(i * 0.8) * 90 + 30)}%`
+                              : `${(i % 5 + 2) * 15}%`
                           }}
                         />
                       ))}
                     </div>
 
-                    {/* Audio Player Controls */}
-                    <div className="flex items-center justify-between gap-3 pt-2">
+                    <div className="flex items-center justify-between pt-2 border-t border-white/10">
                       <button
-                        onClick={() => handlePlayAudio(msg.id, msg.audioTitle)}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition-all shadow-md active:scale-95 cursor-pointer"
+                        onClick={() => handleDownloadAudio(msg.audioTitle)}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl btn-tactile text-white text-xs font-semibold transition-all cursor-pointer font-sans"
                       >
-                        {playingMessageId === msg.id ? (
-                          <>
-                            <Pause className="w-4 h-4" />
-                            <span>Pausar</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-4 h-4 fill-white" />
-                            <span>Ouvir Vinheta</span>
-                          </>
-                        )}
+                        <Download className="w-3.5 h-3.5 text-red-400" />
+                        <span>Baixar Áudio (.wav)</span>
                       </button>
 
                       <button
-                        onClick={() => handleDownloadAudio(msg.audioTitle)}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-medium transition-all active:scale-95 cursor-pointer"
+                        onClick={onOpenPix}
+                        className="text-[11px] text-red-300 hover:text-white flex items-center gap-1 font-sans cursor-pointer"
                       >
-                        <Download className="w-4 h-4" />
-                        <span>Baixar Áudio (WAV)</span>
+                        <Heart className="w-3 h-3 fill-red-400 text-red-400" />
+                        <span>Apoiar Projeto</span>
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Arts Deliverables Previews (Side-by-side Feed 3:4 & Stories 9:16) */}
-                {msg.isArtResult && msg.artRatio34Url && msg.artRatio916Url && (
-                  <div className="mt-4 p-5 rounded-2xl bg-[#141418] border border-red-500/40 text-white">
-                    <h4 className="text-sm font-bold text-white font-serif mb-4 flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4 text-red-400" />
-                      <span>Artes Prontas para Download (PNG Alta Resolução)</span>
-                    </h4>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Feed 3:4 Card */}
-                      <div className="flex flex-col items-center p-3 rounded-xl bg-black/50 border border-white/10">
-                        <span className="text-xs font-semibold text-zinc-300 mb-2">Feed (3:4)</span>
-                        <div className="w-full aspect-[3/4] max-h-64 rounded-lg overflow-hidden border border-white/10 mb-3 bg-[#0C0C0F]">
-                          <img
-                            src={msg.artRatio34Url}
-                            alt="Feed 3:4 Preview"
-                            className="w-full h-full object-contain"
-                          />
+                {/* Visual Art Deliverables Cards (Feed & Stories) */}
+                {msg.isArtResult && (
+                  <div className="mt-4 space-y-3 font-sans">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Feed 3:4 */}
+                      {msg.artRatio34Url && (
+                        <div className="p-3 rounded-xl bg-black/50 border border-white/10 flex flex-col justify-between card-tactile">
+                          <div className="relative aspect-[3/4] w-full rounded-lg overflow-hidden bg-zinc-950 border border-white/5 mb-2 card-tactile">
+                            <img
+                              src={msg.artRatio34Url}
+                              alt="Feed 3:4"
+                              className="w-full h-full object-cover"
+                            />
+                            <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/75 border border-white/10 text-[10px] font-semibold text-zinc-300 font-sans">
+                              Feed 3:4
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handleDownloadImage(msg.artRatio34Url!, 'memorial-feed-3x4.png')}
+                            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg btn-tactile text-white text-xs font-semibold transition-all cursor-pointer font-sans"
+                          >
+                            <Download className="w-3.5 h-3.5 text-red-400" />
+                            <span>Baixar Feed (PNG)</span>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handleDownloadImage(msg.artRatio34Url!, 'homenagem-feed-3x4.png')}
-                          className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-full bg-red-600 hover:bg-red-500 text-white text-xs font-medium transition-all active:scale-95 cursor-pointer"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                          <span>Baixar Feed (3:4)</span>
-                        </button>
-                      </div>
+                      )}
 
-                      {/* Stories 9:16 Card */}
-                      <div className="flex flex-col items-center p-3 rounded-xl bg-black/50 border border-white/10">
-                        <span className="text-xs font-semibold text-zinc-300 mb-2">Stories (9:16)</span>
-                        <div className="w-full aspect-[9/16] max-h-64 rounded-lg overflow-hidden border border-white/10 mb-3 bg-[#0C0C0F]">
-                          <img
-                            src={msg.artRatio916Url}
-                            alt="Stories 9:16 Preview"
-                            className="w-full h-full object-contain"
-                          />
+                      {/* Stories 9:16 */}
+                      {msg.artRatio916Url && (
+                        <div className="p-3 rounded-xl bg-black/50 border border-white/10 flex flex-col justify-between card-tactile">
+                          <div className="relative aspect-[9/16] w-full rounded-lg overflow-hidden bg-zinc-950 border border-white/5 mb-2 card-tactile">
+                            <img
+                              src={msg.artRatio916Url}
+                              alt="Stories 9:16"
+                              className="w-full h-full object-cover"
+                            />
+                            <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/75 border border-white/10 text-[10px] font-semibold text-zinc-300 font-sans">
+                              Stories 9:16
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handleDownloadImage(msg.artRatio916Url!, 'memorial-stories-9x16.png')}
+                            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg btn-tactile text-white text-xs font-semibold transition-all cursor-pointer font-sans"
+                          >
+                            <Download className="w-3.5 h-3.5 text-red-400" />
+                            <span>Baixar Stories (PNG)</span>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handleDownloadImage(msg.artRatio916Url!, 'homenagem-stories-9x16.png')}
-                          className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-full bg-red-600 hover:bg-red-500 text-white text-xs font-medium transition-all active:scale-95 cursor-pointer"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                          <span>Baixar Stories (9:16)</span>
-                        </button>
-                      </div>
+                      )}
                     </div>
                   </div>
                 )}
               </div>
+
+              <span className="mt-1 px-1 text-[10px] text-zinc-400 font-sans">
+                {new Date(msg.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+              </span>
             </div>
           );
         })}
 
-        {/* Dynamic Orb Processing State */}
+        {/* Processing Indicator with Dynamic Orb */}
         {isProcessing && (
-          <div className="flex justify-start">
+          <div className="flex items-center gap-3 p-4 rounded-2xl bg-[#16161D] border border-white/10 w-fit max-w-[85%] card-tactile font-sans">
             <DynamicOrb stage={processingStage} />
           </div>
         )}
@@ -610,37 +618,32 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Voice Recording Overlay Bar */}
+      {/* Voice Recording Drawer Banner */}
       <AnimatePresence>
         {isRecording && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="px-4 py-3 bg-[#181820] border-t border-red-500/40 flex items-center justify-between text-white z-30"
+            exit={{ opacity: 0, y: 30 }}
+            className="px-6 py-4 bg-[#14141A] border-t border-red-500/40 flex items-center justify-between z-30 shadow-[0_-10px_30px_rgba(220,38,38,0.2)] font-sans"
           >
             <div className="flex items-center gap-3">
               <span className="w-3 h-3 rounded-full bg-red-500 animate-ping" />
-              <div className="flex flex-col">
-                <span className="text-xs text-red-400 font-semibold tracking-wide">
-                  Gravando Homenagem por Voz
-                </span>
-                <span className="text-sm font-mono font-bold text-white">
-                  {formatTime(recordingSeconds)}
-                </span>
-              </div>
+              <span className="text-xs sm:text-sm font-semibold text-white font-sans">
+                Gravando áudio solene... ({formatTime(recordingSeconds)})
+              </span>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsRecording(false)}
-                className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-medium text-zinc-300 transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl btn-tactile text-zinc-400 hover:text-white text-xs font-sans cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSendVoice}
-                className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white text-xs font-semibold shadow-[0_0_15px_rgba(220,38,38,0.4)] transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl btn-tactile-red text-white text-xs font-semibold cursor-pointer font-sans"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Enviar Áudio</span>
@@ -652,26 +655,27 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
       {/* Attached Photo Preview Pill */}
       {attachedPhoto && (
-        <div className="px-6 py-2 bg-[#14141A] border-t border-white/5 flex items-center justify-between z-20">
+        <div className="px-6 py-2.5 bg-[#14141A] border-t border-white/10 flex items-center justify-between z-20 font-sans">
           <div className="flex items-center gap-3">
             <img
               src={attachedPhoto}
               alt="Anexo selecionado"
-              className="w-8 h-8 rounded-lg object-cover border border-red-500/40"
+              className="w-9 h-9 rounded-xl object-cover border border-red-500/40 card-tactile"
             />
-            <span className="text-xs text-zinc-300">Foto anexada para a homenagem</span>
+            <span className="text-xs text-zinc-300 font-sans">Foto ajustada e pronta para a homenagem</span>
           </div>
           <button
             onClick={() => setAttachedPhoto(null)}
-            className="p-1 rounded-full text-zinc-400 hover:text-white hover:bg-white/10"
+            className="p-1.5 rounded-xl btn-tactile text-zinc-400 hover:text-white cursor-pointer"
+            title="Remover foto"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Bottom Input Bar with Strict Exclusivity Rule */}
-      <div className="p-3 sm:p-4 bg-[#16161B]/95 border-t border-white/10 backdrop-blur-xl z-20">
+      {/* Bottom Input Bar */}
+      <div className="p-3 sm:p-4 bg-[#16161B]/95 border-t border-white/10 backdrop-blur-xl z-20 font-sans">
         <div className="flex items-center gap-2 sm:gap-3 max-w-3xl mx-auto">
           {/* Photo Attachment Picker */}
           <input
@@ -683,11 +687,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-[#1F1F28] hover:bg-[#282834] border border-white/10 text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer shrink-0"
-            title="Anexar foto do homenageado"
+            className="w-11 h-11 flex items-center justify-center rounded-xl btn-tactile text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer shrink-0 font-sans"
+            title="Anexar e enquadrar foto do homenageado"
             aria-label="Anexar foto"
           >
-            <Paperclip className="w-5 h-5" />
+            <Paperclip className="w-5 h-5 text-red-400" />
           </button>
 
           {/* Text Input */}
@@ -703,26 +707,24 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 }
               }}
               placeholder="Digite o nome, datas ou mensagem..."
-              className="w-full h-12 px-5 rounded-full bg-[#0C0C0F] border border-white/10 focus:border-red-500/60 focus:outline-none text-white placeholder-zinc-500 text-sm sm:text-base transition-colors"
+              className="w-full h-11 px-4 rounded-xl bg-[#0C0C0F] border border-white/10 focus:border-red-500/60 focus:outline-none text-white placeholder-zinc-500 text-xs sm:text-sm transition-colors font-sans card-tactile"
             />
           </div>
 
           {/* Exclusivity: Mic Button (Empty Input) vs Send Arrow (With Text) */}
           {inputText.trim().length === 0 && !attachedPhoto ? (
-            /* Prominent Mic with Pulsing Red Gradient Glow */
             <button
               onClick={() => setIsRecording(true)}
-              className="relative w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-tr from-red-800 to-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.5)] hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer animate-pulse-glow"
+              className="relative w-11 h-11 flex items-center justify-center rounded-xl btn-tactile-red text-white transition-all shrink-0 cursor-pointer animate-pulse-glow"
               title="Falar por voz"
               aria-label="Gravar áudio"
             >
               <Mic className="w-5 h-5 text-white" />
             </button>
           ) : (
-            /* Send Button */
             <button
               onClick={handleSendMessage}
-              className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-r from-red-800 to-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer"
+              className="w-11 h-11 flex items-center justify-center rounded-xl btn-tactile-red text-white transition-all shrink-0 cursor-pointer"
               title="Enviar mensagem"
               aria-label="Enviar"
             >

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScreenId } from './types';
 import { Sidebar } from './components/Sidebar';
 import { MobileHeader } from './components/MobileHeader';
-import { PixModal } from './components/PixModal';
+import { PixModal, FloatingPixButton } from './components/PixModal';
 
 // Screens
 import { HomeScreen } from './screens/HomeScreen';
@@ -28,14 +28,14 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-[#0C0C0F] text-zinc-100 font-sans antialiased selection:bg-red-900 selection:text-white">
-      {/* Mobile Top Header */}
+      {/* Mobile Top Header (Sticky with 48x48 hamburger and full screen menu) */}
       <MobileHeader
         currentScreen={currentScreen}
         onNavigate={handleNavigate}
         onOpenPix={() => setIsPixOpen(true)}
       />
 
-      {/* Desktop Persistent Sidebar */}
+      {/* Desktop Persistent Sidebar (Fixed on left, dove logo, luminous indicator) */}
       <Sidebar
         currentScreen={currentScreen}
         onNavigate={handleNavigate}
@@ -68,7 +68,10 @@ export const App: React.FC = () => {
         )}
 
         {currentScreen === 'historico' && (
-          <HistoricoScreen onNavigate={handleNavigate} />
+          <HistoricoScreen
+            onNavigate={handleNavigate}
+            onOpenPix={() => setIsPixOpen(true)}
+          />
         )}
 
         {currentScreen === 'sobre' && (
@@ -82,6 +85,9 @@ export const App: React.FC = () => {
           <PrivacidadeScreen onNavigate={handleNavigate} />
         )}
       </main>
+
+      {/* Persistent Floating PIX Button with Micro-Interaction / Glow */}
+      <FloatingPixButton onOpen={() => setIsPixOpen(true)} />
 
       {/* Voluntary Contribution Pix Modal */}
       <PixModal

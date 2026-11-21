@@ -57,16 +57,16 @@ export const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose })
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#16161B] border border-red-500/30 shadow-[0_0_40px_rgba(220,38,38,0.25)] text-white"
+          className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#16161B] border border-red-500/30 shadow-[0_0_40px_rgba(220,38,38,0.25)] text-white card-tactile"
         >
           {/* Header indicator */}
           <div className="flex items-center justify-between mb-6">
-            <span className="text-xs uppercase tracking-wider font-semibold text-red-400">
+            <span className="text-xs uppercase tracking-wider font-semibold text-red-400 font-sans">
               Guia de Boas-Vindas ({step + 1} de {steps.length})
             </span>
             <button
               onClick={handleSkip}
-              className="text-xs text-zinc-400 hover:text-white transition-colors py-1 px-3 rounded-full hover:bg-white/5"
+              className="text-xs text-zinc-400 hover:text-white transition-colors py-1 px-3 rounded-lg hover:bg-white/5 btn-tactile font-sans"
             >
               Pular
             </button>
@@ -83,10 +83,10 @@ export const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose })
           </div>
 
           {/* Content */}
-          <h3 className="text-xl font-bold text-center tracking-tight mb-3 font-serif">
+          <h3 className="text-xl font-bold text-center tracking-tight mb-3 font-sans">
             {steps[step].title}
           </h3>
-          <p className="text-sm text-zinc-300 text-center leading-relaxed mb-8 min-h-[4.5rem]">
+          <p className="text-sm text-zinc-300 text-center leading-relaxed mb-8 min-h-[4.5rem] font-sans">
             {steps[step].desc}
           </p>
 
@@ -105,7 +105,7 @@ export const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose })
           {/* Action button */}
           <button
             onClick={handleNext}
-            className="flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white font-medium text-sm transition-all shadow-[0_0_25px_rgba(220,38,38,0.4)] active:scale-95 cursor-pointer"
+            className="flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl btn-tactile-red text-white font-semibold text-sm transition-all active:scale-95 cursor-pointer font-sans"
           >
             {step === steps.length - 1 ? (
               <>

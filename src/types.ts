@@ -5,7 +5,10 @@ export interface HistoryItem {
   dateStr: string; // ISO or formatted
   timestamp: number;
   previewUrl?: string;
+  artRatio34Url?: string;
+  artRatio916Url?: string;
   audioDuration?: string;
+  audioTitle?: string;
   details?: {
     nascimento?: string;
     falecimento?: string;

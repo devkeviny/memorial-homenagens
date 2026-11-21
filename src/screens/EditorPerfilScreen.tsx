@@ -183,7 +183,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
       // Rose accent markers
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '36px serif';
+      ctx.font = '36px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('🕊️', size / 2, 70);
     } else {
@@ -266,7 +266,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
     // Name text
     if (nameText) {
-      ctx.font = 'bold 32px serif';
+      ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
       ctx.fillStyle = '#F3F4F6';
       ctx.shadowColor = 'rgba(0,0,0,0.9)';
       ctx.shadowBlur = 10;
@@ -347,7 +347,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-4xl font-bold text-white font-serif tracking-tight">
+        <h1 className="text-2xl sm:text-4xl font-bold text-white font-sans tracking-tight">
           Editor de Foto de Perfil (Luto)
         </h1>
         <p className="mt-2 text-sm sm:text-base text-zinc-400">
@@ -376,7 +376,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold transition-all active:scale-95 cursor-pointer"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl btn-tactile text-white text-xs sm:text-sm font-semibold transition-all active:scale-95 cursor-pointer font-sans"
             >
               <Upload className="w-4 h-4 text-red-400" />
               <span>Carregar Foto da Galeria</span>
@@ -384,7 +384,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
             <button
               onClick={handleDownload}
-              className="flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white text-xs sm:text-sm font-semibold shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all active:scale-95 cursor-pointer"
+              className="flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-xl btn-tactile-red text-white text-xs sm:text-sm font-semibold transition-all active:scale-95 cursor-pointer font-sans"
             >
               <Download className="w-4 h-4" />
               <span>Baixar Foto Pronta (PNG 1080px)</span>
@@ -393,7 +393,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
             <button
               onClick={handleSaveToHistory}
               disabled={isSaved}
-              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-full bg-[#1F1F28] hover:bg-[#282834] border border-white/10 text-zinc-300 hover:text-white text-xs font-medium transition-all active:scale-95 cursor-pointer"
+              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl btn-tactile text-zinc-300 hover:text-white text-xs font-medium transition-all active:scale-95 cursor-pointer font-sans"
             >
               {isSaved ? (
                 <>
@@ -411,13 +411,13 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
         </div>
 
         {/* Right Col: Customization Controls (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-6 p-6 sm:p-8 rounded-3xl bg-[#16161B]/90 border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+        <div className="lg:col-span-7 flex flex-col gap-6 p-6 sm:p-8 rounded-3xl bg-[#16161B]/90 border border-white/10 card-tactile">
           {/* Section 1: Estilo de Moldura */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-red-400 mb-3">
+            <label className="block text-xs font-bold uppercase tracking-wider text-red-400 mb-3 font-sans">
               1. Moldura de Homenagem
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-sans">
               {[
                 { id: 'laco-preto', label: 'Laço de Luto' },
                 { id: 'ouro-solene', label: 'Ouro Solene' },
@@ -427,10 +427,10 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                 <button
                   key={f.id}
                   onClick={() => setFrame(f.id as FrameType)}
-                  className={`p-3 rounded-2xl border text-xs font-medium transition-all cursor-pointer ${
+                  className={`p-3 rounded-xl border text-xs font-medium transition-all cursor-pointer font-sans ${
                     frame === f.id
-                      ? 'bg-red-500/20 border-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]'
-                      : 'bg-[#1C1C24] border-white/10 text-zinc-400 hover:text-white hover:border-white/20'
+                      ? 'btn-tactile-red text-white'
+                      : 'btn-tactile text-zinc-400 hover:text-white'
                   }`}
                 >
                   {f.label}
@@ -441,10 +441,10 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
           {/* Section 2: Filtro de Imagem */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-red-400 mb-3">
+            <label className="block text-xs font-bold uppercase tracking-wider text-red-400 mb-3 font-sans">
               2. Filtro Fotográfico
             </label>
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-3 gap-2.5 font-sans">
               {[
                 { id: 'pb', label: 'Preto & Branco Solene' },
                 { id: 'sepia', label: 'Sépia Emotivo' },
@@ -453,10 +453,10 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                 <button
                   key={fil.id}
                   onClick={() => setFilter(fil.id as FilterType)}
-                  className={`p-3 rounded-2xl border text-xs font-medium transition-all cursor-pointer ${
+                  className={`p-3 rounded-xl border text-xs font-medium transition-all cursor-pointer font-sans ${
                     filter === fil.id
-                      ? 'bg-red-500/20 border-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]'
-                      : 'bg-[#1C1C24] border-white/10 text-zinc-400 hover:text-white hover:border-white/20'
+                      ? 'btn-tactile-red text-white'
+                      : 'btn-tactile text-zinc-400 hover:text-white'
                   }`}
                 >
                   {fil.label}

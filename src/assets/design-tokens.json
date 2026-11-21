@@ -28,7 +28,7 @@
   },
   "typography": {
     "fontFamily": {
-      "serif": "'Cinzel', 'Playfair Display', serif",
+      "serif": "'Plus Jakarta Sans', 'Inter', sans-serif",
       "sans": "'Inter', 'Plus Jakarta Sans', sans-serif",
       "accent": "'Great Vibes', cursive"
     },
