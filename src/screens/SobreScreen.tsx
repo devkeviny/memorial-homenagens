@@ -25,7 +25,7 @@ export const SobreScreen: React.FC<SobreScreenProps> = ({ onNavigate, onOpenPix 
       <div className="p-8 sm:p-12 rounded-3xl bg-[#16161B]/90 border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] mb-10 text-center relative overflow-hidden">
         <div className="w-20 h-20 mx-auto rounded-3xl bg-red-950/50 border border-red-500/40 flex items-center justify-center p-3 mb-6 shadow-[0_0_30px_rgba(220,38,38,0.3)]">
           <img
-            src="/src/assets/dove-red-flower.svg"
+            src="/assets/dove-red-flower.svg"
             alt="Memorial Solene"
             className="w-full h-full object-contain"
           />

@@ -27,7 +27,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
       >
         <div className="relative w-11 h-11 rounded-2xl bg-[#16161B] border border-red-500/30 flex items-center justify-center p-2 shadow-[0_0_15px_rgba(220,38,38,0.25)] group-hover:border-red-500/60 transition-all">
           <img 
-            src="/src/assets/dove-red-flower.svg" 
+            src="/assets/dove-red-flower.svg" 
             alt="Pomba com flor vermelha" 
             className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]"
           />

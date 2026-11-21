@@ -427,7 +427,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                   <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/10">
                     <div className="w-6 h-6 rounded-lg bg-red-900/40 border border-red-500/30 flex items-center justify-center p-1">
                       <img
-                        src="/src/assets/dove-red-flower.svg"
+                        src="/assets/dove-red-flower.svg"
                         alt="Memorial"
                         className="w-full h-full object-contain"
                       />

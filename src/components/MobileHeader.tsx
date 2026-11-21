@@ -35,7 +35,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
         >
           <div className="w-9 h-9 rounded-xl bg-[#16161B] border border-red-500/30 flex items-center justify-center p-1.5 shadow-[0_0_10px_rgba(220,38,38,0.25)]">
             <img 
-              src="/src/assets/dove-red-flower.svg" 
+              src="/assets/dove-red-flower.svg" 
               alt="Logo Memorial" 
               className="w-full h-full object-contain"
             />
@@ -63,7 +63,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-[#16161B] border border-red-500/30 flex items-center justify-center p-2">
                 <img 
-                  src="/src/assets/dove-red-flower.svg" 
+                  src="/assets/dove-red-flower.svg" 
                   alt="Logo Memorial" 
                   className="w-full h-full object-contain"
                 />
