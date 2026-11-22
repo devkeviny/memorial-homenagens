@@ -192,9 +192,15 @@ export function drawStoryImage(data: MemorialData, photoImg?: HTMLImageElement |
   } else {
     ctx.fillStyle = '#111827';
     ctx.fill();
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '64px sans-serif';
-    ctx.fillText('🕊️', width / 2, 475);
+    if (globalDoveImg && globalDoveImg.complete && globalDoveImg.naturalWidth > 0) {
+      const iconSize = 130;
+      ctx.drawImage(globalDoveImg, (width / 2) - iconSize / 2, 450 - iconSize / 2, iconSize, iconSize);
+    } else {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '600 28px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PAZ', width / 2, 460);
+    }
   }
   ctx.restore();
 
