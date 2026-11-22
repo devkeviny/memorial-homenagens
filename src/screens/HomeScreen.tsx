@@ -19,6 +19,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('chat')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onNavigate('chat');
+          }}
           className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.05)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
           {/* Background fotográfico com rosas vermelhas em cor seletiva */}
@@ -77,7 +82,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
 
             <button
               type="button"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigate('chat');
+              }}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans cursor-pointer"
             >
               <span>Criar Vinheta</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -90,6 +99,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('artes-submenu')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onNavigate('artes-submenu');
+          }}
           className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.06)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
           {/* Background fotográfico com rosas vermelhas em cor seletiva */}
@@ -148,9 +162,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
 
             <button
               type="button"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white btn-tactile flex items-center justify-center gap-2 group-hover:text-white font-sans"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigate('artes-submenu');
+              }}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans cursor-pointer"
             >
-              <span>Ver Opções de Postagens</span>
+              <span>Criar Postagens</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
