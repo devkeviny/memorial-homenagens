@@ -27,16 +27,13 @@ import { drawFeedImage, drawStoryImage, createSolemnAudioBlob, MemorialData } fr
 
 interface ChatScreenProps {
   onNavigate: (screen: ScreenId) => void;
-  initialMode?: 'vinheta' | 'artes';
   onOpenPix: () => void;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({ 
   onNavigate, 
-  initialMode = 'vinheta',
   onOpenPix 
 }) => {
-  const [mode, setMode] = useState<'vinheta' | 'artes'>(initialMode);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -80,11 +77,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     }
   }, []);
 
-  // Initialize conversation based on mode
+  // Initialize single unified solemn conversation
   useEffect(() => {
-    const welcomeText = mode === 'vinheta'
-      ? `Olá. Meus mais sinceros sentimentos por sua perda. Estou aqui para ajudar você a criar uma **vinheta solene em áudio** com muito respeito e carinho.\n\nPor favor, me informe:\n• **Nome completo** do ente querido\n• **Data de nascimento e falecimento**\n• **Local e horário do velório e sepultamento**\n• Uma **frase especial** ou mensagem de despedida que gostaria de incluir.\n\nVocê pode **escrever aqui** ou simplesmente **tocar no microfone** para me contar por voz.`
-      : `Olá. Nossos sentimentos fraternos neste momento. Vamos preparar as **artes de homenagem e luto** para suas redes sociais (Feed 3:4 e Stories 9:16).\n\nPara começarmos, envie os dados:\n• **Nome do homenageado**\n• **Datas de nascimento e partida**\n• **Informações da cerimônia de despedida** (velório/missa)\n• Se desejar, anexe uma foto com o botão de anexo (+) abaixo para ajustar o enquadramento.\n\nVocê pode digitar ou falar pelo microfone.`;
+    const welcomeText = `Olá. Meus mais sinceros sentimentos por sua perda. Sou o Assistente Solene e estou aqui para acolher você em uma experiência única e integrada.\n\nJuntos, geraremos a **vinheta narrada em áudio** com orquestração solene e as **artes visuais de homenagem** (Feed 3:4 e Stories 9:16) prontas para compartilhar com a família.\n\nPor favor, me informe:\n• **Nome completo** do homenageado\n• **Data de nascimento e falecimento**\n• **Local e horário do velório e sepultamento**\n• Uma **frase especial** ou mensagem de carinho\n• Se desejar, anexe uma foto com o botão (+) abaixo para enquadrar com respeito.\n\nVocê pode **escrever aqui** ou simplesmente **tocar no microfone** para me contar por voz.`;
 
     setMessages([
       {
@@ -94,7 +89,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         timestamp: Date.now()
       }
     ]);
-  }, [mode]);
+  }, []);
 
   // Voice Recording Timer
   useEffect(() => {
@@ -157,9 +152,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   // Simulate Audio/Text Voice Submission
   const handleSendVoice = () => {
     setIsRecording(false);
-    const simulatedVoiceText = mode === 'vinheta'
-      ? 'Homenagem a Dona Maria das Graças, nascida em 12/05/1944 e falecida em 21/11/2026. Velório na Capela da Saudade a partir das 08h e sepultamento às 16h. Combati o bom combate, descanse em paz.'
-      : 'Homenagem a José Carlos da Silva, 1952 a 2026. Missa de 7º dia na Igreja Matriz às 19h. Sempre lembraremos do seu sorriso.';
+    const simulatedVoiceText = 'Homenagem solene a Maria das Graças Silva, nascida em 12/05/1944 e falecida em 21/11/2026. Velório na Capela da Saudade a partir das 08h e sepultamento às 16h. Combati o bom combate, guardei a fé, descanse em paz.';
 
     const userMsg: ChatMessage = {
       id: `msg_voice_${Date.now()}`,
@@ -216,17 +209,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const handleConfirmAndGenerate = (data: MemorialData) => {
     setIsProcessing(true);
 
-    if (mode === 'vinheta') {
-      setProcessingStage('Sintetizando voz solene de homenagem...');
-      setTimeout(() => {
-        setProcessingStage('Equalizando fundo musical orquestrado...');
-      }, 1400);
-    } else {
-      setProcessingStage('Compondo tipografia solene e molduras...');
-      setTimeout(() => {
-        setProcessingStage('Renderizando Feed 3:4 e Stories 9:16...');
-      }, 1400);
-    }
+    setProcessingStage('Sintetizando voz solene de homenagem...');
+    setTimeout(() => {
+      setProcessingStage('Equalizando áudio e renderizando artes visuais (Feed 3:4 e Stories 9:16)...');
+    }, 1400);
 
     const renderArtifacts = (photoImg?: HTMLImageElement | null) => {
       setTimeout(() => {
@@ -239,11 +225,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         const resultMsg: ChatMessage = {
           id: `msg_result_${Date.now()}`,
           sender: 'assistant',
-          text: mode === 'vinheta'
-            ? 'Sua **vinheta solene em áudio** e **artes visuais integradas** foram geradas com perfeição e respeito. Você pode ouvi-la abaixo e fazer o download gratuito dos formatos Feed 3:4 e Stories 9:16 para compartilhar com a família:'
-            : 'Suas **artes comemorativas de luto** estão prontas em alta definição (Feed 3:4 e Stories 9:16). Faça o download gratuito de cada formato abaixo:',
+          text: 'Sua **vinheta solene em áudio** e **artes visuais integradas** foram geradas com respeito e acolhimento. Você pode ouvir a narração orquestrada abaixo e baixar gratuitamente as artes nos formatos Feed 3:4 e Stories 9:16 para homenagear e compartilhar com a família:',
           timestamp: Date.now(),
-          isAudioResult: mode === 'vinheta',
+          isAudioResult: true,
           audioTitle: `Vinheta Solene - ${data.nome}`,
           audioDuration: '00:42',
           isArtResult: true,
@@ -256,7 +240,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         // Save to localStorage memorial_historico
         saveToHistory({
           id: `hist_${Date.now()}`,
-          type: mode === 'vinheta' ? 'vinheta' : 'post-duplo',
+          type: 'vinheta',
           name: data.nome,
           dateStr: new Date().toLocaleDateString('pt-BR', {
             day: '2-digit',
@@ -270,8 +254,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           previewUrl: feedUrl,
           artRatio34Url: feedUrl,
           artRatio916Url: storyUrl,
-          audioTitle: mode === 'vinheta' ? `Vinheta Solene - ${data.nome}` : undefined,
-          audioDuration: mode === 'vinheta' ? '00:42' : undefined,
+          audioTitle: `Vinheta Solene - ${data.nome}`,
+          audioDuration: '00:42',
           details: {
             nascimento: data.nascimento,
             falecimento: data.falecimento,
@@ -401,33 +385,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </h2>
             <p className="text-[11px] text-zinc-400 font-sans">
-              {mode === 'vinheta' ? 'Modo: Vinheta em Áudio' : 'Modo: Artes para Redes'}
+              Vinheta em Áudio Narrado & Artes Integradas
             </p>
           </div>
         </div>
 
-        {/* Mode Switcher Pill */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#0C0C0F] border border-white/10 text-xs card-tactile">
-          <button
-            onClick={() => setMode('vinheta')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all font-sans cursor-pointer ${
-              mode === 'vinheta'
-                ? 'bg-white text-zinc-950 font-bold shadow-sm'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            Vinheta
-          </button>
-          <button
-            onClick={() => setMode('artes')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all font-sans cursor-pointer ${
-              mode === 'artes'
-                ? 'bg-white text-zinc-950 font-bold shadow-sm'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            Artes
-          </button>
+        {/* Status Badge */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-300 font-sans">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping" />
+          <span>Atendimento Solene</span>
         </div>
       </div>
 

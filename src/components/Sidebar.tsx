@@ -11,7 +11,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onOpenPix }) => {
   const navItems = [
     { id: 'home' as ScreenId, label: 'Início', icon: Home },
-    { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic, mode: 'vinheta' as const },
+    { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic },
     { id: 'artes-submenu' as ScreenId, label: 'Criar Artes', icon: Image },
     { id: 'historico' as ScreenId, label: 'Meu Histórico', icon: History },
     { id: 'sobre' as ScreenId, label: 'Sobre', icon: Info },
@@ -51,19 +51,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
           return (
             <button
               key={item.id}
-              onClick={() => onNavigate(item.id, item.mode)}
+              onClick={() => onNavigate(item.id)}
               className={`relative flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group font-sans ${
                 isActive
-                  ? 'bg-white text-zinc-950 font-bold shadow-[0_4px_20px_rgba(255,255,255,0.2)]'
+                  ? 'btn-menu-active-white font-bold'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5 btn-tactile'
               }`}
             >
               {/* Vertical Luminous Indicator on Left Edge */}
               {isActive && (
-                <span className="absolute -left-3 w-1.5 h-6 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
+                <span className="absolute -left-3 w-1.5 h-6 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]" />
               )}
 
-              <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-zinc-950' : 'text-zinc-400'}`} />
+              <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-zinc-950 stroke-[2.5]' : 'text-zinc-400'}`} />
               <span className="tracking-wide">{item.label}</span>
             </button>
           );

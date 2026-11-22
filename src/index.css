@@ -85,6 +85,66 @@ body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
+/* Menu Active Item - Pure White Anti-Slop (No Red, per Kevinny specification) */
+.btn-menu-active-white {
+  background: #FFFFFF !important;
+  color: #09090B !important;
+  border: 1px solid #FFFFFF !important;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+.btn-menu-active-white:hover {
+  background: #F4F4F5 !important;
+  color: #000000 !important;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.32) !important;
+}
+
+/* Solemn Dynamic Pulsing Gradient & Border (Automático e Contínuo sem hover) */
+@keyframes solemnPulseBase {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateY(-3px) scaleY(1.12);
+  }
+}
+
+@keyframes solemnPulseOrb {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes solemnCardBorderPulse {
+  0%, 100% {
+    border-color: rgba(220, 38, 38, 0.3);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 22px rgba(220, 38, 38, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    border-color: rgba(220, 38, 38, 0.7);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(220, 38, 38, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+}
+
+.card-dynamic-solemn {
+  animation: solemnCardBorderPulse 4s infinite ease-in-out;
+}
+
+.gradient-pulse-base {
+  animation: solemnPulseBase 3.6s infinite ease-in-out;
+}
+
+.gradient-pulse-orb {
+  animation: solemnPulseOrb 4.5s infinite ease-in-out;
+}
+
 /* Floating PIX button micro-interactions */
 @keyframes pixPulseGlow {
   0%, 100% {

@@ -15,13 +15,9 @@ import { PrivacidadeScreen } from './screens/PrivacidadeScreen';
 
 export const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
-  const [chatInitialMode, setChatInitialMode] = useState<'vinheta' | 'artes'>('vinheta');
   const [isPixOpen, setIsPixOpen] = useState(false);
 
-  const handleNavigate = (screen: ScreenId, mode?: 'vinheta' | 'artes') => {
-    if (mode) {
-      setChatInitialMode(mode);
-    }
+  const handleNavigate = (screen: ScreenId) => {
     setCurrentScreen(screen);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -58,7 +54,6 @@ export const App: React.FC = () => {
         {currentScreen === 'chat' && (
           <ChatScreen
             onNavigate={handleNavigate}
-            initialMode={chatInitialMode}
             onOpenPix={() => setIsPixOpen(true)}
           />
         )}

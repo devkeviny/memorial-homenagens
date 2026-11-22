@@ -13,15 +13,15 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
 
   const navItems = [
     { id: 'home' as ScreenId, label: 'Início', icon: Home },
-    { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic, mode: 'vinheta' as const },
+    { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic },
     { id: 'artes-submenu' as ScreenId, label: 'Criar Artes', icon: Image },
     { id: 'historico' as ScreenId, label: 'Meu Histórico', icon: History },
     { id: 'sobre' as ScreenId, label: 'Sobre o Projeto', icon: Info },
     { id: 'privacidade' as ScreenId, label: 'Privacidade', icon: Shield },
   ];
 
-  const handleSelect = (id: ScreenId, mode?: 'vinheta' | 'artes') => {
-    onNavigate(id, mode);
+  const handleSelect = (id: ScreenId) => {
+    onNavigate(id);
     setIsOpen(false);
   };
 
@@ -93,14 +93,14 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleSelect(item.id, item.mode)}
+                  onClick={() => handleSelect(item.id)}
                   className={`flex items-center gap-4 py-4 px-6 rounded-xl text-base font-semibold tracking-wide transition-all font-sans ${
                     isActive
-                      ? 'bg-white text-zinc-950 font-bold shadow-[0_4px_25px_rgba(255,255,255,0.25)]'
-                      : 'btn-tactile text-zinc-300 hover:text-white'
+                      ? 'btn-menu-active-white font-bold'
+                      : 'btn-tactile text-zinc-300'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-zinc-950' : 'text-zinc-400'}`} />
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-zinc-950 stroke-[2.5]' : 'text-zinc-400'}`} />
                   <span>{item.label}</span>
                 </button>
               );
