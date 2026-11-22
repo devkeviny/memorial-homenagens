@@ -354,7 +354,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-4rem)] md:h-screen max-w-4xl mx-auto bg-[#0C0C0F] relative overflow-hidden select-none font-sans">
+    <div className="flex flex-col w-full h-[calc(100vh-4rem)] md:h-screen bg-transparent relative overflow-hidden select-none font-sans">
       {/* Tutorial Modal */}
       <TutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
 
@@ -369,15 +369,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         onClose={() => setRawPhotoToCrop(null)}
       />
 
-      {/* Top Header Bar */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 bg-[#16161B]/95 border-b border-white/10 backdrop-blur-xl z-20">
+      {/* Top Header Bar - Full Width Horizontal & Transparent Backdrop */}
+      <div className="w-full flex items-center justify-between px-4 sm:px-8 py-3.5 bg-[#121217]/60 border-b border-white/10 backdrop-blur-xl z-20">
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNavigate('home')}
             className="p-2 rounded-xl btn-tactile text-zinc-400 hover:text-white transition-all cursor-pointer font-sans"
             title="Voltar ao Início"
           >
-            <ArrowLeft className="w-5 h-5 text-red-400" />
+            <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <div>
             <h2 className="text-sm sm:text-base font-bold text-white font-sans tracking-tight flex items-center gap-2">
@@ -391,14 +391,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         </div>
 
         {/* Status Badge */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-300 font-sans">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping" />
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300 font-sans shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
           <span>Atendimento Solene</span>
         </div>
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 max-w-4xl w-full mx-auto">
         {messages.map((msg) => {
           const isUser = msg.sender === 'user';
 
@@ -654,9 +654,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         </div>
       )}
 
-      {/* Bottom Input Bar */}
-      <div className="p-3 sm:p-4 bg-[#16161B]/95 border-t border-white/10 backdrop-blur-xl z-20 font-sans">
-        <div className="flex items-center gap-2 sm:gap-3 max-w-3xl mx-auto">
+      {/* Bottom Input Bar - Full Width Horizontal & Transparent Backdrop */}
+      <div className="w-full p-3 sm:p-4 bg-[#121217]/60 border-t border-white/10 backdrop-blur-xl z-20 font-sans">
+        <div className="flex items-center gap-2 sm:gap-3 max-w-4xl mx-auto">
           {/* Photo Attachment Picker */}
           <input
             type="file"
@@ -671,7 +671,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             title="Anexar e enquadrar foto do homenageado"
             aria-label="Anexar foto"
           >
-            <Paperclip className="w-5 h-5 text-red-400" />
+            <Paperclip className="w-5 h-5 text-white" />
           </button>
 
           {/* Text Input */}
@@ -687,15 +687,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 }
               }}
               placeholder="Digite o nome, datas ou mensagem..."
-              className="w-full h-11 px-4 rounded-xl bg-[#0C0C0F] border border-white/10 focus:border-red-500/60 focus:outline-none text-white placeholder-zinc-500 text-xs sm:text-sm transition-colors font-sans card-tactile"
+              className="w-full h-11 px-4 rounded-xl bg-[#0C0C0F]/80 border border-white/10 focus:border-white/30 focus:outline-none text-white placeholder-zinc-500 text-xs sm:text-sm transition-colors font-sans card-tactile"
             />
           </div>
 
-          {/* Exclusivity: Mic Button (Empty Input) vs Send Arrow (With Text) */}
+          {/* Exclusivity: Mic Button (Round Button) vs Send Arrow */}
           {inputText.trim().length === 0 && !attachedPhoto ? (
             <button
               onClick={() => setIsRecording(true)}
-              className="relative w-11 h-11 flex items-center justify-center rounded-xl btn-tactile-red text-white transition-all shrink-0 cursor-pointer animate-pulse-glow"
+              className="relative w-12 h-12 flex items-center justify-center rounded-full btn-tactile-red text-white transition-all shrink-0 cursor-pointer shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95"
               title="Falar por voz"
               aria-label="Gravar áudio"
             >
@@ -704,11 +704,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           ) : (
             <button
               onClick={handleSendMessage}
-              className="w-11 h-11 flex items-center justify-center rounded-xl btn-tactile-red text-white transition-all shrink-0 cursor-pointer"
+              className="relative w-12 h-12 flex items-center justify-center rounded-full btn-tactile-red text-white transition-all shrink-0 cursor-pointer shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95"
               title="Enviar mensagem"
               aria-label="Enviar"
             >
-              <Send className="w-5 h-5 text-white" />
+              <Send className="w-5 h-5 text-white ml-0.5" />
             </button>
           )}
         </div>
