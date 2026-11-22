@@ -768,6 +768,17 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             />
           </div>
 
+          {/* Botão Doe Pix Integrado na Barra de Digitação */}
+          <button
+            type="button"
+            onClick={onOpenPix}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/60 hover:text-emerald-200 hover:border-emerald-400 transition-all text-xs font-bold tracking-wide uppercase shrink-0 cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.25)] font-sans"
+            title="Fazer contribuição via PIX"
+          >
+            <Heart className="w-3.5 h-3.5 text-emerald-400 fill-emerald-500/30" />
+            <span>Doe Pix</span>
+          </button>
+
           {/* Exclusivity: Mic Button with Circular Red Glow Border (exact Caffeine reference) vs Send Arrow */}
           {inputText.trim().length === 0 && !attachedPhoto ? (
             <button

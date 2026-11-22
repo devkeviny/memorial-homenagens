@@ -148,8 +148,10 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Persistent Floating PIX Button with Micro-Interaction / Glow */}
-      <FloatingPixButton onOpen={() => setIsPixOpen(true)} />
+      {/* Persistent Floating PIX Button with Micro-Interaction / Glow (Oculto na tela do Chat para dar lugar ao botão integrado na barra) */}
+      {currentScreen !== 'chat' && (
+        <FloatingPixButton onOpen={() => setIsPixOpen(true)} />
+      )}
 
       {/* Voluntary Contribution Pix Modal */}
       <PixModal
