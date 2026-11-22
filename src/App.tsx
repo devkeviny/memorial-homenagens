@@ -80,7 +80,7 @@ export const App: React.FC = () => {
     setCurrentScreen(screen);
     const targetHash = `#${SCREEN_HASH_MAP[screen] || screen}`;
     if (window.location.hash !== targetHash) {
-      window.history.pushState({ screen }, '', targetHash);
+      window.location.hash = targetHash;
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
