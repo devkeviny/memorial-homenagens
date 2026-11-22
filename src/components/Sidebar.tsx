@@ -19,11 +19,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-[#0C0C0F]/95 border-r border-white/10 p-6 backdrop-blur-xl z-30 select-none">
+    <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-[#0C0C0F]/80 border-r border-white/5 p-5 backdrop-blur-2xl z-30 select-none">
       {/* Brand Header */}
       <div 
         onClick={() => onNavigate('home')}
-        className="flex items-center gap-3.5 mb-10 cursor-pointer group"
+        className="flex items-center gap-3.5 mb-8 cursor-pointer group"
       >
         <div className="relative w-11 h-11 rounded-2xl bg-[#16161D] border border-white/10 flex items-center justify-center p-2 card-tactile shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:border-white/20 transition-all">
           <img 
@@ -36,7 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
           <h1 className="text-lg font-bold tracking-tight text-white font-sans">
             Memorial
           </h1>
-          <p className="text-sm text-zinc-300 font-cursive italic tracking-wide">
+          <p className="text-sm text-zinc-400 font-cursive italic tracking-wide">
             Homenagens Solenes
           </p>
         </div>
@@ -52,9 +52,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex items-center gap-4 px-5 py-3.5 rounded-full text-base font-semibold transition-all duration-200 group font-sans cursor-pointer ${
+              className={`flex items-center gap-4 px-4 py-3 rounded-full text-sm font-semibold transition-all duration-200 group font-sans cursor-pointer ${
                 isActive
-                  ? 'btn-menu-active-clean font-bold text-white pl-6'
+                  ? 'btn-menu-active-clean font-bold text-white'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5'
               }`}
             >
