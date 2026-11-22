@@ -33,7 +33,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
           onClick={() => handleSelect('home')}
           className="flex items-center gap-3 cursor-pointer"
         >
-          <div className="w-9 h-9 rounded-xl bg-[#16161D] border border-red-500/30 flex items-center justify-center p-1.5 shadow-[0_0_10px_rgba(220,38,38,0.25)] card-tactile">
+          <div className="w-9 h-9 rounded-xl bg-[#16161D] border border-white/10 flex items-center justify-center p-1.5 shadow-[0_0_10px_rgba(0,0,0,0.5)] card-tactile">
             <img 
               src="/assets/dove-red-flower.svg" 
               alt="Logo Memorial" 
@@ -61,7 +61,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
           {/* Top Row with Large X Button */}
           <div className="flex items-center justify-between pb-6 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#16161D] border border-red-500/30 flex items-center justify-center p-2 card-tactile">
+              <div className="w-10 h-10 rounded-2xl bg-[#16161D] border border-white/10 flex items-center justify-center p-2 card-tactile">
                 <img 
                   src="/assets/dove-red-flower.svg" 
                   alt="Logo Memorial" 
@@ -94,9 +94,9 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item.id)}
-                  className={`flex items-center gap-4 py-4 px-6 rounded-xl text-base font-semibold tracking-wide transition-all font-sans ${
+                  className={`relative flex items-center gap-4 py-4 px-6 rounded-xl text-base font-semibold tracking-wide transition-all font-sans ${
                     isActive
-                      ? 'btn-menu-active-white font-bold'
+                      ? 'btn-menu-active-white font-bold nav-active'
                       : 'btn-tactile text-zinc-300'
                   }`}
                 >

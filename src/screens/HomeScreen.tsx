@@ -18,18 +18,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('chat')}
-          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-red-500/40 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(220,38,38,0.22)] transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
+          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.05)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
           {/* Efeito de degradê dinâmico automático e contínuo (sem precisar de hover) */}
-          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-red-950/50 via-red-900/15 to-transparent pointer-events-none gradient-pulse-base" />
-          <div className="absolute -top-10 -right-10 w-72 h-72 bg-red-600/15 rounded-full blur-3xl pointer-events-none gradient-pulse-orb" />
+          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white/[0.04] via-transparent to-transparent pointer-events-none gradient-pulse-base" />
+          <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none gradient-pulse-orb" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-red-600 to-red-900 text-white shadow-[0_4px_20px_rgba(220,38,38,0.5)] group-hover:scale-105 transition-transform">
+              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
                 <Radio className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
-              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-red-500/15 text-red-300 border border-red-500/30 font-sans shadow-sm">
+              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-white/5 text-zinc-300 border border-white/10 font-sans shadow-sm">
                 Assistente Solene • Áudio
               </span>
             </div>
@@ -43,15 +43,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
 
             <div className="space-y-3 text-xs sm:text-sm text-zinc-300 font-sans">
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-red-400 flex-shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
                 <span>Voz solene com trilha orquestrada de acolhimento</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-red-400 flex-shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
                 <span>Áudio masterizado pronto para compartilhar no WhatsApp</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-red-400 flex-shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
                 <span>Assistente guiado por voz ou digitação respeitosa</span>
               </div>
             </div>
@@ -59,13 +59,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
 
           <div className="relative z-10 pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs font-medium text-zinc-400 font-sans">
-              <Sparkles className="w-4 h-4 text-red-400" />
+              <Sparkles className="w-4 h-4 text-zinc-400" />
               <span>Geração imediata no Chat Solene</span>
             </div>
 
             <button
               type="button"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white btn-tactile-red flex items-center justify-center gap-2 group-hover:shadow-[0_0_24px_rgba(220,38,38,0.7)] font-sans"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans"
             >
               <span>Criar Vinheta</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -78,15 +78,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('artes-submenu')}
-          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.06)] hover:border-red-500/40 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
+          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.06)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
-          {/* Efeito de degradê dinâmico automático e contínuo (sem precisar de hover) */}
-          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-zinc-900/60 via-red-950/20 to-transparent pointer-events-none gradient-pulse-base" />
+          {/* Efeito de degradê dinâmico suave na base */}
+          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white/[0.04] via-transparent to-transparent pointer-events-none gradient-pulse-base" />
           <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none gradient-pulse-orb" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-red-500/40 transition-all">
+              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
                 <ImageIcon className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
               <span className="px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-white/5 text-zinc-300 border border-white/10 font-sans shadow-sm">
@@ -125,7 +125,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
 
             <button
               type="button"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white btn-tactile flex items-center justify-center gap-2 group-hover:text-red-300 font-sans"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white btn-tactile flex items-center justify-center gap-2 group-hover:text-white font-sans"
             >
               <span>Ver Opções de Artes</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -150,7 +150,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           onClick={onOpenPix}
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-300 hover:text-white btn-tactile transition-colors font-sans"
         >
-          <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500/40" />
+          <Heart className="w-3.5 h-3.5 text-zinc-400" />
           <span>Apoiar Projeto</span>
         </button>
       </motion.div>

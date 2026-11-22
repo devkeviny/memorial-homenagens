@@ -28,8 +28,8 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
         transition={{ duration: 0.4 }}
         className="text-center mb-10 sm:mb-14"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#16161B] border border-red-500/25 text-red-400 text-xs font-semibold mb-4 shadow-[0_0_15px_rgba(220,38,38,0.15)] font-sans">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-xs font-semibold mb-4 shadow-sm font-sans">
+          <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
           <span>Artes em Alta Definição</span>
         </div>
 
@@ -48,16 +48,16 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
           whileHover={{ y: -4, scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('editor-perfil')}
-          className="relative group flex flex-col justify-between p-8 sm:p-10 rounded-2xl bg-[#16161D] border border-white/10 hover:border-red-500/50 shadow-[0_4px_25px_rgba(0,0,0,0.6)] card-tactile transition-all duration-300 cursor-pointer overflow-hidden"
+          className="relative group flex flex-col justify-between p-8 sm:p-10 rounded-2xl bg-[#16161D] border border-white/10 hover:border-white/20 shadow-[0_4px_25px_rgba(0,0,0,0.6)] card-tactile transition-all duration-300 cursor-pointer overflow-hidden"
         >
-          <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-red-600/10 filter blur-3xl pointer-events-none group-hover:bg-red-600/20 transition-all" />
+          <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/5 filter blur-3xl pointer-events-none transition-all" />
 
           <div>
             <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-red-950 via-[#23232C] to-red-900/60 border border-red-500/30 shadow-[0_0_20px_rgba(220,38,38,0.3)] group-hover:scale-110 transition-transform card-tactile">
-                <User className="w-7 h-7 text-red-400" />
+              <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#22222C] border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform card-tactile">
+                <User className="w-7 h-7 text-white" />
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20 font-sans">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-zinc-300 border border-white/10 font-sans">
                 WhatsApp & Redes
               </span>
             </div>
@@ -74,7 +74,7 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
             <span className="text-xs font-medium text-zinc-400 font-sans">
               Efeito P&B + Molduras Solenes
             </span>
-            <div className="flex items-center gap-2 text-sm font-semibold text-white group-hover:text-red-400 transition-colors font-sans">
+            <div className="flex items-center gap-2 text-sm font-semibold text-white group-hover:text-zinc-200 transition-colors font-sans">
               <span>Personalizar</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
             </div>
@@ -86,16 +86,16 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
           whileHover={{ y: -4, scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('chat', 'artes')}
-          className="relative group flex flex-col justify-between p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-[#1C1618] via-[#16161D] to-[#121217] border border-red-500/40 hover:border-red-500/70 shadow-[0_4px_30px_rgba(220,38,38,0.25)] card-tactile transition-all duration-300 cursor-pointer overflow-hidden"
+          className="relative group flex flex-col justify-between p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-[#1C1618] via-[#16161D] to-[#121217] border border-white/10 hover:border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.6)] card-tactile transition-all duration-300 cursor-pointer overflow-hidden"
         >
-          <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-red-700/15 filter blur-3xl pointer-events-none group-hover:bg-red-700/25 transition-all" />
+          <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/5 filter blur-3xl pointer-events-none transition-all" />
 
           <div>
             <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-red-900 to-red-600 shadow-[0_0_20px_rgba(220,38,38,0.4)] group-hover:scale-110 transition-transform card-tactile">
+              <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#22222C] border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform card-tactile">
                 <LayoutGrid className="w-7 h-7 text-white" />
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-500/15 text-red-300 border border-red-500/30 font-sans">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-zinc-300 border border-white/10 font-sans">
                 Combo 2 em 1
               </span>
             </div>
@@ -110,10 +110,10 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
 
           <div className="flex items-center justify-between pt-6 border-t border-white/5">
             <span className="text-xs font-medium text-zinc-400 flex items-center gap-1.5 font-sans">
-              <ImageIcon className="w-4 h-4 text-red-400" />
+              <ImageIcon className="w-4 h-4 text-zinc-400" />
               Gera Feed 3:4 e Stories 9:16
             </span>
-            <div className="flex items-center gap-2 text-sm font-semibold text-white group-hover:text-red-400 transition-colors font-sans">
+            <div className="flex items-center gap-2 text-sm font-semibold text-white group-hover:text-zinc-200 transition-colors font-sans">
               <span>Criar via Chat</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
             </div>

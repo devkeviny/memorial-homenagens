@@ -20,6 +20,21 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Background Floral Simbólico Low-Key (Flow2API) - 10-12% sutil */
+.bg-floral-solemn {
+  background-color: #0C0C0F;
+  background-image: 
+    linear-gradient(rgba(12, 12, 15, 0.88), rgba(12, 12, 15, 0.94)),
+    url('/assets/funeral_floral_bg.jpg');
+  background-image: 
+    linear-gradient(rgba(12, 12, 15, 0.88), rgba(12, 12, 15, 0.94)),
+    url('/assets/funeral_floral_bg.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
@@ -55,6 +70,25 @@ body {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+.btn-tactile-white {
+  background: #FFFFFF;
+  color: #09090B;
+  border: 1px solid #FFFFFF;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-tactile-white:hover {
+  background: #F4F4F5;
+  color: #000000;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.35);
+}
+
+.btn-tactile-white:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
 .btn-tactile-red {
   background: linear-gradient(180deg, #DC2626 0%, #991B1B 100%);
   border: 1px solid rgba(248, 113, 113, 0.4);
@@ -80,12 +114,14 @@ body {
 }
 
 .card-tactile-bento {
-  background: linear-gradient(180deg, #16161D 0%, #0F0F14 100%);
+  background: linear-gradient(180deg, rgba(22, 22, 29, 0.88) 0%, rgba(15, 15, 20, 0.92) 100%);
   border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-/* Menu Active Item - Pure White Anti-Slop (No Red, per Kevinny specification) */
+/* Menu Active Item - Pure White Anti-Slop (Signature Detail: Traço Vermelho Luminoso) */
 .btn-menu-active-white {
   background: #FFFFFF !important;
   color: #09090B !important;
@@ -97,6 +133,20 @@ body {
   background: #F4F4F5 !important;
   color: #000000 !important;
   box-shadow: 0 6px 24px rgba(255, 255, 255, 0.32) !important;
+}
+
+/* Traço Vermelho Luminoso no Menu Ativo (Signature Detail do Claude: Luz de Vela) */
+.nav-active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 18%;
+  bottom: 18%;
+  width: 4px;
+  border-radius: 9999px;
+  background: #DC2626;
+  box-shadow: 0 0 14px 3px rgba(220, 38, 38, 0.8);
+  pointer-events: none;
 }
 
 /* Solemn Dynamic Pulsing Gradient & Border (Automático e Contínuo sem hover) */

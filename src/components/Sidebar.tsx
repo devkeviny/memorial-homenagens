@@ -25,7 +25,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
         onClick={() => onNavigate('home')}
         className="flex items-center gap-3.5 mb-10 cursor-pointer group"
       >
-        <div className="relative w-11 h-11 rounded-2xl bg-[#16161D] border border-red-500/30 flex items-center justify-center p-2 card-tactile shadow-[0_0_15px_rgba(220,38,38,0.25)] group-hover:border-red-500/60 transition-all">
+        <div className="relative w-11 h-11 rounded-2xl bg-[#16161D] border border-white/10 flex items-center justify-center p-2 card-tactile shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:border-white/20 transition-all">
           <img 
             src="/assets/dove-red-flower.svg" 
             alt="Pomba com flor vermelha" 
@@ -54,15 +54,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
               onClick={() => onNavigate(item.id)}
               className={`relative flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group font-sans ${
                 isActive
-                  ? 'btn-menu-active-white font-bold'
+                  ? 'btn-menu-active-white font-bold nav-active'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5 btn-tactile'
               }`}
             >
-              {/* Vertical Luminous Indicator on Left Edge */}
-              {isActive && (
-                <span className="absolute -left-3 w-1.5 h-6 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]" />
-              )}
-
               <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-zinc-950 stroke-[2.5]' : 'text-zinc-400'}`} />
               <span className="tracking-wide">{item.label}</span>
             </button>
@@ -76,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
           <p className="text-[11px] text-zinc-400 leading-tight font-sans">
             Em memória daqueles que permanecem vivos em nossos corações.
           </p>
-          <span className="inline-flex items-center gap-1 mt-2 text-[10px] text-red-400 font-bold uppercase tracking-wider font-sans">
+          <span className="inline-flex items-center gap-1 mt-2 text-[10px] text-zinc-400 font-bold uppercase tracking-wider font-sans">
             <Sparkles className="w-2.5 h-2.5" />
             Gratuito & Aberto
           </span>

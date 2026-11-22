@@ -23,7 +23,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-[#0C0C0F] text-zinc-100 font-sans antialiased selection:bg-red-900 selection:text-white">
+    <div className="flex flex-col md:flex-row min-h-screen bg-floral-solemn text-zinc-100 font-sans antialiased selection:bg-red-900 selection:text-white">
       {/* Mobile Top Header (Sticky with 48x48 hamburger and full screen menu) */}
       <MobileHeader
         currentScreen={currentScreen}

@@ -20,7 +20,7 @@ export const PixModal: React.FC<PixModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#141418] border border-red-500/30 card-tactile text-white shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(220,38,38,0.25)]">
+      <div className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#141418] border border-white/10 card-tactile text-white shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -32,8 +32,8 @@ export const PixModal: React.FC<PixModalProps> = ({ isOpen, onClose }) => {
 
         {/* Header */}
         <div className="flex items-center gap-3.5 mb-5">
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-red-700 to-red-950 border border-red-500/40 shadow-[0_0_20px_rgba(220,38,38,0.4)]">
-            <Heart className="w-6 h-6 text-white fill-white/20" />
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#1E1E28] border border-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
+            <Heart className="w-6 h-6 text-white" />
           </div>
           <div>
             <h3 className="text-xl font-bold tracking-tight text-white font-sans">Apoie este Memorial</h3>
@@ -51,14 +51,14 @@ export const PixModal: React.FC<PixModalProps> = ({ isOpen, onClose }) => {
             <QrCode className="w-32 h-32 text-black" />
           </div>
           <span className="text-xs text-zinc-400 font-medium font-sans">Chave PIX (E-mail):</span>
-          <span className="text-sm font-semibold text-red-400 select-all mt-1 font-mono">{pixKey}</span>
+          <span className="text-sm font-semibold text-white select-all mt-1 font-mono">{pixKey}</span>
         </div>
 
         {/* Copy Button */}
         <button
           onClick={handleCopy}
           className={`flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl font-semibold text-sm transition-all ${
-            copied ? 'bg-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'btn-tactile-red text-white'
+            copied ? 'bg-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'btn-tactile-white text-zinc-950 font-bold'
           }`}
         >
           {copied ? (
@@ -86,15 +86,14 @@ export const FloatingPixButton: React.FC<{ onOpen: () => void }> = ({ onOpen }) 
   return (
     <button
       onClick={onOpen}
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 py-3 px-5 rounded-full bg-[#181820]/95 hover:bg-[#20202C] border border-red-500/40 text-white backdrop-blur-md transition-all btn-pix-floating group cursor-pointer"
+      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 py-3 px-5 rounded-full bg-[#181820]/95 hover:bg-[#20202C] border border-white/10 text-white backdrop-blur-md transition-all btn-pix-floating group cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
       title="Apoiar este memorial voluntariamente via PIX"
       aria-label="Apoiar PIX"
     >
       <div className="relative flex items-center justify-center">
-        <Heart className="w-4 h-4 text-red-500 fill-red-500/50 group-hover:scale-125 transition-transform" />
-        <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping" />
+        <Heart className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
       </div>
-      <span className="text-xs font-bold tracking-wider font-sans uppercase">Apoiar PIX</span>
+      <span className="text-xs font-bold tracking-wider font-sans uppercase text-zinc-200">Apoiar PIX</span>
     </button>
   );
 };
