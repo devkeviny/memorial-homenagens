@@ -352,10 +352,16 @@ export function drawProfileAvatar(
     ctx.arc(center, center, radius - 8, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Memorial flower at bottom center
-    ctx.font = '54px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('🌹', center, center + radius + 15);
+    // Memorial flower or peace emblem at bottom center
+    if (globalDoveImg && globalDoveImg.complete && globalDoveImg.naturalWidth > 0) {
+      const doveW = 72;
+      ctx.drawImage(globalDoveImg, center - doveW / 2, center + radius - 20, doveW, doveW);
+    } else {
+      ctx.fillStyle = '#DC2626';
+      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PAZ', center, center + radius + 15);
+    }
   } else {
     // Minimalista
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';

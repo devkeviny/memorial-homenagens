@@ -9,7 +9,8 @@ import {
   Palette,
   ChevronLeft,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  Move
 } from 'lucide-react';
 import { ScreenId } from '../types';
 import { ImageTouchModal } from '../components/ImageTouchModal';
@@ -520,11 +521,11 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
                     />
                   </div>
 
-                  {/* Photo Input Button */}
-                  <div className="pt-2 flex items-center gap-3">
+                  {/* Photo Input Button & Touch Adjustment */}
+                  <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                     <label className="flex-1 flex items-center justify-center gap-2 h-12 px-4 rounded-xl btn-tactile text-sm font-semibold text-white cursor-pointer transition-all">
                       <Upload className="w-4 h-4 text-white" />
-                      <span>{photoUrl ? 'Alterar & Reajustar Foto' : 'Adicionar Foto com Ajuste Touch'}</span>
+                      <span>{photoUrl ? 'Substituir Foto' : 'Adicionar Foto'}</span>
                       <input
                         type="file"
                         accept="image/*"
@@ -532,8 +533,22 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
                         className="hidden"
                       />
                     </label>
+
                     {photoUrl && (
                       <button
+                        type="button"
+                        onClick={() => setRawPhotoToCrop(photoUrl)}
+                        className="flex items-center justify-center gap-2 h-12 px-4 rounded-xl btn-tactile text-sm font-semibold text-white cursor-pointer transition-all hover:border-white/20"
+                        title="Ajuste Touch da Foto (Zoom e Posição)"
+                      >
+                        <Move className="w-4 h-4 text-white" />
+                        <span>Ajuste Touch</span>
+                      </button>
+                    )}
+
+                    {photoUrl && (
+                      <button
+                        type="button"
                         onClick={() => setPhotoUrl(null)}
                         className="px-4 h-12 rounded-xl btn-tactile text-xs text-zinc-400 hover:text-white"
                       >
