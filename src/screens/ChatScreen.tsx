@@ -228,55 +228,69 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       }, 1400);
     }
 
-    setTimeout(() => {
-      setIsProcessing(false);
+    const renderArtifacts = (photoImg?: HTMLImageElement | null) => {
+      setTimeout(() => {
+        setIsProcessing(false);
 
-      // Draw real high quality canvas images
-      const feedUrl = drawFeedImage(data);
-      const storyUrl = drawStoryImage(data);
+        // Draw real high quality canvas images with adjusted photo if provided
+        const feedUrl = drawFeedImage(data, photoImg);
+        const storyUrl = drawStoryImage(data, photoImg);
 
-      const resultMsg: ChatMessage = {
-        id: `msg_result_${Date.now()}`,
-        sender: 'assistant',
-        text: mode === 'vinheta'
-          ? 'Sua **vinheta solene em áudio** foi gerada com perfeição e respeito. Você pode ouvi-la abaixo e fazer o download gratuito para compartilhar com a família:'
-          : 'Suas **artes comemorativas de luto** estão prontas em alta definição (Feed 3:4 e Stories 9:16). Faça o download gratuito de cada formato abaixo:',
-        timestamp: Date.now(),
-        isAudioResult: mode === 'vinheta',
-        audioTitle: `Vinheta Solene - ${data.nome}`,
-        audioDuration: '00:42',
-        isArtResult: true,
-        artRatio34Url: feedUrl,
-        artRatio916Url: storyUrl
-      };
+        const resultMsg: ChatMessage = {
+          id: `msg_result_${Date.now()}`,
+          sender: 'assistant',
+          text: mode === 'vinheta'
+            ? 'Sua **vinheta solene em áudio** e **artes visuais integradas** foram geradas com perfeição e respeito. Você pode ouvi-la abaixo e fazer o download gratuito dos formatos Feed 3:4 e Stories 9:16 para compartilhar com a família:'
+            : 'Suas **artes comemorativas de luto** estão prontas em alta definição (Feed 3:4 e Stories 9:16). Faça o download gratuito de cada formato abaixo:',
+          timestamp: Date.now(),
+          isAudioResult: mode === 'vinheta',
+          audioTitle: `Vinheta Solene - ${data.nome}`,
+          audioDuration: '00:42',
+          isArtResult: true,
+          artRatio34Url: feedUrl,
+          artRatio916Url: storyUrl
+        };
 
-      setMessages((prev) => [...prev, resultMsg]);
+        setMessages((prev) => [...prev, resultMsg]);
 
-      // Save to localStorage memorial_historico
-      saveToHistory({
-        id: `hist_${Date.now()}`,
-        type: mode === 'vinheta' ? 'vinheta' : 'post-duplo',
-        name: data.nome,
-        dateStr: new Date().toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          timeZone: 'America/Sao_Paulo'
-        }),
-        timestamp: Date.now(),
-        previewUrl: feedUrl,
-        audioDuration: mode === 'vinheta' ? '00:42' : undefined,
-        details: {
-          nascimento: data.nascimento,
-          falecimento: data.falecimento,
-          velorio: data.velorio,
-          sepultamento: data.sepultamento,
-          mensagem: data.mensagem
-        }
-      });
-    }, 2800);
+        // Save to localStorage memorial_historico
+        saveToHistory({
+          id: `hist_${Date.now()}`,
+          type: mode === 'vinheta' ? 'vinheta' : 'post-duplo',
+          name: data.nome,
+          dateStr: new Date().toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'America/Sao_Paulo'
+          }),
+          timestamp: Date.now(),
+          previewUrl: feedUrl,
+          artRatio34Url: feedUrl,
+          artRatio916Url: storyUrl,
+          audioTitle: mode === 'vinheta' ? `Vinheta Solene - ${data.nome}` : undefined,
+          audioDuration: mode === 'vinheta' ? '00:42' : undefined,
+          details: {
+            nascimento: data.nascimento,
+            falecimento: data.falecimento,
+            velorio: data.velorio,
+            sepultamento: data.sepultamento,
+            mensagem: data.mensagem
+          }
+        });
+      }, 2800);
+    };
+
+    if (attachedPhoto) {
+      const img = new Image();
+      img.onload = () => renderArtifacts(img);
+      img.onerror = () => renderArtifacts(null);
+      img.src = attachedPhoto;
+    } else {
+      renderArtifacts(null);
+    }
   };
 
   // Save to History helper

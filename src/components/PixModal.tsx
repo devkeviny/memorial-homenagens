@@ -86,15 +86,15 @@ export const FloatingPixButton: React.FC<{ onOpen: () => void }> = ({ onOpen }) 
   return (
     <button
       onClick={onOpen}
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 py-3 px-5 rounded-full bg-[#181820]/95 hover:bg-[#20202C] border border-red-500/40 text-white backdrop-blur-md transition-all btn-pix-floating group"
+      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 py-3 px-5 rounded-full bg-[#181820]/95 hover:bg-[#20202C] border border-red-500/40 text-white backdrop-blur-md transition-all btn-pix-floating group cursor-pointer"
       title="Apoiar este memorial voluntariamente via PIX"
-      aria-label="Apoiar via PIX"
+      aria-label="Apoiar PIX"
     >
       <div className="relative flex items-center justify-center">
         <Heart className="w-4 h-4 text-red-500 fill-red-500/50 group-hover:scale-125 transition-transform" />
         <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping" />
       </div>
-      <span className="text-xs font-bold tracking-wider font-sans uppercase">Apoiar via PIX</span>
+      <span className="text-xs font-bold tracking-wider font-sans uppercase">Apoiar PIX</span>
     </button>
   );
 };
