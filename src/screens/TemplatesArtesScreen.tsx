@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { ScreenId } from '../types';
 import { ImageTouchModal } from '../components/ImageTouchModal';
+import BlurText from '../components/BlurText/BlurText';
 
 interface TemplatesArtesScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -77,7 +78,7 @@ const TEMPLATES: ArtTemplate[] = [
     themeColor: '#EF4444',
     borderColor: 'rgba(239, 68, 68, 0.35)',
     bgStyle: 'from-[#1C1416] via-[#100B0D] to-[#080506]',
-    accentText: '🌹 ETERNAMENTE EM NOSSOS CORAÇÕES'
+    accentText: 'ETERNAMENTE EM NOSSOS CORAÇÕES'
   }
 ];
 
@@ -240,9 +241,15 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
 
       {/* Title */}
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-sans">
-          Criador Direto de Artes & Templates
-        </h1>
+        <div className="mb-2">
+          <BlurText
+            text="Templates Oficiais em Alta Definição"
+            delay={60}
+            animateBy="words"
+            direction="top"
+            className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-sans inline-block"
+          />
+        </div>
         <p className="mt-2 text-sm sm:text-base text-zinc-400 font-sans max-w-2xl">
           Escolha um template nobre, preencha os dados e enquadre a foto com gestos de toque na tela. Você pode baixar em alta resolução imediatamente.
         </p>
@@ -455,7 +462,11 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-3xl">🕊️</span>
+                    <img 
+                      src="/assets/dove-red-flower.svg" 
+                      alt="Pomba da Paz com Flor" 
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-md"
+                    />
                   )}
                 </div>
               </div>

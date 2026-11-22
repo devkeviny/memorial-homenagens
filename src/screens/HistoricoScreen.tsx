@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { ScreenId, HistoryItem } from '../types';
 import { createSolemnAudioBlob } from '../utils/canvasHelper';
+import BlurText from '../components/BlurText/BlurText';
 
 interface HistoricoScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -179,9 +180,13 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate, on
             <span>Voltar ao Início</span>
           </button>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-sans">
-              Histórico de Homenagens
-            </h1>
+            <BlurText
+              text="Meu Histórico de Homenagens"
+              delay={60}
+              animateBy="words"
+              direction="top"
+              className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-sans inline-block"
+            />
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-950/80 border border-red-500/40 text-red-300 font-sans">
               {items.length} {items.length === 1 ? 'salva' : 'salvas'}
             </span>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowLeft, Shield, Heart, Sparkles } from 'lucide-react';
 import { ScreenId } from '../types';
+import BlurText from '../components/BlurText/BlurText';
 
 interface SobreScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -31,9 +32,15 @@ export const SobreScreen: React.FC<SobreScreenProps> = ({ onNavigate, onOpenPix 
           />
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-bold text-white font-sans tracking-tight mb-4">
-          Memorial Homenagens & Vinhetas Fúnebres
-        </h1>
+        <div className="mb-4">
+          <BlurText
+            text="Sobre o Memorial"
+            delay={60}
+            animateBy="words"
+            direction="top"
+            className="text-3xl sm:text-5xl font-bold text-white font-sans tracking-tight inline-block"
+          />
+        </div>
         <p className="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto leading-relaxed font-sans">
           Nascemos com o propósito solene de amparar famílias enlutadas, oferecendo dignidade, beleza e reverência na preservação das memórias mais preciosas da vida.
         </p>

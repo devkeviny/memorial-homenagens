@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowLeft, Lock, EyeOff, Database } from 'lucide-react';
 import { ScreenId } from '../types';
+import BlurText from '../components/BlurText/BlurText';
 
 interface PrivacidadeScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -22,9 +23,15 @@ export const PrivacidadeScreen: React.FC<PrivacidadeScreenProps> = ({ onNavigate
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-4xl font-bold text-white font-sans tracking-tight">
-          Termos de Privacidade & Proteção de Dados
-        </h1>
+        <div className="mb-2">
+          <BlurText
+            text="Privacidade & Respeito aos Dados"
+            delay={60}
+            animateBy="words"
+            direction="top"
+            className="text-2xl sm:text-4xl font-bold text-white font-sans tracking-tight inline-block"
+          />
+        </div>
         <p className="mt-2 text-sm sm:text-base text-zinc-400 font-sans">
           Entenda como tratamos com máxima reverência e discrição as memórias do seu ente querido.
         </p>

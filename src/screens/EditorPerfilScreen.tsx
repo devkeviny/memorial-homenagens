@@ -13,6 +13,7 @@ import {
   Bookmark
 } from 'lucide-react';
 import { ScreenId, HistoryItem } from '../types';
+import BlurText from '../components/BlurText/BlurText';
 
 interface EditorPerfilScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -347,9 +348,15 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-4xl font-bold text-white font-sans tracking-tight">
-          Editor de Foto de Perfil (Luto)
-        </h1>
+        <div className="mb-2">
+          <BlurText
+            text="Moldura de Luto para Foto de Perfil"
+            delay={60}
+            animateBy="words"
+            direction="top"
+            className="text-2xl sm:text-4xl font-bold text-white font-sans tracking-tight inline-block"
+          />
+        </div>
         <p className="mt-2 text-sm sm:text-base text-zinc-400">
           Personalize a foto do ente querido com moldura de respeito, laço preto e efeito preto e branco para WhatsApp e redes.
         </p>

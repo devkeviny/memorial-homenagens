@@ -23,6 +23,7 @@ import { ScreenId, ChatMessage, HistoryItem } from '../types';
 import { DynamicOrb } from '../components/DynamicOrb';
 import { TutorialModal } from '../components/TutorialModal';
 import { ImageTouchModal } from '../components/ImageTouchModal';
+import BlurText from '../components/BlurText/BlurText';
 import { drawFeedImage, drawStoryImage, createSolemnAudioBlob, MemorialData } from '../utils/canvasHelper';
 
 interface ChatScreenProps {
@@ -406,10 +407,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-white font-sans tracking-tight flex items-center gap-2">
-              <span>Assistente Solene</span>
+            <div className="flex items-center gap-2">
+              <BlurText
+                text="Assistente Solene"
+                delay={60}
+                animateBy="words"
+                direction="top"
+                className="text-base sm:text-lg font-bold text-white font-sans tracking-tight inline-block"
+              />
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            </h2>
+            </div>
             <p className="text-xs sm:text-sm text-zinc-400 font-sans">
               Vinheta em Áudio Narrado & Postagens Integradas
             </p>
