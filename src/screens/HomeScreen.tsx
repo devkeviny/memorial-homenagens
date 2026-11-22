@@ -1,19 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Heart, Radio, Image as ImageIcon, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Radio, ImageIcon, ArrowRight, CheckCircle2, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 import { ScreenId } from '../types';
+import BlurText from '../components/BlurText/BlurText';
 
 interface HomeScreenProps {
-  onNavigate: (screen: ScreenId) => void;
+  onNavigate: (screen: ScreenId, mode?: 'vinheta' | 'artes') => void;
   onOpenPix: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix }) => {
   return (
-    <div className="flex flex-col w-full h-full min-h-[calc(100vh-80px)] md:min-h-[calc(100vh-40px)] justify-between px-3 sm:px-6 md:px-8 py-4 sm:py-6 max-w-7xl mx-auto animate-fadeIn select-none font-sans">
-      {/* 2 Bento Cards Split 50/50 em Tela Cheia - Sem Header Promocional Superior */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-7 flex-1 items-stretch w-full my-auto py-2">
-        {/* Bento Card 1: Criar Vinheta em Áudio (Leva para o Chat) */}
+    <div className="flex-1 flex flex-col justify-between w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-10 animate-fade-in font-sans">
+      {/* 50/50 Large Bento Cards Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 flex-1 items-stretch">
+        {/* Bento Card 1: Criar Vinheta em Áudio */}
         <motion.div
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
@@ -25,35 +26,44 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
             className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_vinheta_bg.webp')` }}
           />
-          {/* Efeito de degradê dinâmico automático e contínuo (sem precisar de hover) */}
-          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white/[0.04] via-transparent to-transparent pointer-events-none gradient-pulse-base" />
-          <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none gradient-pulse-orb" />
+          {/* Gradiente vermelho pulsando internamente no card por cima da imagem (glow discreto) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none animate-pulse-glow" />
+          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
                 <Radio className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
+              <span className="text-sm sm:text-base font-cursive text-red-300 italic tracking-wider">
+                Voz Solene & Oração
+              </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight font-sans">
-              Criar Vinheta em Áudio
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-zinc-300 leading-relaxed font-sans mb-6">
+            <div className="mb-4">
+              <BlurText
+                text="Criar Vinheta em Áudio"
+                delay={60}
+                animateBy="words"
+                direction="top"
+                className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+              />
+            </div>
+            <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
               Produza uma vinheta narrada com voz solene, trilha orquestrada de acolhimento e dados da despedida para homenagear e compartilhar com carinho no WhatsApp.
             </p>
 
-            <div className="space-y-3 text-xs sm:text-sm text-zinc-300 font-sans">
+            <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
                 <span>Voz solene com trilha orquestrada de acolhimento</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
                 <span>Áudio masterizado pronto para compartilhar no WhatsApp</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
                 <span>Assistente guiado por voz ou digitação respeitosa</span>
               </div>
             </div>
@@ -75,7 +85,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           </div>
         </motion.div>
 
-        {/* Bento Card 2: Criar Artes (Leva para a página de artes) */}
+        {/* Bento Card 2: Criar Postagens (Leva para a página de postagens) */}
         <motion.div
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
@@ -87,35 +97,44 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
             className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_artes_bg.webp')` }}
           />
-          {/* Efeito de degradê dinâmico suave na base */}
-          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white/[0.04] via-transparent to-transparent pointer-events-none gradient-pulse-base" />
-          <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none gradient-pulse-orb" />
+          {/* Gradiente vermelho pulsando internamente no card por cima da imagem (glow discreto) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none animate-pulse-glow" />
+          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
                 <ImageIcon className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
+              <span className="text-sm sm:text-base font-cursive text-zinc-300 italic tracking-wider">
+                Luto & Saudade Eterna
+              </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight font-sans">
-              Criar Artes
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-zinc-300 leading-relaxed font-sans mb-6">
-              Molduras com laço oficial de luto para foto de perfil do WhatsApp e artes comemorativas em alta resolução para Feed (3:4) e Stories (9:16).
+            <div className="mb-4">
+              <BlurText
+                text="Criar Postagens"
+                delay={60}
+                animateBy="words"
+                direction="top"
+                className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+              />
+            </div>
+            <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
+              Molduras com laço oficial de luto para foto de perfil do WhatsApp e postagens comemorativas em alta resolução para Feed (3:4) e Stories (9:16).
             </p>
 
-            <div className="space-y-3 text-xs sm:text-sm text-zinc-300 font-sans">
+            <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
                 <span>Moldura de luto para WhatsApp com laço preto oficial</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
-                <span>Artes comemorativas em alta definição para Feed e Stories</span>
+                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
+                <span>Postagens comemorativas em alta definição para Feed e Stories</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-zinc-300 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
                 <span>Editor com pinça touch e download imediato em PNG</span>
               </div>
             </div>
@@ -131,7 +150,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
               type="button"
               className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white btn-tactile flex items-center justify-center gap-2 group-hover:text-white font-sans"
             >
-              <span>Ver Opções de Artes</span>
+              <span>Ver Opções de Postagens</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

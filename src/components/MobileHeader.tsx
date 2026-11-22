@@ -14,7 +14,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
   const navItems = [
     { id: 'home' as ScreenId, label: 'Início', icon: Home },
     { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic },
-    { id: 'artes-submenu' as ScreenId, label: 'Criar Artes', icon: Image },
+    { id: 'artes-submenu' as ScreenId, label: 'Criar Postagens', icon: Image },
     { id: 'historico' as ScreenId, label: 'Meu Histórico', icon: History },
     { id: 'sobre' as ScreenId, label: 'Sobre o Projeto', icon: Info },
     { id: 'privacidade' as ScreenId, label: 'Privacidade', icon: Shield },
@@ -85,7 +85,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
           </div>
 
           {/* Navigation Items (Large Touch Area) */}
-          <nav className="flex flex-col gap-3 my-auto py-6">
+          <nav className="flex flex-col gap-2.5 my-auto py-6">
             {navItems.map((item) => {
               const isActive = currentScreen === item.id;
               const Icon = item.icon;
@@ -94,13 +94,13 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item.id)}
-                  className={`relative flex items-center gap-4 py-4 px-6 rounded-xl text-base font-semibold tracking-wide transition-all font-sans ${
+                  className={`relative flex items-center gap-4 py-4 px-6 rounded-full text-lg font-semibold tracking-wide transition-all font-sans ${
                     isActive
-                      ? 'btn-menu-active-white font-bold nav-active'
-                      : 'btn-tactile text-zinc-300'
+                      ? 'btn-menu-active-white font-bold nav-active text-white bg-white/10'
+                      : 'text-zinc-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-zinc-950 stroke-[2.5]' : 'text-zinc-400'}`} />
+                  <Icon className={`w-6 h-6 ${isActive ? 'text-white stroke-[2.5]' : 'text-zinc-400'}`} />
                   <span>{item.label}</span>
                 </button>
               );

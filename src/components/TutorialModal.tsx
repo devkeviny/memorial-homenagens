@@ -1,39 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, Sparkles, Share2, Check, ArrowRight } from 'lucide-react';
+import { Mic, ClipboardCheck, Download, ArrowRight, Check } from 'lucide-react';
 
 interface TutorialModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+const STEPS = [
+  {
+    title: 'Fale no microfone ou escreva',
+    text: 'Toque no microfone e conte os dados com suas palavras, ou digite no campo de texto.',
+    Icon: Mic,
+  },
+  {
+    title: 'Confira os dados',
+    text: 'O assistente mostra tudo organizado. Se algo estiver errado, toque em Alterar dados.',
+    Icon: ClipboardCheck,
+  },
+  {
+    title: 'Baixe pronto',
+    text: 'Receba a vinheta narrada em áudio e as postagens prontas para compartilhar com a família.',
+    Icon: Download,
+  },
+] as const;
+
+const FLOAT_POSITIONS = [
+  'left-0 top-2 -rotate-6',
+  'right-0 top-10 rotate-6',
+  'left-6 bottom-0 rotate-3',
+] as const;
+
 export const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(0);
+  const nextRef = useRef<HTMLButtonElement | null>(null);
+  const last = step === STEPS.length - 1;
+  const current = STEPS[step];
 
-  const steps = [
-    {
-      icon: Mic,
-      title: '1. Conte com suas próprias palavras',
-      desc: 'Você pode falar segurando o botão de microfone ou digitar uma mensagem simples com o nome do homenageado, datas e lembranças especiais.',
-      badge: 'Voz ou Texto'
-    },
-    {
-      icon: Sparkles,
-      title: '2. Criação Solene & Inteligente',
-      desc: 'Nossa inteligência memorial organiza com carinho o texto, cria a vinheta em áudio com fundo solene e prepara as homenagens visuais.',
-      badge: 'Processamento Respeitoso'
-    },
-    {
-      icon: Share2,
-      title: '3. Baixe e Compartilhe Grátis',
-      desc: 'Receba a vinheta em áudio de alta qualidade e as artes prontas para o Feed (3:4), Stories (9:16) e WhatsApp para confortar familiares e amigos.',
-      badge: 'Sem Custos ou Anúncios'
+  useEffect(() => {
+    if (isOpen) {
+      nextRef.current?.focus();
     }
-  ];
+  }, [isOpen, step]);
 
   const handleNext = () => {
-    if (step < steps.length - 1) {
-      setStep(step + 1);
+    if (!last) {
+      setStep((prev) => prev + 1);
     } else {
       localStorage.setItem('tutorial_chat_visto', 'true');
       onClose();
@@ -45,80 +57,126 @@ export const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose })
     onClose();
   };
 
-  if (!isOpen) return null;
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      handleSkip();
+    }
+  };
 
-  const CurrentIcon = steps[step].icon;
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+      <div 
+        onKeyDown={handleKeyDown}
+        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#09090B]/85 backdrop-blur-md select-none font-sans"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tutorial-title"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#16161B] border border-red-500/30 shadow-[0_0_40px_rgba(220,38,38,0.25)] text-white card-tactile"
+          className="relative flex w-full max-w-md flex-col items-center gap-6 py-6 px-4 sm:px-6 text-center"
         >
-          {/* Header indicator */}
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-xs uppercase tracking-wider font-semibold text-red-400 font-sans">
-              Guia de Boas-Vindas ({step + 1} de {steps.length})
-            </span>
-            <button
-              onClick={handleSkip}
-              className="text-xs text-zinc-400 hover:text-white transition-colors py-1 px-3 rounded-lg hover:bg-white/5 btn-tactile font-sans"
+          {/* Floating Glassmorphism Hero Stage (from Caffeine zip) */}
+          <div className="relative h-60 w-full flex items-center justify-center" aria-hidden="true">
+            {/* Ambient Red Glow in Center */}
+            <div className="absolute left-1/2 top-1/2 size-56 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600/25 blur-3xl pointer-events-none animate-pulse" />
+
+            {/* Orbiting Glass Cards */}
+            {STEPS.map(({ Icon, title }, i) => (
+              <motion.div
+                key={title}
+                animate={{
+                  y: [0, -6, 0],
+                  rotate: i === 0 ? [-6, -4, -6] : i === 1 ? [6, 8, 6] : [3, 1, 3]
+                }}
+                transition={{
+                  duration: 4 + i,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
+                className={`absolute flex size-24 items-center justify-center rounded-3xl border transition-all duration-300 ${
+                  FLOAT_POSITIONS[i]
+                } ${
+                  i === step
+                    ? 'z-10 scale-110 border-red-500/80 bg-white/15 shadow-[0_0_25px_rgba(220,38,38,0.5)] backdrop-blur-xl'
+                    : 'border-white/10 bg-white/5 opacity-40 backdrop-blur-lg'
+                }`}
+              >
+                <Icon
+                  className={`size-10 ${
+                    i === step ? 'text-red-400' : 'text-zinc-400'
+                  }`}
+                />
+              </motion.div>
+            ))}
+
+            {/* Central Master Glass Card */}
+            <motion.div 
+              key={step}
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="absolute left-1/2 top-1/2 flex size-36 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[2rem] border border-white/20 bg-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
             >
-              Pular
-            </button>
+              <current.Icon className="size-16 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
+            </motion.div>
           </div>
 
-          {/* Step Icon */}
-          <div className="flex justify-center mb-6">
-            <div className="relative flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-red-950 via-[#1C1618] to-[#121217] border border-red-500/40 shadow-[0_0_25px_rgba(220,38,38,0.35)]">
-              <CurrentIcon className="w-10 h-10 text-red-400 animate-pulse" />
-              <span className="absolute -top-2 -right-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-600 text-white shadow-md">
-                {steps[step].badge}
-              </span>
-            </div>
+          {/* Heading */}
+          <h2
+            id="tutorial-title"
+            className="text-2xl sm:text-3xl font-extrabold leading-tight tracking-tight text-white font-sans"
+          >
+            COMO CRIAR SUA <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400">HOMENAGEM</span>
+          </h2>
+
+          {/* Step Description */}
+          <div className="min-h-28 w-full" aria-live="polite">
+            <p className="text-xs uppercase tracking-widest font-bold text-red-400 font-sans">
+              Passo {step + 1} de {STEPS.length}
+            </p>
+            <h3 className="mt-1 text-xl sm:text-2xl font-bold text-white font-sans">
+              {step + 1}. {current.title}
+            </h3>
+            <p className="mt-2 text-sm sm:text-base text-zinc-300 font-sans leading-relaxed max-w-sm mx-auto">
+              {current.text}
+            </p>
           </div>
 
-          {/* Content */}
-          <h3 className="text-xl font-bold text-center tracking-tight mb-3 font-sans">
-            {steps[step].title}
-          </h3>
-          <p className="text-sm text-zinc-300 text-center leading-relaxed mb-8 min-h-[4.5rem] font-sans">
-            {steps[step].desc}
-          </p>
-
-          {/* Step Dots */}
-          <div className="flex justify-center gap-2 mb-6">
-            {steps.map((_, i) => (
+          {/* Step Dots with Pill Expansion */}
+          <div className="flex items-center gap-2" aria-hidden="true">
+            {STEPS.map((s, i) => (
               <span
-                key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === step ? 'w-8 bg-gradient-to-r from-red-600 to-red-400' : 'w-2 bg-white/20'
+                key={s.title}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  i === step ? 'w-8 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.7)]' : 'w-2.5 bg-white/30'
                 }`}
               />
             ))}
           </div>
 
-          {/* Action button */}
-          <button
-            onClick={handleNext}
-            className="flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl btn-tactile-red text-white font-semibold text-sm transition-all active:scale-95 cursor-pointer font-sans"
-          >
-            {step === steps.length - 1 ? (
-              <>
-                <Check className="w-4 h-4 text-emerald-300" />
-                <span>Começar Agora</span>
-              </>
-            ) : (
-              <>
-                <span>Próximo Passo</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
+          {/* Actions */}
+          <div className="w-full flex flex-col items-center gap-3">
+            <button
+              ref={nextRef}
+              onClick={handleNext}
+              className="w-full py-4 rounded-full text-base sm:text-lg font-bold btn-tactile-red text-white shadow-[0_0_25px_rgba(220,38,38,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer font-sans flex items-center justify-center gap-2"
+            >
+              <span>{last ? 'Começar' : 'Próximo →'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleSkip}
+              className="cursor-pointer rounded-full px-5 py-2 text-sm sm:text-base text-zinc-400 underline underline-offset-4 hover:text-white transition-colors font-sans"
+            >
+              Pular tutorial
+            </button>
+          </div>
         </motion.div>
       </div>
     </AnimatePresence>

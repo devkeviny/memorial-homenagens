@@ -12,7 +12,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
   const navItems = [
     { id: 'home' as ScreenId, label: 'Início', icon: Home },
     { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic },
-    { id: 'artes-submenu' as ScreenId, label: 'Criar Artes', icon: Image },
+    { id: 'artes-submenu' as ScreenId, label: 'Criar Postagens', icon: Image },
     { id: 'historico' as ScreenId, label: 'Meu Histórico', icon: History },
     { id: 'sobre' as ScreenId, label: 'Sobre', icon: Info },
     { id: 'privacidade' as ScreenId, label: 'Privacidade', icon: Shield },
@@ -33,10 +33,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
           />
         </div>
         <div>
-          <h1 className="text-base font-bold tracking-tight text-white font-sans">
+          <h1 className="text-lg font-bold tracking-tight text-white font-sans">
             Memorial
           </h1>
-          <p className="text-[11px] text-zinc-400 font-sans tracking-wide">
+          <p className="text-sm text-zinc-300 font-cursive italic tracking-wide">
             Homenagens Solenes
           </p>
         </div>
@@ -52,13 +52,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`relative flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group font-sans ${
+              className={`relative flex items-center gap-4 px-4 py-3.5 rounded-full text-base font-semibold transition-all duration-200 group font-sans cursor-pointer ${
                 isActive
-                  ? 'btn-menu-active-white font-bold nav-active'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5 btn-tactile'
+                  ? 'btn-menu-active-white font-bold nav-active text-white bg-white/10'
+                  : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-zinc-950 stroke-[2.5]' : 'text-zinc-400'}`} />
+              <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? 'text-white stroke-[2.5]' : 'text-zinc-400'}`} />
               <span className="tracking-wide">{item.label}</span>
             </button>
           );
