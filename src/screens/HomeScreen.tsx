@@ -34,9 +34,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
               <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
                 <Radio className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
-              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-white/5 text-zinc-300 border border-white/10 font-sans shadow-sm">
-                Assistente Solene • Áudio
-              </span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight font-sans">
@@ -99,9 +96,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
               <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
                 <ImageIcon className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
-              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-white/5 text-zinc-300 border border-white/10 font-sans shadow-sm">
-                Visual • Feed, Stories & Perfil
-              </span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight font-sans">
