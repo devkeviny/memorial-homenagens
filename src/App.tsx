@@ -105,7 +105,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Screen Content Body */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden pt-16 md:pt-0">
+      <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
         {currentScreen === 'home' && (
           <HomeScreen
             onNavigate={handleNavigate}

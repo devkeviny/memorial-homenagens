@@ -441,7 +441,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
   };
 
   return (
-    <div className="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10 animate-fade-in select-none font-sans">
+    <div className="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-8 pt-3 sm:pt-6 pb-6 sm:pb-10 animate-fade-in select-none font-sans">
       {/* Hidden file input */}
       <input
         type="file"
@@ -476,21 +476,21 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
       {viewMode === 'gallery' ? (
         <div className="flex flex-col flex-1">
           {/* Top Bar with Breadcrumbs */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-3 border-b border-white/5">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 mb-3 sm:mb-6 pb-2 sm:pb-3 border-b border-white/5">
             <button
               onClick={() => onNavigate('artes-submenu')}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
             >
-              <ArrowLeft className="w-4 h-4 text-red-400" />
+              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400" />
               <span>Voltar para Formatos</span>
             </button>
 
             {/* Interactive Breadcrumb */}
-            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-white/10">
+            <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-0.5 sm:py-1 rounded-xl border border-white/10">
               <button
                 type="button"
                 onClick={handleBackToGallery}
-                className="px-3 py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm"
+                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm text-xs sm:text-sm"
               >
                 1. Estilos
               </button>
@@ -498,7 +498,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
               <button
                 type="button"
                 onClick={() => handleGoToCustomize()}
-                className="px-3 py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5"
+                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5 text-xs sm:text-sm"
               >
                 2. Personalização
               </button>
@@ -506,23 +506,23 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
           </div>
 
           {/* Header */}
-          <div className="text-center mb-8 sm:mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-xs font-semibold mb-3 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-red-400" />
+          <div className="text-center mb-4 sm:mb-8">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-[11px] sm:text-xs font-semibold mb-2 shadow-sm">
+              <Layers className="w-3 h-3 text-zinc-400" />
               <span>Molduras Solenes</span>
             </div>
 
-            <div className="mb-2">
+            <div className="mb-1.5">
               <BlurText
                 text="Selecione o estilo que você quer"
                 delay={50}
                 animateBy="words"
                 direction="top"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans inline-block"
+                className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white font-sans inline-block"
               />
             </div>
 
-            <p className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
               Escolha a moldura de respeito para foto de perfil do WhatsApp e redes sociais
             </p>
           </div>
