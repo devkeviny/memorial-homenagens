@@ -7,6 +7,7 @@ import { PixModal, FloatingPixButton } from './components/PixModal';
 // Screens
 import { HomeScreen } from './screens/HomeScreen';
 import { ArtesSubmenuScreen } from './screens/ArtesSubmenuScreen';
+import { TemplatesArtesScreen } from './screens/TemplatesArtesScreen';
 import { ChatScreen } from './screens/ChatScreen';
 import { EditorPerfilScreen } from './screens/EditorPerfilScreen';
 import { HistoricoScreen } from './screens/HistoricoScreen';
@@ -49,6 +50,10 @@ export const App: React.FC = () => {
 
         {currentScreen === 'artes-submenu' && (
           <ArtesSubmenuScreen onNavigate={handleNavigate} />
+        )}
+
+        {currentScreen === 'templates-artes' && (
+          <TemplatesArtesScreen onNavigate={handleNavigate} />
         )}
 
         {currentScreen === 'chat' && (

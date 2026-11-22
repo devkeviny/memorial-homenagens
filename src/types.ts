@@ -18,7 +18,7 @@ export interface HistoryItem {
   };
 }
 
-export type ScreenId = 'home' | 'artes-submenu' | 'chat' | 'editor-perfil' | 'historico' | 'sobre' | 'privacidade';
+export type ScreenId = 'home' | 'artes-submenu' | 'templates-artes' | 'chat' | 'editor-perfil' | 'historico' | 'sobre' | 'privacidade';
 
 export interface ChatMessage {
   id: string;

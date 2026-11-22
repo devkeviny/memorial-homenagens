@@ -81,11 +81,11 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
           </div>
         </motion.div>
 
-        {/* Card B: Post Duplo (Feed 3:4 + Stories 9:16) */}
+        {/* Card B: Templates Oficiais (Feed 3:4 & Stories 9:16) */}
         <motion.div
           whileHover={{ y: -4, scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
-          onClick={() => onNavigate('chat', 'artes')}
+          onClick={() => onNavigate('templates-artes')}
           className="relative group flex flex-col justify-between p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-[#1C1618] via-[#16161D] to-[#121217] border border-white/10 hover:border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.6)] card-tactile transition-all duration-300 cursor-pointer overflow-hidden"
         >
           <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/5 filter blur-3xl pointer-events-none transition-all" />
@@ -96,25 +96,25 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
                 <LayoutGrid className="w-7 h-7 text-white" />
               </div>
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-zinc-300 border border-white/10 font-sans">
-                Combo 2 em 1
+                Galeria de Templates
               </span>
             </div>
 
             <h3 className="text-2xl sm:text-3xl font-bold text-white font-sans mb-3">
-              Post Duplo (Feed & Stories)
+              Templates Oficiais (Feed & Stories)
             </h3>
             <p className="text-sm sm:text-base text-zinc-300 leading-relaxed mb-6 font-sans">
-              Nossa inteligência cria simultaneamente a arte vertical de Stories (9:16) e a arte de Feed (3:4) com nome, datas, mensagem e dados da cerimônia.
+              Acesse a galeria com templates nobres prontos. Preencha os dados do homenageado, enquadre a foto com gestos de toque na tela e baixe em alta resolução diretamente.
             </p>
           </div>
 
           <div className="flex items-center justify-between pt-6 border-t border-white/5">
             <span className="text-xs font-medium text-zinc-400 flex items-center gap-1.5 font-sans">
               <ImageIcon className="w-4 h-4 text-zinc-400" />
-              Gera Feed 3:4 e Stories 9:16
+              Templates em Feed 3:4 e Stories 9:16
             </span>
             <div className="flex items-center gap-2 text-sm font-semibold text-white group-hover:text-zinc-200 transition-colors font-sans">
-              <span>Criar via Chat</span>
+              <span>Abrir Templates & Criar</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
             </div>
           </div>
