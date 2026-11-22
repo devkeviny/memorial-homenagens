@@ -20,6 +20,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           onClick={() => onNavigate('chat')}
           className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.05)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
+          {/* Background fotográfico com rosas vermelhas em cor seletiva */}
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
+            style={{ backgroundImage: `url('/assets/card_vinheta_bg.webp')` }}
+          />
           {/* Efeito de degradê dinâmico automático e contínuo (sem precisar de hover) */}
           <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white/[0.04] via-transparent to-transparent pointer-events-none gradient-pulse-base" />
           <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none gradient-pulse-orb" />
@@ -80,6 +85,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           onClick={() => onNavigate('artes-submenu')}
           className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.06)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
+          {/* Background fotográfico com rosas vermelhas em cor seletiva */}
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
+            style={{ backgroundImage: `url('/assets/card_artes_bg.webp')` }}
+          />
           {/* Efeito de degradê dinâmico suave na base */}
           <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white/[0.04] via-transparent to-transparent pointer-events-none gradient-pulse-base" />
           <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none gradient-pulse-orb" />
