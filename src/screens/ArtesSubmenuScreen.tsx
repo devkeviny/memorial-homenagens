@@ -55,81 +55,52 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('editor-perfil')}
-          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.05)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
+          className="relative group flex flex-col justify-between p-6 sm:p-8 md:p-10 rounded-[32px] bg-gradient-to-b from-[#14141B] via-[#0E0E14] to-[#0A0A0E] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.8),0_0_20px_rgba(255,255,255,0.03)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
-          {/* Background fotográfico solene com rosas/vela em sobreposição escura */}
+          {/* Background fotográfico mais escuro com opacidade contida */}
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
+            className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_vinheta_bg.webp')` }}
           />
-          {/* Gradiente vermelho sutil no card por cima da imagem */}
-          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none" />
-          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+          {/* Degradê vertical elegante de cima para baixo (do escuro profundo ao transparente/suave) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0E]/90 via-[#0A0A0E]/50 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-red-950/20 to-transparent pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
-                <User className="w-7 h-7 sm:w-8 sm:h-8" />
+            <div className="flex items-center justify-between mb-5 sm:mb-6">
+              <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1C1C24] border border-white/10 text-white shadow-md group-hover:scale-105 transition-all">
+                <User className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-200" />
               </div>
-              <span className="text-sm sm:text-base font-cursive text-zinc-300 italic tracking-wider">
+              <span className="text-xs sm:text-sm font-cursive text-zinc-400 italic tracking-wider">
                 WhatsApp & Redes
               </span>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-3">
               <BlurText
                 text="Foto de Perfil (Luto)"
                 delay={60}
                 animateBy="words"
                 direction="top"
-                className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+                className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-sans inline-block"
               />
             </div>
-            <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
-              Aplique moldura circular com laço preto oficial de luto, converta sua foto em preto e branco e faça o download pronto para seu perfil no WhatsApp e Instagram.
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans mb-4">
+              Moldura circular com laço preto oficial de luto e conversão em preto e branco para o perfil.
             </p>
-
-            <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Moldura de luto com laço preto oficial e respeito solene</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Filtro P&B e sépia com ajuste fino de contraste</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Enquadramento por toque e download direto em PNG</span>
-              </div>
-            </div>
           </div>
 
-          <div className="relative z-10 pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 font-sans">
-                <Layers className="w-4 h-4 text-zinc-400" />
-                <span>Efeito P&B e Molduras</span>
-              </div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onNavigate('chat');
-                }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700/80 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white transition-colors"
-                title="Assistente Solene de Homenagens"
-              >
-                <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
-                <span>Assistente Solene</span>
-              </button>
+          <div className="relative z-10 pt-5 mt-4 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-zinc-400 font-sans">
+              <Layers className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Molduras de respeito</span>
             </div>
 
             <button
               type="button"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans"
             >
-              <span>Criar agora</span>
+              <span>Criar foto</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -140,81 +111,52 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('templates-artes')}
-          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.06)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
+          className="relative group flex flex-col justify-between p-6 sm:p-8 md:p-10 rounded-[32px] bg-gradient-to-b from-[#14141B] via-[#0E0E14] to-[#0A0A0E] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.8),0_0_20px_rgba(255,255,255,0.03)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
-          {/* Background fotográfico solene com flores/velas */}
+          {/* Background fotográfico mais escuro com opacidade contida */}
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
+            className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_artes_bg.webp')` }}
           />
-          {/* Gradiente vermelho sutil no card por cima da imagem */}
-          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none" />
-          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+          {/* Degradê vertical elegante de cima para baixo (do escuro profundo ao transparente/suave) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0E]/90 via-[#0A0A0E]/50 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-red-950/20 to-transparent pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
-                <LayoutGrid className="w-7 h-7 sm:w-8 sm:h-8" />
+            <div className="flex items-center justify-between mb-5 sm:mb-6">
+              <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1C1C24] border border-white/10 text-white shadow-md group-hover:scale-105 transition-all">
+                <ImageIcon className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-200" />
               </div>
-              <span className="text-sm sm:text-base font-cursive text-zinc-300 italic tracking-wider">
-                Galeria de Modelos
+              <span className="text-xs sm:text-sm font-cursive text-zinc-400 italic tracking-wider">
+                Feed 3:4 & Stories 9:16
               </span>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-3">
               <BlurText
-                text="Modelos Oficiais (Feed & Stories)"
+                text="Modelos Solenes"
                 delay={60}
                 animateBy="words"
                 direction="top"
-                className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+                className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-sans inline-block"
               />
             </div>
-            <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
-              Acesse a galeria com modelos solenes prontos. Preencha os dados do homenageado, ajuste a foto por toque e baixe a imagem para compartilhar.
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans mb-4">
+              Modelos comemorativos com foto, datas e mensagens para compartilhar com familiares e amigos.
             </p>
-
-            <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Formatos para Feed (3:4) e Stories (9:16)</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Tipografia nobre, filetes solenes e tons aveludados</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Arquivo de imagem pronto para salvar no celular</span>
-              </div>
-            </div>
           </div>
 
-          <div className="relative z-10 pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 font-sans">
-                <ImageIcon className="w-4 h-4 text-zinc-400" />
-                <span>Feed 3:4 e Stories 9:16</span>
-              </div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onNavigate('chat');
-                }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700/80 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white transition-colors"
-                title="Assistente Solene de Homenagens"
-              >
-                <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
-                <span>Assistente Solene</span>
-              </button>
+          <div className="relative z-10 pt-5 mt-4 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-zinc-400 font-sans">
+              <ImageIcon className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Formatos Feed e Stories</span>
             </div>
 
             <button
               type="button"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans"
             >
-              <span>Criar agora</span>
+              <span>Ver modelos</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

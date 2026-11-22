@@ -24,60 +24,46 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') onNavigate('chat');
           }}
-          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.05)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
+          className="relative group flex flex-col justify-between p-6 sm:p-8 md:p-10 rounded-[32px] bg-gradient-to-b from-[#14141B] via-[#0E0E14] to-[#0A0A0E] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.8),0_0_20px_rgba(255,255,255,0.03)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
-          {/* Background fotográfico com rosas vermelhas em cor seletiva */}
+          {/* Background fotográfico mais escuro com opacidade contida */}
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
+            className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_vinheta_bg.webp')` }}
           />
-          {/* Gradiente vermelho pulsando internamente no card por cima da imagem (glow discreto) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none animate-pulse-glow" />
-          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
+          {/* Degradê vertical elegante de cima para baixo (do escuro profundo ao transparente/suave) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0E]/90 via-[#0A0A0E]/50 to-transparent pointer-events-none" />
+          {/* Brilho avermelhado discreto e solene no fundo */}
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-red-950/20 to-transparent pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
-                <Radio className="w-7 h-7 sm:w-8 sm:h-8" />
+            <div className="flex items-center justify-between mb-5 sm:mb-6">
+              <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1C1C24] border border-white/10 text-white shadow-md group-hover:scale-105 transition-all">
+                <Radio className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-200" />
               </div>
-              <span className="text-sm sm:text-base font-cursive text-red-300 italic tracking-wider">
+              <span className="text-xs sm:text-sm font-cursive text-zinc-400 italic tracking-wider">
                 Voz Solene & Oração
               </span>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-3">
               <BlurText
                 text="Criar Vinheta em Áudio"
                 delay={60}
                 animateBy="words"
                 direction="top"
-                className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+                className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-sans inline-block"
               />
             </div>
-            <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
-              Produza uma vinheta narrada com voz solene, trilha orquestrada de acolhimento e dados da despedida para homenagear e compartilhar com carinho no WhatsApp.
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans mb-4">
+              Vinheta narrada com voz solene e trilha orquestrada, pronta para compartilhar com a família no WhatsApp.
             </p>
-
-            <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Voz solene com trilha orquestrada de acolhimento</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Áudio masterizado pronto para compartilhar no WhatsApp</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Assistente guiado por voz ou digitação respeitosa</span>
-              </div>
-            </div>
           </div>
 
-          <div className="relative z-10 pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-medium text-zinc-400 font-sans">
-              <RadioTower className="w-4 h-4 text-zinc-400" />
-              <span>Geração imediata no Chat Solene</span>
+          <div className="relative z-10 pt-5 mt-4 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-zinc-400 font-sans">
+              <RadioTower className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Geração direta no chat</span>
             </div>
 
             <button
@@ -86,7 +72,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
                 e.stopPropagation();
                 onNavigate('chat');
               }}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans cursor-pointer"
             >
               <span>Criar Vinheta</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -104,60 +90,46 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') onNavigate('artes-submenu');
           }}
-          className="relative group flex flex-col justify-between p-7 sm:p-10 md:p-12 rounded-[32px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.7),0_0_25px_rgba(255,255,255,0.06)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
+          className="relative group flex flex-col justify-between p-6 sm:p-8 md:p-10 rounded-[32px] bg-gradient-to-b from-[#14141B] via-[#0E0E14] to-[#0A0A0E] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.8),0_0_20px_rgba(255,255,255,0.03)] hover:border-white/20 transition-all duration-300 cursor-pointer overflow-hidden card-tactile-bento card-dynamic-solemn"
         >
-          {/* Background fotográfico com rosas vermelhas em cor seletiva */}
+          {/* Background fotográfico mais escuro com opacidade contida */}
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
+            className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_artes_bg.webp')` }}
           />
-          {/* Gradiente vermelho pulsando internamente no card por cima da imagem (glow discreto) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none animate-pulse-glow" />
-          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
+          {/* Degradê vertical elegante de cima para baixo (do escuro profundo ao transparente/suave) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0E]/90 via-[#0A0A0E]/50 to-transparent pointer-events-none" />
+          {/* Brilho avermelhado discreto e solene no fundo */}
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-red-950/20 to-transparent pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#22222C] border border-white/10 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 group-hover:border-white/20 transition-all">
-                <ImageIcon className="w-7 h-7 sm:w-8 sm:h-8" />
+            <div className="flex items-center justify-between mb-5 sm:mb-6">
+              <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1C1C24] border border-white/10 text-white shadow-md group-hover:scale-105 transition-all">
+                <ImageIcon className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-200" />
               </div>
-              <span className="text-sm sm:text-base font-cursive text-zinc-300 italic tracking-wider">
+              <span className="text-xs sm:text-sm font-cursive text-zinc-400 italic tracking-wider">
                 Luto & Saudade Eterna
               </span>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-3">
               <BlurText
                 text="Criar Postagens"
                 delay={60}
                 animateBy="words"
                 direction="top"
-                className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+                className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-sans inline-block"
               />
             </div>
-            <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
-              Molduras de luto para foto de perfil do WhatsApp e publicações dedicadas para Feed (3:4) e Stories (9:16).
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans mb-4">
+              Molduras para WhatsApp e publicações de luto dedicadas para Feed e Stories.
             </p>
-
-            <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Moldura de luto para WhatsApp com laço preto oficial</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Formatos para Feed e Stories prontos para compartilhar</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Editor com pinça touch e download imediato em PNG</span>
-              </div>
-            </div>
           </div>
 
-          <div className="relative z-10 pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-medium text-zinc-400 font-sans">
-              <ImageIcon className="w-4 h-4 text-zinc-400" />
-              <span>Download imediato e gratuito em PNG</span>
+          <div className="relative z-10 pt-5 mt-4 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-zinc-400 font-sans">
+              <ImageIcon className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Formatos Feed, Stories e Perfil</span>
             </div>
 
             <button
@@ -166,7 +138,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
                 e.stopPropagation();
                 onNavigate('artes-submenu');
               }}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-950 btn-tactile-white flex items-center justify-center gap-2 font-sans cursor-pointer"
             >
               <span>Criar Postagens</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
