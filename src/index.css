@@ -136,30 +136,30 @@ body {
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* Menu Active Item - Minimal Pure Modern (Sem chanfro, estilo Caffeine) */
-.btn-menu-active-white {
+/* Menu Active Item - Clean Pill Navigation (Design System do Zip / Caffeine) */
+.btn-menu-active-clean {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+  border-radius: 9999px !important;
+  position: relative !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+.btn-menu-active-clean:hover {
   background: rgba(255, 255, 255, 0.12) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
 }
 
-.btn-menu-active-white:hover {
-  background: rgba(255, 255, 255, 0.18) !important;
-  color: #FFFFFF !important;
-}
-
-/* Traço Vermelho Luminoso no Menu Ativo (Signature Detail do Claude: Luz de Vela) */
-.nav-active::before {
+/* Traço Vermelho Luminoso Integrado Elegantemente à Esquerda do Botão Ativo */
+.btn-menu-active-clean::before {
   content: '';
   position: absolute;
-  left: 3px;
-  top: 20%;
-  bottom: 20%;
+  left: 0;
+  top: 25%;
+  bottom: 25%;
   width: 3.5px;
   border-radius: 9999px;
   background: #DC2626;
-  box-shadow: 0 0 12px 2px rgba(220, 38, 38, 0.8);
+  box-shadow: 0 0 10px 1.5px rgba(220, 38, 38, 0.7);
   pointer-events: none;
 }
 

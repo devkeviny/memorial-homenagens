@@ -94,13 +94,13 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ currentScreen, onNav
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item.id)}
-                  className={`relative flex items-center gap-4 py-4 px-6 rounded-full text-lg font-semibold tracking-wide transition-all font-sans ${
+                  className={`flex items-center gap-4 py-4 px-6 rounded-full text-lg font-semibold tracking-wide transition-all font-sans ${
                     isActive
-                      ? 'btn-menu-active-white font-bold nav-active text-white bg-white/10'
-                      : 'text-zinc-300 hover:text-white hover:bg-white/5'
+                      ? 'btn-menu-active-clean font-bold text-white pl-8'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <Icon className={`w-6 h-6 ${isActive ? 'text-white stroke-[2.5]' : 'text-zinc-400'}`} />
+                  <Icon className={`w-6 h-6 shrink-0 ${isActive ? 'text-white stroke-[2.2]' : 'text-zinc-400'}`} />
                   <span>{item.label}</span>
                 </button>
               );

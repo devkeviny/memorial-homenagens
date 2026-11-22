@@ -43,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex flex-col gap-2 flex-1">
+      <nav className="flex flex-col gap-1.5 flex-1">
         {navItems.map((item) => {
           const isActive = currentScreen === item.id;
           const Icon = item.icon;
@@ -52,13 +52,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`relative flex items-center gap-4 px-4 py-3.5 rounded-full text-base font-semibold transition-all duration-200 group font-sans cursor-pointer ${
+              className={`flex items-center gap-4 px-5 py-3.5 rounded-full text-base font-semibold transition-all duration-200 group font-sans cursor-pointer ${
                 isActive
-                  ? 'btn-menu-active-white font-bold nav-active text-white bg-white/10'
-                  : 'text-zinc-300 hover:text-white hover:bg-white/5'
+                  ? 'btn-menu-active-clean font-bold text-white pl-6'
+                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? 'text-white stroke-[2.5]' : 'text-zinc-400'}`} />
+              <Icon className={`w-5 h-5 transition-transform group-hover:scale-105 shrink-0 ${isActive ? 'text-white stroke-[2.2]' : 'text-zinc-400'}`} />
               <span className="tracking-wide">{item.label}</span>
             </button>
           );
