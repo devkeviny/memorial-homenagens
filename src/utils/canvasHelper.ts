@@ -1,6 +1,12 @@
 // Helper to generate real downloadable PNG images using HTML5 Canvas
 // and audio synthesizing for realistic preview & download.
 
+let globalDoveImg: HTMLImageElement | null = null;
+if (typeof window !== 'undefined') {
+  globalDoveImg = new Image();
+  globalDoveImg.src = '/assets/dove-red-flower.svg';
+}
+
 export interface MemorialData {
   nome: string;
   nascimento: string;
@@ -85,9 +91,15 @@ export function drawFeedImage(data: MemorialData, photoImg?: HTMLImageElement | 
   } else {
     ctx.fillStyle = '#111116';
     ctx.fill();
-    ctx.fillStyle = '#1A1A22';
-    ctx.font = '72px sans-serif';
-    ctx.fillText('🕊️', width / 2, 655);
+    if (globalDoveImg && globalDoveImg.complete && globalDoveImg.naturalWidth > 0) {
+      const iconSize = 140;
+      ctx.drawImage(globalDoveImg, (width / 2) - iconSize / 2, 630 - iconSize / 2, iconSize, iconSize);
+    } else {
+      ctx.fillStyle = '#1A1A22';
+      ctx.font = '600 28px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PAZ', width / 2, 640);
+    }
   }
   ctx.restore();
 

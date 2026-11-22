@@ -37,9 +37,17 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const loadedImageRef = useRef<HTMLImageElement | null>(null);
+  const doveImageRef = useRef<HTMLImageElement | null>(null);
 
-  // Default sample image if none uploaded yet
+  // Default sample image if none uploaded yet & preload official dove SVG
   useEffect(() => {
+    const doveImg = new Image();
+    doveImg.onload = () => {
+      doveImageRef.current = doveImg;
+      renderCanvas();
+    };
+    doveImg.src = '/assets/dove-red-flower.svg';
+
     // Generate placeholder sample on mount
     const canvas = document.createElement('canvas');
     canvas.width = 400;
@@ -183,10 +191,14 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
       ctx.stroke();
 
       // Rose accent markers
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = '36px "Plus Jakarta Sans", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('🕊️', size / 2, 70);
+      if (doveImageRef.current && doveImageRef.current.complete) {
+        ctx.drawImage(doveImageRef.current, size / 2 - 32, 42, 64, 64);
+      } else {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('PAZ', size / 2, 72);
+      }
     } else {
       // Classic Dark Solemn Ring
       ctx.lineWidth = 22;

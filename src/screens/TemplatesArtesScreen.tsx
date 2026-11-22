@@ -5,15 +5,11 @@ import {
   Sparkles, 
   Upload, 
   Download, 
-  Eye, 
-  Check, 
   Sliders, 
-  Layout, 
-  Layers, 
-  Feather,
-  Sun,
-  Shield,
-  Palette
+  Palette,
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight
 } from 'lucide-react';
 import { ScreenId } from '../types';
 import { ImageTouchModal } from '../components/ImageTouchModal';
@@ -83,6 +79,7 @@ const TEMPLATES: ArtTemplate[] = [
 ];
 
 export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNavigate }) => {
+  const [viewMode, setViewMode] = useState<'gallery' | 'customize'>('gallery');
   const [selectedTemplate, setSelectedTemplate] = useState<ArtTemplate>(TEMPLATES[0]);
   const [activeRatioFilter, setActiveRatioFilter] = useState<'all' | '3:4' | '9:16'>('all');
   
@@ -102,6 +99,24 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
     return t.ratio === activeRatioFilter;
   });
 
+  const currentIndex = TEMPLATES.findIndex(t => t.id === selectedTemplate.id);
+
+  const handlePrevTemplate = () => {
+    const prevIdx = (currentIndex - 1 + TEMPLATES.length) % TEMPLATES.length;
+    setSelectedTemplate(TEMPLATES[prevIdx]);
+  };
+
+  const handleNextTemplate = () => {
+    const nextIdx = (currentIndex + 1) % TEMPLATES.length;
+    setSelectedTemplate(TEMPLATES[nextIdx]);
+  };
+
+  const handleSelectAndCustomize = (template: ArtTemplate) => {
+    setSelectedTemplate(template);
+    setViewMode('customize');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -115,7 +130,6 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
 
   const handleDownloadArt = () => {
     setIsExporting(true);
-    // Draw canvas export
     const width = selectedTemplate.ratio === '3:4' ? 1080 : 1080;
     const height = selectedTemplate.ratio === '3:4' ? 1440 : 1920;
     
@@ -223,61 +237,100 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
         onClose={() => setRawPhotoToCrop(null)}
       />
 
-      {/* Top Navigation */}
-      <div className="flex items-center justify-between mb-8">
-        <button
-          onClick={() => onNavigate('artes-submenu')}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all cursor-pointer font-sans"
+      {/* Breadcrumb Navigation Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
+        <nav aria-label="Trilha de Navegação" className="flex items-center gap-2 text-xs sm:text-sm text-zinc-400 font-sans">
+          <button 
+            onClick={() => onNavigate('home')} 
+            className="hover:text-white transition-colors cursor-pointer"
+          >
+            Início
+          </button>
+          <span>/</span>
+          <button 
+            onClick={() => onNavigate('artes-submenu')} 
+            className="hover:text-white transition-colors cursor-pointer"
+          >
+            Criar Postagens
+          </button>
+          <span>/</span>
+          {viewMode === 'gallery' ? (
+            <span className="text-white font-medium">Galeria de Templates</span>
+          ) : (
+            <>
+              <button 
+                onClick={() => setViewMode('gallery')} 
+                className="hover:text-white transition-colors cursor-pointer"
+              >
+                Galeria
+              </button>
+              <span>/</span>
+              <span className="text-white font-medium">{selectedTemplate.name}</span>
+            </>
+          )}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          {viewMode === 'customize' && (
+            <button
+              onClick={() => setViewMode('gallery')}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer font-sans"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Ver todos os modelos</span>
+            </button>
+          )}
+
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300 font-sans shadow-sm">
+            <Palette className="w-3.5 h-3.5 text-white" />
+            <span>Formatos Oficiais</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ============================================================== */}
+      {/* VIEW 1: VITRINE / PÁGINA DE NAVEGAÇÃO ENTRE OS TEMPLATES      */}
+      {/* ============================================================== */}
+      {viewMode === 'gallery' && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-8"
         >
-          <ArrowLeft className="w-4 h-4 text-white" />
-          <span>Voltar para Formatos</span>
-        </button>
+          {/* Header */}
+          <div>
+            <div className="mb-2">
+              <BlurText
+                text="Templates Oficiais em Alta Definição"
+                delay={60}
+                animateBy="words"
+                direction="top"
+                className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+              />
+            </div>
+            <p className="mt-2 text-base sm:text-lg text-zinc-400 font-sans max-w-2xl leading-relaxed">
+              Selecione o modelo desejado para acessar a tela de customização com preview ao vivo e enquadramento touch da foto.
+            </p>
+          </div>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300 font-sans shadow-sm">
-          <Palette className="w-3.5 h-3.5 text-white" />
-          <span>Galeria de Templates Oficiais</span>
-        </div>
-      </div>
-
-      {/* Title */}
-      <div className="mb-8">
-        <div className="mb-2">
-          <BlurText
-            text="Templates Oficiais em Alta Definição"
-            delay={60}
-            animateBy="words"
-            direction="top"
-            className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-sans inline-block"
-          />
-        </div>
-        <p className="mt-2 text-sm sm:text-base text-zinc-400 font-sans max-w-2xl">
-          Escolha um template nobre, preencha os dados e enquadre a foto com gestos de toque na tela. Você pode baixar em alta resolução imediatamente.
-        </p>
-      </div>
-
-      {/* Layout Split: Left Editor (Form & Templates) | Right Live Canvas Preview */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Left Column: Template Picker & Form (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          
-          {/* Format Tabs (All / Feed 3:4 / Stories 9:16) */}
-          <div className="flex items-center gap-2 p-1 bg-[#121215] border border-white/10 rounded-xl w-fit">
+          {/* Format Filter Tabs */}
+          <div className="flex items-center gap-2 p-1.5 bg-[#121215] border border-white/10 rounded-2xl w-fit">
             <button
               onClick={() => setActiveRatioFilter('all')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                 activeRatioFilter === 'all' 
-                  ? 'bg-white text-zinc-950 shadow-sm' 
+                  ? 'bg-white text-zinc-950 shadow-md font-bold' 
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
-              Todos os Formatos
+              Todos os Formatos ({TEMPLATES.length})
             </button>
             <button
               onClick={() => setActiveRatioFilter('3:4')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                 activeRatioFilter === '3:4' 
-                  ? 'bg-white text-zinc-950 shadow-sm' 
+                  ? 'bg-white text-zinc-950 shadow-md font-bold' 
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
@@ -285,9 +338,9 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
             </button>
             <button
               onClick={() => setActiveRatioFilter('9:16')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                 activeRatioFilter === '9:16' 
-                  ? 'bg-white text-zinc-950 shadow-sm' 
+                  ? 'bg-white text-zinc-950 shadow-md font-bold' 
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
@@ -295,208 +348,291 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
             </button>
           </div>
 
-          {/* Template Grid Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {filteredTemplates.map((tmpl) => {
-              const isSelected = selectedTemplate.id === tmpl.id;
-              return (
-                <div
-                  key={tmpl.id}
-                  onClick={() => setSelectedTemplate(tmpl)}
-                  className={`p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
-                    isSelected 
-                      ? 'bg-[#18181E] border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.08)]' 
-                      : 'bg-[#121215] border-white/10 hover:border-white/20'
-                  }`}
-                >
+          {/* Templates Grid Cards (Design Bento & Visual Rico) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            {filteredTemplates.map((tmpl) => (
+              <motion.div
+                key={tmpl.id}
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => handleSelectAndCustomize(tmpl)}
+                className="relative group flex flex-col justify-between p-7 sm:p-9 rounded-[28px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 hover:border-white/25 shadow-[0_15px_35px_rgba(0,0,0,0.6)] transition-all duration-300 cursor-pointer overflow-hidden card-tactile"
+              >
+                {/* Subtle Glow */}
+                <div 
+                  className="absolute -top-10 -right-10 w-44 h-44 rounded-full blur-3xl opacity-20 pointer-events-none group-hover:opacity-35 transition-opacity" 
+                  style={{ backgroundColor: tmpl.themeColor }}
+                />
+
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white font-sans">
+                      {tmpl.tag}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span 
+                        className="w-3.5 h-3.5 rounded-full border border-white/30 shadow-sm" 
+                        style={{ backgroundColor: tmpl.themeColor }} 
+                      />
+                      <span className="text-xs font-medium text-zinc-300">Tema Solene</span>
+                    </div>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 font-sans tracking-tight">
+                    {tmpl.name}
+                  </h3>
+                  <p className="text-sm sm:text-base text-zinc-300 leading-relaxed mb-6 font-sans">
+                    {tmpl.description}
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-white/10 flex items-center justify-between gap-4">
+                  <span className="text-xs font-cursive text-zinc-300 italic tracking-wider">
+                    {tmpl.accentText}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-950 btn-tactile-white flex items-center gap-2 font-sans shrink-0"
+                  >
+                    <span>Personalizar</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* ============================================================== */}
+      {/* VIEW 2: TELA DEDICADA DE CUSTOMIZAÇÃO DO TEMPLATE ACESSADO     */}
+      {/* ============================================================== */}
+      {viewMode === 'customize' && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-6"
+        >
+          {/* Template Switcher Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#14141A] border border-white/10">
+            <div className="flex items-center gap-3">
+              <span 
+                className="w-4 h-4 rounded-full border border-white/30 shadow-sm" 
+                style={{ backgroundColor: selectedTemplate.themeColor }} 
+              />
+              <div>
+                <h2 className="text-lg font-bold text-white font-sans leading-none">
+                  {selectedTemplate.name}
+                </h2>
+                <span className="text-xs text-zinc-400 font-sans">
+                  Formato: {selectedTemplate.tag}
+                </span>
+              </div>
+            </div>
+
+            {/* Previous / Next Template Navigation Controls */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handlePrevTemplate}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl btn-tactile text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer font-sans"
+                title="Modelo Anterior"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">Anterior</span>
+              </button>
+              <span className="text-xs text-zinc-400 px-2 font-medium">
+                {currentIndex + 1} de {TEMPLATES.length}
+              </span>
+              <button
+                onClick={handleNextTemplate}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl btn-tactile text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer font-sans"
+                title="Próximo Modelo"
+              >
+                <span className="hidden sm:inline">Próximo</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Customization Layout: Left Editor Inputs | Right Live Art Preview */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Left Column: Customization Form (7 cols) */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="p-6 sm:p-8 rounded-[28px] bg-[#121217] border border-white/10 space-y-5 shadow-xl">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <Sliders className="w-4 h-4 text-white" />
+                  <span>Informações do Homenageado</span>
+                </h3>
+
+                <div className="space-y-4 text-sm font-sans">
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-zinc-300">
-                        {tmpl.tag}
-                      </span>
-                      {isSelected && (
-                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-black">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        </span>
+                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
+                      Nome Completo
+                    </label>
+                    <input
+                      type="text"
+                      value={nome}
+                      onChange={(e) => setNome(e.target.value)}
+                      className="w-full h-12 px-4 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 text-base"
+                      placeholder="Ex: Maria de Lourdes Santos"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
+                      Datas (Nascimento e Falecimento)
+                    </label>
+                    <input
+                      type="text"
+                      value={datas}
+                      onChange={(e) => setDatas(e.target.value)}
+                      className="w-full h-12 px-4 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 text-base"
+                      placeholder="★ 00/00/0000   ✦   ✝ 00/00/0000"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
+                      Mensagem ou Frase de Conforto
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={mensagem}
+                      onChange={(e) => setMensagem(e.target.value)}
+                      className="w-full p-3.5 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 resize-none text-base"
+                      placeholder="Frase em memória do ente querido..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
+                      Cerimônia e Despedida (Opcional)
+                    </label>
+                    <input
+                      type="text"
+                      value={cerimonia}
+                      onChange={(e) => setCerimonia(e.target.value)}
+                      className="w-full h-12 px-4 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 text-base"
+                      placeholder="Ex: Velório: Capela Memorial • Sepultamento: 16h30"
+                    />
+                  </div>
+
+                  {/* Photo Input Button */}
+                  <div className="pt-2 flex items-center gap-3">
+                    <label className="flex-1 flex items-center justify-center gap-2 h-12 px-4 rounded-xl btn-tactile text-sm font-semibold text-white cursor-pointer transition-all">
+                      <Upload className="w-4 h-4 text-white" />
+                      <span>{photoUrl ? 'Alterar & Reajustar Foto' : 'Adicionar Foto com Ajuste Touch'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                      />
+                    </label>
+                    {photoUrl && (
+                      <button
+                        onClick={() => setPhotoUrl(null)}
+                        className="px-4 h-12 rounded-xl btn-tactile text-xs text-zinc-400 hover:text-white"
+                      >
+                        Remover
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Live Art Preview & Download (5 cols) */}
+            <div className="lg:col-span-5 flex flex-col items-center">
+              <div className="w-full sticky top-6 space-y-4">
+                
+                {/* Live Interactive Preview Card */}
+                <div 
+                  className={`w-full mx-auto relative rounded-[28px] border overflow-hidden p-6 sm:p-8 flex flex-col justify-between shadow-2xl transition-all duration-300 ${
+                    selectedTemplate.ratio === '3:4' ? 'aspect-[3/4]' : 'aspect-[9/16]'
+                  }`}
+                  style={{
+                    borderColor: selectedTemplate.borderColor,
+                    background: '#09090B'
+                  }}
+                >
+                  {/* Internal Fine Border */}
+                  <div 
+                    className="absolute inset-2.5 rounded-2xl border pointer-events-none"
+                    style={{ borderColor: 'rgba(255, 255, 255, 0.09)' }}
+                  />
+
+                  {/* Header Badge */}
+                  <div className="text-center pt-2 relative z-10">
+                    <span 
+                      className="text-[10px] sm:text-xs font-bold tracking-widest uppercase font-sans"
+                      style={{ color: selectedTemplate.themeColor }}
+                    >
+                      {selectedTemplate.accentText}
+                    </span>
+                    <h2 className="text-lg sm:text-2xl font-extrabold text-white mt-3 tracking-tight font-sans">
+                      {nome || 'Nome do Homenageado'}
+                    </h2>
+                    <p 
+                      className="text-xs sm:text-sm font-semibold mt-1 font-sans"
+                      style={{ color: selectedTemplate.themeColor }}
+                    >
+                      {datas}
+                    </p>
+                  </div>
+
+                  {/* Center Portrait / Dove */}
+                  <div className="flex items-center justify-center my-auto relative z-10">
+                    <div 
+                      className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 overflow-hidden shadow-2xl flex items-center justify-center bg-[#141418] p-1"
+                      style={{ borderColor: selectedTemplate.themeColor }}
+                    >
+                      {photoUrl ? (
+                        <img 
+                          src={photoUrl} 
+                          alt="Homenagem" 
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <img 
+                          src="/assets/dove-red-flower.svg" 
+                          alt="Símbolo de Paz" 
+                          className="w-16 h-16 object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
+                        />
                       )}
                     </div>
-                    <h3 className="text-base font-bold text-white mb-1.5">{tmpl.name}</h3>
-                    <p className="text-xs text-zinc-400 leading-relaxed mb-4">{tmpl.description}</p>
                   </div>
 
-                  <div className="flex items-center gap-2 pt-3 border-t border-white/5 text-[11px] text-zinc-400">
-                    <span className="w-3 h-3 rounded-full border border-white/20" style={{ backgroundColor: tmpl.themeColor }} />
-                    <span>Tema Solene</span>
+                  {/* Bottom Message & Ceremony */}
+                  <div className="text-center space-y-3 relative z-10 pb-2">
+                    <p className="text-xs sm:text-sm text-zinc-300 italic px-2 leading-relaxed font-sans">
+                      {mensagem}
+                    </p>
+                    {cerimonia && (
+                      <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-[11px] sm:text-xs font-medium text-white font-sans">
+                        {cerimonia}
+                      </div>
+                    )}
                   </div>
                 </div>
-              );
-            })}
-          </div>
 
-          {/* Data Inputs Card */}
-          <div className="p-6 rounded-2xl bg-[#121215] border border-white/10 space-y-4">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-white" />
-              <span>Informações da Homenagem</span>
-            </h3>
-
-            <div className="space-y-3 text-xs sm:text-sm">
-              <div>
-                <label className="block text-zinc-400 mb-1 font-medium">Nome Completo</label>
-                <input
-                  type="text"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  className="w-full h-11 px-3.5 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30"
-                  placeholder="Ex: Maria de Lourdes Santos"
-                />
-              </div>
-
-              <div>
-                <label className="block text-zinc-400 mb-1 font-medium">Datas (Nascimento e Falecimento)</label>
-                <input
-                  type="text"
-                  value={datas}
-                  onChange={(e) => setDatas(e.target.value)}
-                  className="w-full h-11 px-3.5 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30"
-                  placeholder="★ 00/00/0000   ✦   ✝ 00/00/0000"
-                />
-              </div>
-
-              <div>
-                <label className="block text-zinc-400 mb-1 font-medium">Mensagem ou Frase de Conforto</label>
-                <textarea
-                  rows={2}
-                  value={mensagem}
-                  onChange={(e) => setMensagem(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 resize-none"
-                  placeholder="Frase em memória do ente querido..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-zinc-400 mb-1 font-medium">Cerimônia e Despedida (Opcional)</label>
-                <input
-                  type="text"
-                  value={cerimonia}
-                  onChange={(e) => setCerimonia(e.target.value)}
-                  className="w-full h-11 px-3.5 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30"
-                  placeholder="Ex: Velório: Capela Memorial • Sepultamento: 16h30"
-                />
-              </div>
-
-              {/* Photo Input Button */}
-              <div className="pt-2 flex items-center gap-3">
-                <label className="flex-1 flex items-center justify-center gap-2 h-11 px-4 rounded-xl btn-tactile text-xs sm:text-sm font-semibold text-white cursor-pointer transition-all">
-                  <Upload className="w-4 h-4 text-white" />
-                  <span>{photoUrl ? 'Alterar & Reajustar Foto' : 'Adicionar Foto com Ajuste Touch'}</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                  />
-                </label>
-                {photoUrl && (
-                  <button
-                    onClick={() => setPhotoUrl(null)}
-                    className="px-3.5 h-11 rounded-xl btn-tactile text-xs text-zinc-400 hover:text-white"
-                  >
-                    Remover
-                  </button>
-                )}
+                {/* Download Button */}
+                <button
+                  onClick={handleDownloadArt}
+                  disabled={isExporting}
+                  className="w-full py-4 rounded-full text-base font-bold text-zinc-950 btn-tactile-white shadow-[0_0_25px_rgba(255,255,255,0.15)] flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.01] active:scale-[0.99] font-sans"
+                >
+                  <Download className="w-5 h-5 text-zinc-950" />
+                  <span>{isExporting ? 'Renderizando Arte...' : 'Baixar Arte em Alta Resolução (PNG)'}</span>
+                </button>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Right Column: Live Art Preview & Download (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col items-center">
-          <div className="w-full sticky top-6 space-y-4">
-            
-            {/* Live Interactive Preview Card */}
-            <div 
-              className={`w-full mx-auto relative rounded-3xl border overflow-hidden p-6 sm:p-8 flex flex-col justify-between shadow-2xl transition-all duration-300 ${
-                selectedTemplate.ratio === '3:4' ? 'aspect-[3/4]' : 'aspect-[9/16]'
-              }`}
-              style={{
-                borderColor: selectedTemplate.borderColor,
-                background: '#09090B'
-              }}
-            >
-              {/* Internal Fine Border */}
-              <div 
-                className="absolute inset-2.5 rounded-2xl border pointer-events-none"
-                style={{ borderColor: 'rgba(255, 255, 255, 0.09)' }}
-              />
-
-              {/* Header Badge */}
-              <div className="text-center pt-2 relative z-10">
-                <span 
-                  className="text-[10px] sm:text-xs font-bold tracking-widest uppercase"
-                  style={{ color: selectedTemplate.themeColor }}
-                >
-                  {selectedTemplate.accentText}
-                </span>
-                <h2 className="text-lg sm:text-2xl font-extrabold text-white mt-3 tracking-tight">
-                  {nome || 'Nome do Homenageado'}
-                </h2>
-                <p 
-                  className="text-xs sm:text-sm font-semibold mt-1"
-                  style={{ color: selectedTemplate.themeColor }}
-                >
-                  {datas}
-                </p>
-              </div>
-
-              {/* Center Portrait / Dove */}
-              <div className="flex items-center justify-center my-auto relative z-10">
-                <div 
-                  className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 overflow-hidden shadow-2xl flex items-center justify-center bg-[#141418]"
-                  style={{ borderColor: selectedTemplate.themeColor }}
-                >
-                  {photoUrl ? (
-                    <img 
-                      src={photoUrl} 
-                      alt="Homenagem" 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <img 
-                      src="/assets/dove-red-flower.svg" 
-                      alt="Pomba da Paz com Flor" 
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-md"
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* Bottom Message & Ceremony */}
-              <div className="text-center space-y-3 relative z-10 pb-2">
-                <p className="text-xs sm:text-sm text-zinc-300 italic px-2 leading-relaxed">
-                  {mensagem}
-                </p>
-                {cerimonia && (
-                  <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-[11px] sm:text-xs font-medium text-white">
-                    {cerimonia}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Action Download Button */}
-            <button
-              onClick={handleDownloadArt}
-              disabled={isExporting}
-              className="w-full py-4 rounded-xl btn-tactile-white text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-            >
-              <Download className="w-4 h-4 text-black" />
-              <span>{isExporting ? 'Renderizando Arte...' : 'Baixar Arte em Alta Definição'}</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
+        </motion.div>
+      )}
     </div>
   );
 };
