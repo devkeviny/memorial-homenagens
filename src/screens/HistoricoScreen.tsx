@@ -255,7 +255,7 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate, on
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-[11px] font-bold tracking-wide uppercase text-red-400 font-sans">
-                          {item.type === 'vinheta' ? 'Vinheta & Artes' : item.type === 'post-duplo' ? 'Post Duplo' : 'Foto Perfil'}
+                          {item.type === 'vinheta' ? 'Vinheta & Postagens' : item.type === 'post-duplo' ? 'Post Duplo' : 'Foto Perfil'}
                         </span>
                         {isRecent && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-950/80 border border-red-500/40 text-red-300">
@@ -291,7 +291,7 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate, on
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5 font-sans">
                         <ImageIcon className="w-3.5 h-3.5 text-red-400" />
-                        <span>Artes Comemorativas Salvas</span>
+                        <span>Postagens Comemorativas Salvas</span>
                       </span>
                     </div>
 

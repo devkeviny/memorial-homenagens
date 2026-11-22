@@ -748,7 +748,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             title="Anexar foto"
             aria-label="Anexar foto"
           >
-            <Paperclip className="w-5 h-5 text-white" />
+            <ImageIcon className="w-5 h-5 text-white" />
           </button>
 
           {/* Text Input */}

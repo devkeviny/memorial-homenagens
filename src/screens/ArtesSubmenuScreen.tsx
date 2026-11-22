@@ -31,7 +31,7 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
       >
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-xs font-semibold mb-4 shadow-sm font-sans">
           <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
-          <span>Artes em Alta Definição</span>
+          <span>Postagens em Alta Definição</span>
         </div>
 
         <div className="mb-3">
