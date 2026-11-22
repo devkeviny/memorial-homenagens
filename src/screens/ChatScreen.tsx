@@ -412,7 +412,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             onClick={() => setMode('vinheta')}
             className={`px-3 py-1.5 rounded-lg font-semibold transition-all font-sans cursor-pointer ${
               mode === 'vinheta'
-                ? 'btn-tactile-red text-white'
+                ? 'bg-white text-zinc-950 font-bold shadow-sm'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -422,7 +422,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             onClick={() => setMode('artes')}
             className={`px-3 py-1.5 rounded-lg font-semibold transition-all font-sans cursor-pointer ${
               mode === 'artes'
-                ? 'btn-tactile-red text-white'
+                ? 'bg-white text-zinc-950 font-bold shadow-sm'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >

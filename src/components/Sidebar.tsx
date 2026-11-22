@@ -11,8 +11,8 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onOpenPix }) => {
   const navItems = [
     { id: 'home' as ScreenId, label: 'Início', icon: Home },
-    { id: 'chat' as ScreenId, label: 'Criar Vinheta & Artes', icon: Mic, mode: 'vinheta' as const },
-    { id: 'artes-submenu' as ScreenId, label: 'Artes de Luto', icon: Image },
+    { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic, mode: 'vinheta' as const },
+    { id: 'artes-submenu' as ScreenId, label: 'Criar Artes', icon: Image },
     { id: 'historico' as ScreenId, label: 'Meu Histórico', icon: History },
     { id: 'sobre' as ScreenId, label: 'Sobre', icon: Info },
     { id: 'privacidade' as ScreenId, label: 'Privacidade', icon: Shield },
@@ -54,16 +54,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
               onClick={() => onNavigate(item.id, item.mode)}
               className={`relative flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group font-sans ${
                 isActive
-                  ? 'btn-tactile-red text-white shadow-[0_0_20px_rgba(220,38,38,0.35)]'
+                  ? 'bg-white text-zinc-950 font-bold shadow-[0_4px_20px_rgba(255,255,255,0.2)]'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5 btn-tactile'
               }`}
             >
               {/* Vertical Luminous Indicator on Left Edge */}
               {isActive && (
-                <span className="absolute -left-3 w-1.5 h-6 rounded-full bg-red-400 shadow-[0_0_12px_#EF4444]" />
+                <span className="absolute -left-3 w-1.5 h-6 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
               )}
 
-              <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-white' : 'text-zinc-400'}`} />
+              <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-zinc-950' : 'text-zinc-400'}`} />
               <span className="tracking-wide">{item.label}</span>
             </button>
           );

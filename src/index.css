@@ -116,6 +116,64 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+/* Continuous Autonomous Dynamic Gradient & Border Keyframes for Bento Cards */
+@keyframes solemnBorderBreathe {
+  0%, 100% {
+    border-color: rgba(220, 38, 38, 0.35);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65), 0 0 25px rgba(220, 38, 38, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 0.65);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), 0 0 45px rgba(220, 38, 38, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+}
+
+@keyframes solemnGradientWave {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scaleY(1);
+    filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.3));
+  }
+  50% {
+    opacity: 0.85;
+    transform: scaleY(1.12);
+    filter: drop-shadow(0 0 35px rgba(220, 38, 38, 0.55));
+  }
+}
+
+@keyframes solemnBackdropPulse {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.08) translate(-2%, -2%);
+  }
+}
+
+.animate-solemn-card-1 {
+  animation: solemnBorderBreathe 4.5s infinite ease-in-out;
+}
+
+.animate-solemn-card-2 {
+  animation: solemnBorderBreathe 4.5s infinite ease-in-out;
+  animation-delay: 2.25s;
+}
+
+.animate-solemn-base-gradient {
+  animation: solemnGradientWave 4s infinite ease-in-out;
+}
+
+.animate-solemn-base-gradient-alt {
+  animation: solemnGradientWave 4s infinite ease-in-out;
+  animation-delay: 2s;
+}
+
+.animate-solemn-backdrop {
+  animation: solemnBackdropPulse 6s infinite ease-in-out;
+}
+
 @keyframes orbFloat {
   0%, 100% {
     transform: translateY(0px) scale(1);
