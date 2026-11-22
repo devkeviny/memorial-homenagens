@@ -1,236 +1,432 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   ArrowLeft, 
-  Sparkles, 
-  Upload, 
+  Check, 
   Download, 
-  Sliders, 
-  Palette,
-  ChevronLeft,
-  ChevronRight,
-  ArrowRight,
-  Move
+  Image as ImageIcon, 
+  Heart, 
+  ZoomIn, 
+  Move, 
+  Eye, 
+  Share2, 
+  ArrowRight, 
+  CheckCircle2, 
+  Layers,
+  Loader2
 } from 'lucide-react';
-import { ScreenId } from '../types';
-import { ImageTouchModal } from '../components/ImageTouchModal';
+import { ScreenId, HistoryItem } from '../types';
 import BlurText from '../components/BlurText/BlurText';
+import { ImageTouchModal } from '../components/ImageTouchModal';
 
 interface TemplatesArtesScreenProps {
   onNavigate: (screen: ScreenId) => void;
+  onOpenPix?: () => void;
 }
 
-export interface ArtTemplate {
+interface TemplateItem {
   id: string;
+  label: string;
   name: string;
-  tag: string;
   ratio: '3:4' | '9:16';
+  tag: string;
   description: string;
   themeColor: string;
   borderColor: string;
-  bgStyle: string;
   accentText: string;
+  quote: string;
+  bgGradient: string;
 }
 
-const TEMPLATES: ArtTemplate[] = [
+const TEMPLATES: TemplateItem[] = [
   {
     id: 'gold-classic-feed',
+    label: 'CLÁSSICO DOURADO',
     name: 'Solene Clássico Dourado',
-    tag: 'Feed 3:4',
     ratio: '3:4',
-    description: 'Moldura dupla em filete dourado fino, degradê ébano suave e tipografia nobre.',
+    tag: 'Feed 3:4',
+    description: 'Bordas douradas nobres, fundo preto aveludado profundo e tipografia comemorativa de honra.',
     themeColor: '#D4AF37',
-    borderColor: 'rgba(212, 175, 55, 0.4)',
-    bgStyle: 'from-[#141418] via-[#0D0D10] to-[#08080A]',
-    accentText: '★ EM MEMÓRIA E ETERNA SAUDADE ✝'
+    borderColor: 'rgba(212, 175, 55, 0.5)',
+    accentText: '★ EM MEMÓRIA E ETERNA SAUDADE ✝',
+    quote: 'Sua lembrança permanecerá viva em cada coração que tocou.',
+    bgGradient: 'from-[#1a1708] via-[#0f0e07] to-[#09090b]'
   },
   {
     id: 'candle-light-story',
+    label: 'LUZ DE VELA',
     name: 'Luz de Vela Noturna',
-    tag: 'Stories 9:16',
     ratio: '9:16',
-    description: 'Aura suave e acolhedora com iluminação quente sutil e linhas minimalistas.',
+    tag: 'Stories 9:16',
+    description: 'Atmosfera de vigília suave, iluminação central solene e reverência eterna.',
     themeColor: '#FFFFFF',
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-    bgStyle: 'from-[#1A1817] via-[#100F0F] to-[#080808]',
-    accentText: '✦ QUE BRILHE A LUZ ETERNA ✦'
+    borderColor: 'rgba(255, 255, 255, 0.45)',
+    accentText: '✦ QUE BRILHE A LUZ ETERNA ✦',
+    quote: 'Aqueles que amamos nunca morrem, apenas partem antes de nós.',
+    bgGradient: 'from-[#181826] via-[#101018] to-[#09090b]'
   },
   {
     id: 'silver-minimal-feed',
+    label: 'PRATA MINIMALISTA',
     name: 'Prata Minimalista',
-    tag: 'Feed 3:4',
     ratio: '3:4',
-    description: 'Linhas finas em prata polida, respiro visual generoso e sobriedade contemporânea.',
+    tag: 'Feed 3:4',
+    description: 'Acabamento contemporâneo, linhas finas em prata acetinada e serenidade sóbria.',
     themeColor: '#E4E4E7',
-    borderColor: 'rgba(228, 228, 231, 0.3)',
-    bgStyle: 'from-[#161619] via-[#0E0E12] to-[#08080A]',
-    accentText: 'COM CARINHO E GRATIDÃO'
+    borderColor: 'rgba(228, 228, 231, 0.4)',
+    accentText: 'COM CARINHO E GRATIDÃO',
+    quote: 'O amor não acaba com a despedida, ele se torna eterno na memória.',
+    bgGradient: 'from-[#18181f] via-[#111116] to-[#09090b]'
   },
   {
     id: 'rose-whisper-story',
+    label: 'ROSA SOLENE',
     name: 'Rosa Solene & Pétalas',
-    tag: 'Stories 9:16',
     ratio: '9:16',
-    description: 'Destaque sutil com acento vermelho escarlate fúnebre nas bordas e nas homenagens.',
+    tag: 'Stories 9:16',
+    description: 'Toque de amor eterno, pétalas em carmesim de respeito fúnebre e afeto profundo.',
     themeColor: '#EF4444',
-    borderColor: 'rgba(239, 68, 68, 0.35)',
-    bgStyle: 'from-[#1C1416] via-[#100B0D] to-[#080506]',
-    accentText: 'ETERNAMENTE EM NOSSOS CORAÇÕES'
+    borderColor: 'rgba(239, 68, 68, 0.5)',
+    accentText: 'ETERNAMENTE EM NOSSOS CORAÇÕES',
+    quote: 'Para sempre guardado nas nossas melhores lembranças e orações.',
+    bgGradient: 'from-[#220d0f] via-[#14080a] to-[#09090b]'
+  },
+  {
+    id: 'serene-peace-feed',
+    label: 'PAZ CELESTIAL',
+    name: 'Paz Celestial Branca',
+    ratio: '3:4',
+    tag: 'Feed 3:4',
+    description: 'Alvura etérea, raios de luz suave, serenidade eterna e consolo espiritual.',
+    themeColor: '#60A5FA',
+    borderColor: 'rgba(96, 165, 250, 0.45)',
+    accentText: 'DESCANSO EM PAZ E LUZ',
+    quote: 'Descansou nos braços da paz e vive para sempre no amor divino.',
+    bgGradient: 'from-[#0d1b2a] via-[#09111c] to-[#09090b]'
+  },
+  {
+    id: 'eternal-memory-story',
+    label: 'MEMÓRIA ETERNA',
+    name: 'Memória Eterna Noturna',
+    ratio: '9:16',
+    tag: 'Stories 9:16',
+    description: 'Tons noturnos aveludados com chama perpétua de ouro âmbar e honra solene.',
+    themeColor: '#F59E0B',
+    borderColor: 'rgba(245, 158, 11, 0.5)',
+    accentText: 'LEMBRANÇA VIVA PARA SEMPRE',
+    quote: 'A saudade é o amor que fica. Sua história é o nosso maior legado.',
+    bgGradient: 'from-[#201509] via-[#140c05] to-[#09090b]'
   }
 ];
 
-export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNavigate }) => {
-  const [viewMode, setViewMode] = useState<'gallery' | 'customize'>('gallery');
-  const [selectedTemplate, setSelectedTemplate] = useState<ArtTemplate>(TEMPLATES[0]);
-  const [activeRatioFilter, setActiveRatioFilter] = useState<'all' | '3:4' | '9:16'>('all');
-  
-  // Customization Form State
-  const [nome, setNome] = useState('Maria de Lourdes Santos');
-  const [datas, setDatas] = useState('★ 14/05/1948   ✦   ✝ 21/11/2026');
-  const [mensagem, setMensagem] = useState('“Aqueles que amamos nunca morrem, apenas partem antes de nós e deixam viva a sua luz.”');
-  const [cerimonia, setCerimonia] = useState('Velório: Capela Memorial • Sepultamento: 16h30');
-  
-  // Photo State
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [rawPhotoToCrop, setRawPhotoToCrop] = useState<string | null>(null);
-  const [isExporting, setIsExporting] = useState(false);
-
-  const filteredTemplates = TEMPLATES.filter(t => {
-    if (activeRatioFilter === 'all') return true;
-    return t.ratio === activeRatioFilter;
+export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ 
+  onNavigate, 
+  onOpenPix 
+}) => {
+  // Navigation & View Mode ('gallery' | 'customize')
+  const [viewMode, setViewMode] = useState<'gallery' | 'customize'>(() => {
+    return window.location.hash.includes('customizar') ? 'customize' : 'gallery';
   });
 
-  const currentIndex = TEMPLATES.findIndex(t => t.id === selectedTemplate.id);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem>(TEMPLATES[0]);
+  const [formatFilter, setFormatFilter] = useState<'todos' | '3:4' | '9:16'>('todos');
 
-  const handlePrevTemplate = () => {
-    const prevIdx = (currentIndex - 1 + TEMPLATES.length) % TEMPLATES.length;
-    setSelectedTemplate(TEMPLATES[prevIdx]);
-  };
+  // Form Fields
+  const [nome, setNome] = useState('João da Silva');
+  const [datas, setDatas] = useState('* 15/04/1954  † 20/11/2026');
+  const [mensagem, setMensagem] = useState(
+    'Combati o bom combate, acabei a carreira, guardei a fé. Sua memória viverá eternamente em nossos corações com infinito amor e saudade.'
+  );
+  const [cerimonia, setCerimonia] = useState('Velório Municipal • Sala 02 — Sepultamento às 16h');
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [rawPhotoToCrop, setRawPhotoToCrop] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
 
-  const handleNextTemplate = () => {
-    const nextIdx = (currentIndex + 1) % TEMPLATES.length;
-    setSelectedTemplate(TEMPLATES[nextIdx]);
-  };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const handleSelectAndCustomize = (template: ArtTemplate) => {
-    setSelectedTemplate(template);
+  // Sync hash changes with viewMode for robust browser back/forward navigation
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === '#templates-customizar') {
+        setViewMode('customize');
+      } else if (hash === '#templates' || hash === '#templates-artes') {
+        setViewMode('gallery');
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    window.addEventListener('popstate', handleHash);
+    return () => {
+      window.removeEventListener('hashchange', handleHash);
+      window.removeEventListener('popstate', handleHash);
+    };
+  }, []);
+
+  const handleGoToCustomize = (template?: TemplateItem) => {
+    if (template) {
+      setSelectedTemplate(template);
+    }
     setViewMode('customize');
+    window.location.hash = 'templates-customizar';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setRawPhotoToCrop(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
+  const handleBackToGallery = () => {
+    setViewMode('gallery');
+    window.location.hash = 'templates';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleDownloadArt = () => {
-    setIsExporting(true);
-    const width = selectedTemplate.ratio === '3:4' ? 1080 : 1080;
-    const height = selectedTemplate.ratio === '3:4' ? 1440 : 1920;
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Background
-    ctx.fillStyle = '#09090B';
-    ctx.fillRect(0, 0, width, height);
-
-    // Frame Border
-    ctx.strokeStyle = selectedTemplate.borderColor;
-    ctx.lineWidth = 6;
-    ctx.strokeRect(50, 50, width - 100, height - 100);
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(65, 65, width - 130, height - 130);
-
-    // Top Accent
-    ctx.fillStyle = selectedTemplate.themeColor;
-    ctx.textAlign = 'center';
-    ctx.font = '700 28px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText(selectedTemplate.accentText, width / 2, 160);
-
-    // Name
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '800 60px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText(nome || 'Nome do Homenageado', width / 2, height * 0.28);
-
-    // Dates
-    ctx.fillStyle = selectedTemplate.themeColor;
-    ctx.font = '600 30px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText(datas || '', width / 2, height * 0.34);
-
-    // Draw photo or placeholder
-    const photoSize = 360;
-    const photoY = height * 0.52;
-
-    const finalizeAndDownload = () => {
-      // Message
-      ctx.fillStyle = '#E4E4E7';
-      ctx.font = '500 32px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(mensagem || '', width / 2, height * 0.74);
-
-      // Ceremony
-      if (cerimonia) {
-        ctx.fillStyle = 'rgba(24, 24, 27, 0.9)';
-        ctx.fillRect(100, height - 230, width - 200, 120);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(100, height - 230, width - 200, 120);
-
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '600 26px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(cerimonia, width / 2, height - 160);
-      }
-
-      const a = document.createElement('a');
-      a.href = canvas.toDataURL('image/png');
-      a.download = `arte-${selectedTemplate.id}-${Date.now()}.png`;
-      a.click();
-      setIsExporting(false);
-    };
-
-    if (photoUrl) {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
-        ctx.clip();
-        ctx.drawImage(img, (width / 2) - photoSize / 2, photoY - photoSize / 2, photoSize, photoSize);
-        ctx.restore();
-        
-        ctx.beginPath();
-        ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
-        ctx.strokeStyle = selectedTemplate.themeColor;
-        ctx.lineWidth = 6;
-        ctx.stroke();
-
-        finalizeAndDownload();
+  // Handle Photo selection
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setRawPhotoToCrop(event.target.result as string);
+        }
       };
-      img.onerror = () => finalizeAndDownload();
-      img.src = photoUrl;
-    } else {
-      finalizeAndDownload();
+      reader.readAsDataURL(e.target.files[0]);
     }
   };
 
+  // Render High Resolution Art to Canvas and Download
+  const handleDownloadArt = async () => {
+    setIsGenerating(true);
+    try {
+      const canvas = document.createElement('canvas');
+      const isStory = selectedTemplate.ratio === '9:16';
+      
+      const width = 1080;
+      const height = isStory ? 1920 : 1440; // 3:4 is 1080x1440, 9:16 is 1080x1920
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // 1. Dark solemn gradient background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+      if (selectedTemplate.id === 'gold-classic-feed') {
+        bgGrad.addColorStop(0, '#1c1809');
+        bgGrad.addColorStop(0.5, '#0e0d08');
+        bgGrad.addColorStop(1, '#08080a');
+      } else if (selectedTemplate.id === 'rose-whisper-story') {
+        bgGrad.addColorStop(0, '#240d10');
+        bgGrad.addColorStop(0.5, '#14080a');
+        bgGrad.addColorStop(1, '#08080a');
+      } else if (selectedTemplate.id === 'serene-peace-feed') {
+        bgGrad.addColorStop(0, '#0c1a29');
+        bgGrad.addColorStop(0.5, '#08101a');
+        bgGrad.addColorStop(1, '#08080a');
+      } else if (selectedTemplate.id === 'eternal-memory-story') {
+        bgGrad.addColorStop(0, '#211508');
+        bgGrad.addColorStop(0.5, '#130c05');
+        bgGrad.addColorStop(1, '#08080a');
+      } else {
+        bgGrad.addColorStop(0, '#161622');
+        bgGrad.addColorStop(0.5, '#0e0e14');
+        bgGrad.addColorStop(1, '#08080a');
+      }
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Subtle radial glow behind center
+      const radial = ctx.createRadialGradient(width / 2, height * 0.38, 20, width / 2, height * 0.38, 420);
+      radial.addColorStop(0, selectedTemplate.themeColor + '25');
+      radial.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = radial;
+      ctx.fillRect(0, 0, width, height);
+
+      // 3. Noble double borders
+      ctx.strokeStyle = selectedTemplate.themeColor;
+      ctx.lineWidth = 4;
+      ctx.strokeRect(36, 36, width - 72, height - 72);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(48, 48, width - 96, height - 96);
+
+      // Corner ornaments
+      const drawCorner = (x: number, y: number, angle: number) => {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.strokeStyle = selectedTemplate.themeColor;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(0, 24);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(24, 0);
+        ctx.stroke();
+        ctx.restore();
+      };
+      drawCorner(60, 60, 0);
+      drawCorner(width - 60, 60, Math.PI / 2);
+      drawCorner(width - 60, height - 60, Math.PI);
+      drawCorner(60, height - 60, -Math.PI / 2);
+
+      // 4. Header title
+      ctx.fillStyle = selectedTemplate.themeColor;
+      ctx.font = '700 24px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.letterSpacing = '6px';
+      ctx.fillText(selectedTemplate.accentText, width / 2, isStory ? 170 : 130);
+
+      // Fine rule
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(width / 2 - 120, isStory ? 200 : 155);
+      ctx.lineTo(width / 2 + 120, isStory ? 200 : 155);
+      ctx.stroke();
+
+      // 5. Draw Photo or Dove Emblem
+      const photoSize = isStory ? 380 : 340;
+      const photoY = isStory ? 450 : 370;
+
+      const finishDrawing = () => {
+        // Name
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '800 52px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(nome.toUpperCase(), width / 2, photoY + photoSize / 2 + 80);
+
+        // Dates
+        ctx.fillStyle = selectedTemplate.themeColor;
+        ctx.font = '600 28px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(datas, width / 2, photoY + photoSize / 2 + 130);
+
+        // Divider
+        ctx.strokeStyle = selectedTemplate.themeColor + '40';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(width / 2 - 140, photoY + photoSize / 2 + 165);
+        ctx.lineTo(width / 2 + 140, photoY + photoSize / 2 + 165);
+        ctx.stroke();
+
+        // Message
+        ctx.fillStyle = '#E4E4E7';
+        ctx.font = 'italic 400 32px "Cormorant Garamond", serif';
+        const maxWidth = width - 240;
+        const words = (mensagem || selectedTemplate.quote).split(' ');
+        let line = '';
+        let currentY = photoY + photoSize / 2 + 225;
+        const lineHeight = 44;
+
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + ' ';
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line.trim(), width / 2, currentY);
+            line = words[n] + ' ';
+            currentY += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line.trim(), width / 2, currentY);
+
+        // Ceremony details if present
+        if (cerimonia) {
+          ctx.fillStyle = '#A1A1AA';
+          ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText(cerimonia, width / 2, isStory ? height - 120 : height - 90);
+        }
+
+        // Export and Download
+        const dataUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = `homenagem-${selectedTemplate.id}-${Date.now()}.png`;
+        link.href = dataUrl;
+        link.click();
+
+        // Save to memorial_historico
+        try {
+          const histItem: HistoryItem = {
+            id: 'arte-' + Date.now(),
+            type: 'post-duplo',
+            name: nome || 'Homenagem Póstuma',
+            dateStr: new Date().toLocaleDateString('pt-BR'),
+            timestamp: Date.now(),
+            previewUrl: dataUrl,
+            details: {
+              nascimento: datas,
+              mensagem: mensagem,
+              velorio: cerimonia
+            }
+          };
+          const existing = localStorage.getItem('memorial_historico');
+          const list = existing ? JSON.parse(existing) : [];
+          list.unshift(histItem);
+          localStorage.setItem('memorial_historico', JSON.stringify(list));
+        } catch {
+          // ignore storage quota errors
+        }
+
+        setIsGenerating(false);
+        setDownloadSuccess(true);
+        setTimeout(() => setDownloadSuccess(false), 4000);
+      };
+
+      if (photoUrl) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(img, (width / 2) - photoSize / 2, photoY - photoSize / 2, photoSize, photoSize);
+          ctx.restore();
+
+          // Border ring
+          ctx.beginPath();
+          ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
+          ctx.strokeStyle = selectedTemplate.themeColor;
+          ctx.lineWidth = 6;
+          ctx.stroke();
+
+          finishDrawing();
+        };
+        img.onerror = () => finishDrawing();
+        img.src = photoUrl;
+      } else {
+        // Draw elegant dove placeholder circle
+        ctx.beginPath();
+        ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#14141A';
+        ctx.fill();
+        ctx.strokeStyle = selectedTemplate.themeColor;
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        const doveImg = new Image();
+        doveImg.src = '/assets/dove-red-flower.svg';
+        doveImg.onload = () => {
+          ctx.drawImage(doveImg, (width / 2) - 60, photoY - 60, 120, 120);
+          finishDrawing();
+        };
+        doveImg.onerror = () => finishDrawing();
+      }
+    } catch (err) {
+      console.error('Erro ao gerar arte:', err);
+      setIsGenerating(false);
+    }
+  };
+
+  const filteredTemplates = TEMPLATES.filter((tmpl) => {
+    if (formatFilter === 'todos') return true;
+    return tmpl.ratio === formatFilter;
+  });
+
   return (
     <div className="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10 animate-fade-in font-sans">
-      {/* Touch modal for cropping user image */}
+      {/* Touch Modal for Image Cropping */}
       <ImageTouchModal
         isOpen={Boolean(rawPhotoToCrop)}
         imageSrc={rawPhotoToCrop || ''}
+        aspectRatio={selectedTemplate.ratio === '9:16' ? 9 / 16 : 3 / 4}
         onConfirm={(cropped) => {
           setPhotoUrl(cropped);
           setRawPhotoToCrop(null);
@@ -238,415 +434,527 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ onNa
         onClose={() => setRawPhotoToCrop(null)}
       />
 
-      {/* Breadcrumb Navigation Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
-        <nav aria-label="Trilha de Navegação" className="flex items-center gap-2 text-xs sm:text-sm text-zinc-400 font-sans">
-          <button 
-            onClick={() => onNavigate('home')} 
-            className="hover:text-white transition-colors cursor-pointer"
-          >
-            Início
-          </button>
-          <span>/</span>
-          <button 
-            onClick={() => onNavigate('artes-submenu')} 
-            className="hover:text-white transition-colors cursor-pointer"
-          >
-            Criar Postagens
-          </button>
-          <span>/</span>
-          {viewMode === 'gallery' ? (
-            <span className="text-white font-medium">Galeria de Templates</span>
-          ) : (
-            <>
-              <button 
-                onClick={() => setViewMode('gallery')} 
-                className="hover:text-white transition-colors cursor-pointer"
-              >
-                Galeria
-              </button>
-              <span>/</span>
-              <span className="text-white font-medium">{selectedTemplate.name}</span>
-            </>
-          )}
-        </nav>
+      {/* Hidden file input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handlePhotoSelect}
+        accept="image/*"
+        className="hidden"
+      />
 
-        <div className="flex items-center gap-3">
-          {viewMode === 'customize' && (
+      {/* ========================================================================= */}
+      {/* VIEW 1: UGC BUILDER VISUAL GALLERY (Select template)                      */}
+      {/* ========================================================================= */}
+      {viewMode === 'gallery' ? (
+        <div className="flex flex-col flex-1">
+          {/* Breadcrumb Navigation Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-3 border-b border-white/5">
             <button
-              onClick={() => setViewMode('gallery')}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer font-sans"
+              onClick={() => onNavigate('artes-submenu')}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Ver todos os modelos</span>
+              <ArrowLeft className="w-4 h-4 text-red-400" />
+              <span>Voltar para Formatos</span>
             </button>
-          )}
-
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300 font-sans shadow-sm">
-            <Palette className="w-3.5 h-3.5 text-white" />
-            <span>Formatos Oficiais</span>
+            
+            {/* Interactive Breadcrumb */}
+            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-white/10">
+              <button
+                type="button"
+                onClick={handleBackToGallery}
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm"
+              >
+                1. Modelos
+              </button>
+              <span className="text-zinc-600">/</span>
+              <button
+                type="button"
+                onClick={() => handleGoToCustomize()}
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5"
+              >
+                2. Personalização
+              </button>
+            </nav>
           </div>
-        </div>
-      </div>
 
-      {/* ============================================================== */}
-      {/* VIEW 1: VITRINE / PÁGINA DE NAVEGAÇÃO ENTRE OS TEMPLATES      */}
-      {/* ============================================================== */}
-      {viewMode === 'gallery' && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="space-y-8"
-        >
-          {/* Header */}
-          <div>
+          {/* Header (Clean, Big title with BlurText + subtle subtitle) */}
+          <div className="text-center mb-8 sm:mb-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-xs font-semibold mb-3 shadow-sm">
+              <Layers className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Modelos Solenes</span>
+            </div>
+
             <div className="mb-2">
               <BlurText
-                text="Templates Oficiais em Alta Definição"
-                delay={60}
+                text="Selecione a imagem que você quer"
+                delay={50}
                 animateBy="words"
                 direction="top"
-                className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-sans inline-block"
+                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans inline-block"
               />
             </div>
-            <p className="mt-2 text-base sm:text-lg text-zinc-400 font-sans max-w-2xl leading-relaxed">
-              Selecione o modelo desejado para acessar a tela de customização com preview ao vivo e enquadramento touch da foto.
+
+            <p className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+              Escolha o modelo visual da sua homenagem para avançar
             </p>
           </div>
 
-          {/* Format Filter Tabs */}
-          <div className="flex items-center gap-2 p-1.5 bg-[#121215] border border-white/10 rounded-2xl w-fit">
-            <button
-              onClick={() => setActiveRatioFilter('all')}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                activeRatioFilter === 'all' 
-                  ? 'bg-white text-zinc-950 shadow-md font-bold' 
-                  : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              Todos os Formatos ({TEMPLATES.length})
-            </button>
-            <button
-              onClick={() => setActiveRatioFilter('3:4')}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                activeRatioFilter === '3:4' 
-                  ? 'bg-white text-zinc-950 shadow-md font-bold' 
-                  : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              Feed (3:4)
-            </button>
-            <button
-              onClick={() => setActiveRatioFilter('9:16')}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                activeRatioFilter === '9:16' 
-                  ? 'bg-white text-zinc-950 shadow-md font-bold' 
-                  : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              Stories (9:16)
-            </button>
-          </div>
+          {/* UGC Gallery Grid (Clean 2 rows x 3 columns on desktop, 2 columns on mobile) */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-24">
+            {TEMPLATES.map((tmpl) => {
+              const isSelected = selectedTemplate.id === tmpl.id;
+              const isStory = tmpl.ratio === '9:16';
 
-          {/* Templates Grid Cards (Design Bento & Visual Rico) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {filteredTemplates.map((tmpl) => (
-              <motion.div
-                key={tmpl.id}
-                whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => handleSelectAndCustomize(tmpl)}
-                className="relative group flex flex-col justify-between p-7 sm:p-9 rounded-[28px] bg-gradient-to-b from-[#181822] via-[#121218] to-[#0D0D12] border border-white/10 hover:border-white/25 shadow-[0_15px_35px_rgba(0,0,0,0.6)] transition-all duration-300 cursor-pointer overflow-hidden card-tactile"
-              >
-                {/* Subtle Glow */}
-                <div 
-                  className="absolute -top-10 -right-10 w-44 h-44 rounded-full blur-3xl opacity-20 pointer-events-none group-hover:opacity-35 transition-opacity" 
-                  style={{ backgroundColor: tmpl.themeColor }}
-                />
-
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white font-sans">
-                      {tmpl.tag}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span 
-                        className="w-3.5 h-3.5 rounded-full border border-white/30 shadow-sm" 
-                        style={{ backgroundColor: tmpl.themeColor }} 
-                      />
-                      <span className="text-xs font-medium text-zinc-300">Tema Solene</span>
-                    </div>
-                  </div>
-
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 font-sans tracking-tight">
-                    {tmpl.name}
-                  </h3>
-                  <p className="text-sm sm:text-base text-zinc-300 leading-relaxed mb-6 font-sans">
-                    {tmpl.description}
-                  </p>
-                </div>
-
-                <div className="pt-6 border-t border-white/10 flex items-center justify-between gap-4">
-                  <span className="text-xs font-cursive text-zinc-300 italic tracking-wider">
-                    {tmpl.accentText}
-                  </span>
-
-                  <button
-                    type="button"
-                    className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-950 btn-tactile-white flex items-center gap-2 font-sans shrink-0"
-                  >
-                    <span>Personalizar</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* ============================================================== */}
-      {/* VIEW 2: TELA DEDICADA DE CUSTOMIZAÇÃO DO TEMPLATE ACESSADO     */}
-      {/* ============================================================== */}
-      {viewMode === 'customize' && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="space-y-6"
-        >
-          {/* Template Switcher Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#14141A] border border-white/10">
-            <div className="flex items-center gap-3">
-              <span 
-                className="w-4 h-4 rounded-full border border-white/30 shadow-sm" 
-                style={{ backgroundColor: selectedTemplate.themeColor }} 
-              />
-              <div>
-                <h2 className="text-lg font-bold text-white font-sans leading-none">
-                  {selectedTemplate.name}
-                </h2>
-                <span className="text-xs text-zinc-400 font-sans">
-                  Formato: {selectedTemplate.tag}
-                </span>
-              </div>
-            </div>
-
-            {/* Previous / Next Template Navigation Controls */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handlePrevTemplate}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl btn-tactile text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer font-sans"
-                title="Modelo Anterior"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                <span className="hidden sm:inline">Anterior</span>
-              </button>
-              <span className="text-xs text-zinc-400 px-2 font-medium">
-                {currentIndex + 1} de {TEMPLATES.length}
-              </span>
-              <button
-                onClick={handleNextTemplate}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl btn-tactile text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer font-sans"
-                title="Próximo Modelo"
-              >
-                <span className="hidden sm:inline">Próximo</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Customization Layout: Left Editor Inputs | Right Live Art Preview */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Left Column: Customization Form (7 cols) */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="p-6 sm:p-8 rounded-[28px] bg-[#121217] border border-white/10 space-y-5 shadow-xl">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-white" />
-                  <span>Informações do Homenageado</span>
-                </h3>
-
-                <div className="space-y-4 text-sm font-sans">
-                  <div>
-                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
-                      Nome Completo
-                    </label>
-                    <input
-                      type="text"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 text-base"
-                      placeholder="Ex: Maria de Lourdes Santos"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
-                      Datas (Nascimento e Falecimento)
-                    </label>
-                    <input
-                      type="text"
-                      value={datas}
-                      onChange={(e) => setDatas(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 text-base"
-                      placeholder="★ 00/00/0000   ✦   ✝ 00/00/0000"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
-                      Mensagem ou Frase de Conforto
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={mensagem}
-                      onChange={(e) => setMensagem(e.target.value)}
-                      className="w-full p-3.5 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 resize-none text-base"
-                      placeholder="Frase em memória do ente querido..."
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-zinc-300 mb-1.5 font-medium text-xs sm:text-sm">
-                      Cerimônia e Despedida (Opcional)
-                    </label>
-                    <input
-                      type="text"
-                      value={cerimonia}
-                      onChange={(e) => setCerimonia(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl bg-[#09090B] border border-white/10 text-white focus:outline-none focus:border-white/30 text-base"
-                      placeholder="Ex: Velório: Capela Memorial • Sepultamento: 16h30"
-                    />
-                  </div>
-
-                  {/* Photo Input Button & Touch Adjustment */}
-                  <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                    <label className="flex-1 flex items-center justify-center gap-2 h-12 px-4 rounded-xl btn-tactile text-sm font-semibold text-white cursor-pointer transition-all">
-                      <Upload className="w-4 h-4 text-white" />
-                      <span>{photoUrl ? 'Substituir Foto' : 'Adicionar Foto'}</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePhotoUpload}
-                        className="hidden"
-                      />
-                    </label>
-
-                    {photoUrl && (
-                      <button
-                        type="button"
-                        onClick={() => setRawPhotoToCrop(photoUrl)}
-                        className="flex items-center justify-center gap-2 h-12 px-4 rounded-xl btn-tactile text-sm font-semibold text-white cursor-pointer transition-all hover:border-white/20"
-                        title="Ajuste Touch da Foto (Zoom e Posição)"
-                      >
-                        <Move className="w-4 h-4 text-white" />
-                        <span>Ajuste Touch</span>
-                      </button>
-                    )}
-
-                    {photoUrl && (
-                      <button
-                        type="button"
-                        onClick={() => setPhotoUrl(null)}
-                        className="px-4 h-12 rounded-xl btn-tactile text-xs text-zinc-400 hover:text-white"
-                      >
-                        Remover
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Live Art Preview & Download (5 cols) */}
-            <div className="lg:col-span-5 flex flex-col items-center">
-              <div className="w-full sticky top-6 space-y-4">
-                
-                {/* Live Interactive Preview Card */}
-                <div 
-                  className={`w-full mx-auto relative rounded-[28px] border overflow-hidden p-6 sm:p-8 flex flex-col justify-between shadow-2xl transition-all duration-300 ${
-                    selectedTemplate.ratio === '3:4' ? 'aspect-[3/4]' : 'aspect-[9/16]'
+              return (
+                <div
+                  key={tmpl.id}
+                  onClick={() => setSelectedTemplate(tmpl)}
+                  onDoubleClick={() => handleGoToCustomize(tmpl)}
+                  className={`group relative rounded-[24px] cursor-pointer transition-all duration-300 select-none overflow-hidden aspect-[3/4] ${
+                    isSelected
+                      ? 'border-[3px] border-white shadow-[0_0_28px_rgba(255,255,255,0.45)] ring-2 ring-white/25 scale-[1.01]'
+                      : 'border-[3px] border-transparent hover:border-white/25 bg-zinc-900/60 shadow-xl'
                   }`}
-                  style={{
-                    borderColor: selectedTemplate.borderColor,
-                    background: '#09090B'
-                  }}
                 >
-                  {/* Internal Fine Border */}
-                  <div 
-                    className="absolute inset-2.5 rounded-2xl border pointer-events-none"
-                    style={{ borderColor: 'rgba(255, 255, 255, 0.09)' }}
-                  />
+                  {/* Clean Visual Mockup of the Artwork (Full-Bleed, No excess text clutter) */}
+                  <div className="relative w-full h-full p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
+                    {/* Background solemn gradient */}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-b ${tmpl.bgGradient} pointer-events-none`}
+                    />
+                    {/* Theme radial glow */}
+                    <div
+                      className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl opacity-25 pointer-events-none transition-opacity duration-300 group-hover:opacity-40"
+                      style={{ backgroundColor: tmpl.themeColor }}
+                    />
+                    {/* Fine solemn double border inside the card mockup */}
+                    <div
+                      className="absolute inset-3 rounded-xl border pointer-events-none transition-all duration-300"
+                      style={{ borderColor: tmpl.borderColor }}
+                    />
+                    <div
+                      className="absolute inset-4 rounded-lg border pointer-events-none opacity-40"
+                      style={{ borderColor: tmpl.borderColor }}
+                    />
 
-                  {/* Header Badge */}
-                  <div className="text-center pt-2 relative z-10">
-                    <span 
-                      className="text-[10px] sm:text-xs font-bold tracking-widest uppercase font-sans"
-                      style={{ color: selectedTemplate.themeColor }}
-                    >
-                      {selectedTemplate.accentText}
-                    </span>
-                    <h2 className="text-lg sm:text-2xl font-extrabold text-white mt-3 tracking-tight font-sans">
-                      {nome || 'Nome do Homenageado'}
-                    </h2>
-                    <p 
-                      className="text-xs sm:text-sm font-semibold mt-1 font-sans"
-                      style={{ color: selectedTemplate.themeColor }}
-                    >
-                      {datas}
-                    </p>
-                  </div>
-
-                  {/* Center Portrait / Dove */}
-                  <div className="flex items-center justify-center my-auto relative z-10">
-                    <div 
-                      className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 overflow-hidden shadow-2xl flex items-center justify-center bg-[#141418] p-1"
-                      style={{ borderColor: selectedTemplate.themeColor }}
-                    >
-                      {photoUrl ? (
-                        <img 
-                          src={photoUrl} 
-                          alt="Homenagem" 
-                          className="w-full h-full object-cover rounded-full"
-                        />
-                      ) : (
-                        <img 
-                          src="/assets/dove-red-flower.svg" 
-                          alt="Símbolo de Paz" 
-                          className="w-16 h-16 object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-                        />
-                      )}
+                    {/* Top mockup header */}
+                    <div className="relative z-10 text-center pt-2">
+                      <span
+                        className="text-[9px] sm:text-[11px] font-bold tracking-widest uppercase block truncate px-2"
+                        style={{ color: tmpl.themeColor }}
+                      >
+                        {tmpl.accentText}
+                      </span>
+                      <div className="mt-1.5 h-[1px] w-12 mx-auto bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                     </div>
-                  </div>
 
-                  {/* Bottom Message & Ceremony */}
-                  <div className="text-center space-y-3 relative z-10 pb-2">
-                    <p className="text-xs sm:text-sm text-zinc-300 italic px-2 leading-relaxed font-sans">
-                      {mensagem}
-                    </p>
-                    {cerimonia && (
-                      <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-[11px] sm:text-xs font-medium text-white font-sans">
-                        {cerimonia}
+                    {/* Center solemn emblem mockup */}
+                    <div className="relative z-10 flex flex-col items-center justify-center my-auto py-2">
+                      <div
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 p-1.5 shadow-2xl flex items-center justify-center bg-[#101015]/85 backdrop-blur-sm group-hover:scale-105 transition-transform"
+                        style={{ borderColor: tmpl.themeColor }}
+                      >
+                        <img
+                          src="/assets/dove-red-flower.svg"
+                          alt="Símbolo Solene"
+                          className="w-10 h-10 sm:w-12 sm:h-12 object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]"
+                        />
+                      </div>
+
+                      {/* Mockup name & date placeholder lines */}
+                      <div className="mt-3 text-center px-2 w-full">
+                        <div className="h-2.5 w-24 sm:w-28 mx-auto rounded-full bg-white/25 mb-1.5" />
+                        <div className="h-1.5 w-16 sm:w-20 mx-auto rounded-full bg-white/15" />
+                      </div>
+                    </div>
+
+                    {/* Bottom simulated message lines */}
+                    <div className="relative z-10 px-2 pb-10 text-center space-y-1.5 opacity-65">
+                      <div className="h-1.5 w-3/4 mx-auto rounded-full bg-white/20" />
+                      <div className="h-1.5 w-1/2 mx-auto rounded-full bg-white/10" />
+                    </div>
+
+                    {/* Top Right Format Tag Badge */}
+                    <div className="absolute top-3.5 right-3.5 z-20">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-black/70 border border-white/15 text-zinc-300 backdrop-blur-md">
+                        {tmpl.tag}
+                      </span>
+                    </div>
+
+                    {/* Bottom Left Discreet Uppercase Label (Mandatory UGC style) */}
+                    <div className="absolute bottom-3.5 left-3.5 z-20">
+                      <span className="inline-block px-3 py-1.5 rounded-lg bg-black/85 backdrop-blur-md border border-white/15 text-xs font-black tracking-wider text-white uppercase shadow-lg">
+                        {tmpl.label}
+                      </span>
+                    </div>
+
+                    {/* Top Left Selected Checkmark Badge */}
+                    {isSelected && (
+                      <div className="absolute top-3.5 left-3.5 z-20 w-7 h-7 rounded-full bg-red-600 border border-white/50 flex items-center justify-center shadow-lg animate-scale-in">
+                        <Check className="w-4 h-4 text-white stroke-[3]" />
                       </div>
                     )}
                   </div>
                 </div>
+              );
+            })}
+          </div>
 
-                {/* Download Button */}
+          {/* Sticky Bottom Action Bar with High Contrast Next Button */}
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#101014]/95 backdrop-blur-xl border-t border-white/10 px-4 sm:px-8 py-3.5 shadow-2xl">
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-3.5 h-3.5 rounded-full"
+                  style={{ backgroundColor: selectedTemplate.themeColor }}
+                />
+                <div className="text-xs sm:text-sm text-zinc-300">
+                  <span>Modelo selecionado: </span>
+                  <span className="font-bold text-white">{selectedTemplate.name}</span>
+                  <span className="text-zinc-500 ml-1.5 hidden sm:inline">({selectedTemplate.tag})</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={handleDownloadArt}
-                  disabled={isExporting}
-                  className="w-full py-4 rounded-full text-base font-bold text-zinc-950 btn-tactile-white shadow-[0_0_25px_rgba(255,255,255,0.15)] flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.01] active:scale-[0.99] font-sans"
+                  onClick={() => handleGoToCustomize()}
+                  className="btn-tactile-white font-bold px-6 sm:px-8 py-3 rounded-full shadow-2xl flex items-center gap-2 text-sm sm:text-base cursor-pointer hover:bg-zinc-200 active:scale-95 transition-all"
                 >
-                  <Download className="w-5 h-5 text-zinc-950" />
-                  <span>{isExporting ? 'Renderizando Arte...' : 'Baixar Arte em Alta Resolução (PNG)'}</span>
+                  <span>Avançar para Personalizar</span>
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </button>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
+      ) : (
+        /* ========================================================================= */
+        /* VIEW 2: CUSTOMIZE & PREVIEW STAGE                                         */
+        /* ========================================================================= */
+        <div className="flex flex-col flex-1 animate-fade-in">
+          {/* Breadcrumb Navigation Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-3 border-b border-white/5">
+            <button
+              onClick={handleBackToGallery}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
+            >
+              <ArrowLeft className="w-4 h-4 text-red-400" />
+              <span>← Voltar aos Modelos</span>
+            </button>
+            
+            {/* Interactive Breadcrumb */}
+            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-white/10">
+              <button
+                type="button"
+                onClick={handleBackToGallery}
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5"
+              >
+                1. Modelos
+              </button>
+              <span className="text-zinc-600">/</span>
+              <button
+                type="button"
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm"
+              >
+                2. Personalização
+              </button>
+            </nav>
+          </div>
+
+          {/* Heading */}
+          <div className="mb-8">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Personalizar Homenagem
+            </h1>
+            <p className="mt-1 text-sm sm:text-base text-zinc-400">
+              Preencha os dados da pessoa homenageada e veja a prévia em tempo real ao lado.
+            </p>
+          </div>
+
+          {/* 2-Column Responsive Layout: Controls & Live Preview */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+            {/* Left Column: Form Controls (7 cols on lg) */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* Photo Section */}
+              <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 shadow-lg">
+                <label className="block text-sm font-bold text-white mb-3">
+                  1. Foto da Pessoa Homenageada
+                </label>
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="w-20 h-20 rounded-2xl border-2 border-white/20 bg-zinc-950 overflow-hidden flex items-center justify-center">
+                    {photoUrl ? (
+                      <img
+                        src={photoUrl}
+                        alt="Foto Selecionada"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <ImageIcon className="w-8 h-8 text-zinc-600" />
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-semibold text-white hover:bg-zinc-800 transition-all flex items-center gap-2 cursor-pointer"
+                      >
+                        <ImageIcon className="w-4 h-4 text-red-400" />
+                        <span>Carregar da Galeria</span>
+                      </button>
+
+                      {photoUrl && (
+                        <button
+                          type="button"
+                          onClick={() => setRawPhotoToCrop(photoUrl)}
+                          className="px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <Move className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>Ajustar Toque</span>
+                        </button>
+                      )}
+                    </div>
+                    <span className="text-[11px] text-zinc-500 font-sans">
+                      Formatos aceitos: JPG, PNG, WebP
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Text Fields */}
+              <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 shadow-lg space-y-4">
+                <label className="block text-sm font-bold text-white">
+                  2. Dados da Homenagem
+                </label>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-400 mb-1">
+                    Nome Completo
+                  </label>
+                  <input
+                    type="text"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    placeholder="Ex: João da Silva"
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-400 mb-1">
+                    Datas (Nascimento e Falecimento)
+                  </label>
+                  <input
+                    type="text"
+                    value={datas}
+                    onChange={(e) => setDatas(e.target.value)}
+                    placeholder="Ex: * 15/04/1954  † 20/11/2026"
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors font-mono"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-semibold text-zinc-400">
+                      Mensagem de Conforto
+                    </label>
+                    <span className="text-[10px] text-zinc-500">Sugestões rápidas abaixo</span>
+                  </div>
+                  <textarea
+                    rows={3}
+                    value={mensagem}
+                    onChange={(e) => setMensagem(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors resize-none"
+                  />
+
+                  {/* Quick message pills */}
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMensagem(
+                          'Combati o bom combate, acabei a carreira, guardei a fé. Sua memória viverá eternamente em nossos corações.'
+                        )
+                      }
+                      className="px-2.5 py-1 rounded-lg bg-zinc-800/80 text-[11px] text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
+                    >
+                      "Combati o bom combate..."
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMensagem(
+                          'Aqueles que amamos nunca morrem, apenas partem antes de nós. O amor é infinito.'
+                        )
+                      }
+                      className="px-2.5 py-1 rounded-lg bg-zinc-800/80 text-[11px] text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
+                    >
+                      "Aqueles que amamos..."
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMensagem(
+                          'Sua presença continuará guiando nossos passos. Descanse na paz eterna do Senhor.'
+                        )
+                      }
+                      className="px-2.5 py-1 rounded-lg bg-zinc-800/80 text-[11px] text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
+                    >
+                      "Descanse na paz eterna..."
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-400 mb-1">
+                    Cerimônia / Local (Opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={cerimonia}
+                    onChange={(e) => setCerimonia(e.target.value)}
+                    placeholder="Ex: Velório Municipal • Sala 02 — Sepultamento às 16h"
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+                <button
+                  type="button"
+                  onClick={handleDownloadArt}
+                  disabled={isGenerating}
+                  className="w-full sm:flex-1 py-4 px-6 rounded-2xl btn-tactile-white text-zinc-950 font-bold text-base flex items-center justify-center gap-2.5 shadow-2xl hover:bg-zinc-200 active:scale-98 transition-all cursor-pointer"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin text-zinc-900" />
+                      <span>Gerando Homenagem...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-5 h-5 text-zinc-900 stroke-[2.5]" />
+                      <span>Baixar Arte Pronta (PNG 1080px)</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleBackToGallery}
+                  className="w-full sm:w-auto px-6 py-4 rounded-2xl btn-tactile text-zinc-300 hover:text-white font-semibold text-sm transition-all"
+                >
+                  Trocar Modelo
+                </button>
+              </div>
+
+              {downloadSuccess && (
+                <div className="p-4 rounded-xl bg-green-950/60 border border-green-500/40 text-green-300 text-xs sm:text-sm flex items-center gap-2.5 animate-scale-in">
+                  <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <span>
+                    Arte baixada com sucesso e arquivada em <b>Meu Histórico</b>.
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Right Column: Live Realistic Preview (5 cols on lg) */}
+            <div className="lg:col-span-5 sticky top-8">
+              <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/60 border border-white/10 shadow-2xl flex flex-col items-center">
+                <div className="w-full flex items-center justify-between mb-3 px-1">
+                  <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Eye className="w-3.5 h-3.5 text-red-400" />
+                    <span>Prévia em Tempo Real</span>
+                  </span>
+                  <span className="text-[11px] font-mono text-zinc-500">
+                    Proporção {selectedTemplate.tag}
+                  </span>
+                </div>
+
+                {/* Simulated Container Preview with true aspect ratio */}
+                <div
+                  className={`relative w-full rounded-xl overflow-hidden shadow-2xl border-2 flex flex-col justify-between p-4 sm:p-6 ${
+                    selectedTemplate.ratio === '9:16' ? 'aspect-[9/16]' : 'aspect-[3/4]'
+                  }`}
+                  style={{
+                    borderColor: selectedTemplate.borderColor,
+                    background: `linear-gradient(to bottom, #181822 0%, #0d0d12 100%)`
+                  }}
+                >
+                  {/* Background Radial Glow */}
+                  <div
+                    className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl opacity-20 pointer-events-none"
+                    style={{ backgroundColor: selectedTemplate.themeColor }}
+                  />
+
+                  {/* Fine double border mockup */}
+                  <div
+                    className="absolute inset-3 rounded-lg border pointer-events-none opacity-60"
+                    style={{ borderColor: selectedTemplate.borderColor }}
+                  />
+
+                  {/* Header text */}
+                  <div className="relative z-10 text-center pt-2">
+                    <span
+                      className="text-[10px] sm:text-xs font-bold tracking-widest uppercase block"
+                      style={{ color: selectedTemplate.themeColor }}
+                    >
+                      {selectedTemplate.accentText}
+                    </span>
+                    <div className="mt-1 h-[1px] w-12 mx-auto bg-white/20" />
+                  </div>
+
+                  {/* Photo circle or Dove */}
+                  <div className="relative z-10 flex flex-col items-center my-auto py-2">
+                    <div
+                      className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 p-1 shadow-2xl flex items-center justify-center bg-[#101015]/90 overflow-hidden"
+                      style={{ borderColor: selectedTemplate.themeColor }}
+                    >
+                      {photoUrl ? (
+                        <img
+                          src={photoUrl}
+                          alt="Homenageado"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <img
+                          src="/assets/dove-red-flower.svg"
+                          alt="Paz"
+                          className="w-12 h-12 object-contain"
+                        />
+                      )}
+                    </div>
+
+                    <h2 className="mt-3 text-base sm:text-lg font-bold text-white text-center tracking-tight truncate max-w-full px-2">
+                      {nome || 'Nome da Pessoa'}
+                    </h2>
+                    <span
+                      className="text-[11px] font-semibold tracking-wider font-mono text-center"
+                      style={{ color: selectedTemplate.themeColor }}
+                    >
+                      {datas || '* Datas'}
+                    </span>
+                  </div>
+
+                  {/* Message & Ceremony */}
+                  <div className="relative z-10 text-center px-2 pb-2">
+                    <p className="text-xs sm:text-sm italic font-cursive text-zinc-300 line-clamp-3 leading-relaxed">
+                      "{mensagem || selectedTemplate.quote}"
+                    </p>
+                    {cerimonia && (
+                      <p className="mt-2 text-[10px] text-zinc-400 font-sans truncate">
+                        {cerimonia}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

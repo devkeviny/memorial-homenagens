@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Radio, ImageIcon, ArrowRight, CheckCircle2, ShieldCheck, Heart, Sparkles } from 'lucide-react';
+import { Radio, ImageIcon, ArrowRight, CheckCircle2, ShieldCheck, Heart, RadioTower, Layers } from 'lucide-react';
 import { ScreenId } from '../types';
 import BlurText from '../components/BlurText/BlurText';
 
@@ -76,7 +76,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
 
           <div className="relative z-10 pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs font-medium text-zinc-400 font-sans">
-              <Sparkles className="w-4 h-4 text-zinc-400" />
+              <RadioTower className="w-4 h-4 text-zinc-400" />
               <span>Geração imediata no Chat Solene</span>
             </div>
 
@@ -135,7 +135,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
               />
             </div>
             <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
-              Molduras com laço oficial de luto para foto de perfil do WhatsApp e postagens comemorativas em alta resolução para Feed (3:4) e Stories (9:16).
+              Molduras de luto para foto de perfil do WhatsApp e publicações dedicadas para Feed (3:4) e Stories (9:16).
             </p>
 
             <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
@@ -145,7 +145,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, onOpenPix })
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Postagens comemorativas em alta definição para Feed e Stories</span>
+                <span>Formatos para Feed e Stories prontos para compartilhar</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />

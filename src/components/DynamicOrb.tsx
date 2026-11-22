@@ -19,7 +19,7 @@ export const DynamicOrb: React.FC<DynamicOrbProps> = ({ stage }) => {
           {stage}
         </span>
         <span className="text-[11px] text-zinc-400">
-          Inteligência Memorial em processamento solene
+          Processamento da Homenagem Solene
         </span>
       </div>
     </div>

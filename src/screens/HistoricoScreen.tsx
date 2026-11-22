@@ -306,7 +306,7 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate, on
                               className="w-full h-full object-cover"
                             />
                             <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-md bg-black/80 border border-white/10 text-[10px] font-bold text-zinc-200 uppercase font-sans">
-                              Feed 3:4 (Alta Definição)
+                              Feed 3:4
                             </span>
                           </div>
 

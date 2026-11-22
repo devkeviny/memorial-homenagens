@@ -9,8 +9,8 @@ import {
   Image as ImageIcon, 
   Check, 
   User, 
-  Sparkles,
-  Bookmark
+  Bookmark,
+  Layers
 } from 'lucide-react';
 import { ScreenId, HistoryItem } from '../types';
 import BlurText from '../components/BlurText/BlurText';
@@ -351,7 +351,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
       <div className="mb-6">
         <button
           onClick={() => onNavigate('artes-submenu')}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#16161B]/80 hover:bg-[#1C1C24] border border-white/10 hover:border-red-500/40 text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
         >
           <ArrowLeft className="w-4 h-4 text-red-400" />
           <span>Voltar para Formatos de Arte</span>

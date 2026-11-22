@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, User, LayoutGrid, ArrowRight, Sparkles, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, User, LayoutGrid, ArrowRight, MessageSquare, Image as ImageIcon, CheckCircle2, Layers } from 'lucide-react';
 import { ScreenId } from '../types';
 import BlurText from '../components/BlurText/BlurText';
 
@@ -30,8 +30,8 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
         className="text-center mb-8 sm:mb-12"
       >
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-xs font-semibold mb-4 shadow-sm font-sans">
-          <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
-          <span>Postagens em Alta Definição</span>
+          <Layers className="w-3.5 h-3.5 text-zinc-400" />
+          <span>Modelos para Redes Sociais</span>
         </div>
 
         <div className="mb-3">
@@ -44,7 +44,7 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
           />
         </div>
         <p className="mt-2 text-base sm:text-lg text-zinc-400 max-w-xl mx-auto leading-relaxed font-sans">
-          Gere molduras de luto para sua foto de perfil ou crie publicações completas para Feed e Stories.
+          Molduras de luto para foto de perfil e modelos dedicados para Feed e Stories.
         </p>
       </motion.div>
 
@@ -62,9 +62,9 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
             className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_vinheta_bg.webp')` }}
           />
-          {/* Gradiente vermelho pulsando internamente no card por cima da imagem (glow discreto) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none animate-pulse-glow" />
-          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
+          {/* Gradiente vermelho sutil no card por cima da imagem */}
+          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
@@ -108,8 +108,8 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
           <div className="relative z-10 pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 font-sans">
-                <Sparkles className="w-4 h-4 text-zinc-400" />
-                <span>Efeito P&B + Molduras</span>
+                <Layers className="w-4 h-4 text-zinc-400" />
+                <span>Efeito P&B e Molduras</span>
               </div>
               <button
                 type="button"
@@ -117,12 +117,11 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
                   e.stopPropagation();
                   onNavigate('chat');
                 }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-950/50 border border-red-500/40 text-xs font-semibold text-red-300 hover:bg-red-900/60 transition-colors"
-                title="Editar homenagem com Inteligência Artificial"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700/80 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white transition-colors"
+                title="Assistente Solene de Homenagens"
               >
-                <Sparkles className="w-3.5 h-3.5 text-red-400" />
-                <span>Editar com IA</span>
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-red-500 text-white font-bold uppercase tracking-wider">Novo</span>
+                <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+                <span>Assistente Solene</span>
               </button>
             </div>
 
@@ -148,9 +147,9 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
             className="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
             style={{ backgroundImage: `url('/assets/card_artes_bg.webp')` }}
           />
-          {/* Gradiente vermelho pulsando internamente no card por cima da imagem (glow discreto) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none animate-pulse-glow" />
-          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
+          {/* Gradiente vermelho sutil no card por cima da imagem */}
+          <div className="absolute inset-0 bg-gradient-to-t from-red-600/15 via-red-900/10 to-transparent pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
@@ -158,13 +157,13 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
                 <LayoutGrid className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
               <span className="text-sm sm:text-base font-cursive text-zinc-300 italic tracking-wider">
-                Galeria de Templates
+                Galeria de Modelos
               </span>
             </div>
 
             <div className="mb-4">
               <BlurText
-                text="Templates Oficiais (Feed & Stories)"
+                text="Modelos Oficiais (Feed & Stories)"
                 delay={60}
                 animateBy="words"
                 direction="top"
@@ -172,21 +171,21 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
               />
             </div>
             <p className="text-base sm:text-lg md:text-xl text-zinc-300 leading-relaxed font-sans mb-6">
-              Acesse a galeria com templates nobres prontos. Preencha os dados do homenageado, enquadre a foto com gestos de toque na tela e baixe em alta resolução diretamente.
+              Acesse a galeria com modelos solenes prontos. Preencha os dados do homenageado, ajuste a foto por toque e baixe a imagem para compartilhar.
             </p>
 
             <div className="space-y-3 text-sm sm:text-base text-zinc-300 font-sans">
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Formatos otimizados para Feed (3:4) e Stories (9:16)</span>
+                <span>Formatos para Feed (3:4) e Stories (9:16)</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Tipografia nobre, filetes dourados e acentos escarlate</span>
+                <span>Tipografia nobre, filetes solenes e tons aveludados</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-5 h-5 text-zinc-300 flex-shrink-0" />
-                <span>Exportação instantânea em alta definição PNG</span>
+                <span>Arquivo de imagem pronto para salvar no celular</span>
               </div>
             </div>
           </div>
@@ -195,7 +194,7 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 font-sans">
                 <ImageIcon className="w-4 h-4 text-zinc-400" />
-                <span>Feed 3:4 & Stories 9:16</span>
+                <span>Feed 3:4 e Stories 9:16</span>
               </div>
               <button
                 type="button"
@@ -203,12 +202,11 @@ export const ArtesSubmenuScreen: React.FC<ArtesSubmenuScreenProps> = ({ onNaviga
                   e.stopPropagation();
                   onNavigate('chat');
                 }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-950/50 border border-red-500/40 text-xs font-semibold text-red-300 hover:bg-red-900/60 transition-colors"
-                title="Editar homenagem com Inteligência Artificial"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700/80 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white transition-colors"
+                title="Assistente Solene de Homenagens"
               >
-                <Sparkles className="w-3.5 h-3.5 text-red-400" />
-                <span>Editar com IA</span>
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-red-500 text-white font-bold uppercase tracking-wider">Novo</span>
+                <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+                <span>Assistente Solene</span>
               </button>
             </div>
 

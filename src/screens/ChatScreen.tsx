@@ -184,7 +184,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     const userMsg: ChatMessage = {
       id: `msg_voice_${Date.now()}`,
       sender: 'user',
-      text: `🎤 Áudio gravado (${formatTime(recordingSeconds)}):\n"${simulatedVoiceText}"`,
+      text: `Áudio gravado (${formatTime(recordingSeconds)}):\n"${simulatedVoiceText}"`,
       timestamp: Date.now()
     };
 
