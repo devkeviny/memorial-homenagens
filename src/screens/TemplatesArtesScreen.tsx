@@ -4,11 +4,8 @@ import {
   Check, 
   Download, 
   Image as ImageIcon, 
-  Heart, 
-  ZoomIn, 
   Move, 
   Eye, 
-  Share2, 
   ArrowRight, 
   CheckCircle2, 
   Layers,
@@ -119,8 +116,7 @@ const TEMPLATES: TemplateItem[] = [
 ];
 
 export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ 
-  onNavigate, 
-  onOpenPix 
+  onNavigate 
 }) => {
   // Navigation & View Mode ('gallery' | 'customize')
   const [viewMode, setViewMode] = useState<'gallery' | 'customize'>(() => {
@@ -128,7 +124,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
   });
 
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem>(TEMPLATES[0]);
-  const [formatFilter, setFormatFilter] = useState<'todos' | '3:4' | '9:16'>('todos');
+  const [formatFilter] = useState<'todos' | '3:4' | '9:16'>('todos');
 
   // Form Fields
   const [nome, setNome] = useState('João da Silva');
@@ -143,7 +139,6 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
   // Sync hash changes with viewMode for robust browser back/forward navigation
   useEffect(() => {
@@ -197,7 +192,6 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
     try {
       const canvas = document.createElement('canvas');
       const isStory = selectedTemplate.ratio === '9:16';
-      
       const width = 1080;
       const height = isStory ? 1920 : 1440; // 3:4 is 1080x1440, 9:16 is 1080x1920
       canvas.width = width;
@@ -421,7 +415,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
   });
 
   return (
-    <div className="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-8 pt-3 sm:pt-6 pb-6 sm:pb-10 animate-fade-in font-sans">
+    <div className="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-8 pt-3 sm:pt-6 pb-6 sm:pb-10 animate-fadeIn font-sans">
       {/* Touch Modal for Image Cropping */}
       <ImageTouchModal
         isOpen={Boolean(rawPhotoToCrop)}
@@ -449,29 +443,29 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
       {viewMode === 'gallery' ? (
         <div className="flex flex-col flex-1">
           {/* Breadcrumb Navigation Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-2.5 mb-3 sm:mb-6 pb-2 sm:pb-3 border-b border-white/5">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 mb-3 sm:mb-6 pb-2 sm:pb-3 border-b border-hairline">
             <button
               onClick={() => onNavigate('artes-submenu')}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-secondary hover:text-primary transition-all cursor-pointer font-sans"
             >
-              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400" />
+              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-wine" />
               <span>Voltar para Formatos</span>
             </button>
             
             {/* Interactive Breadcrumb */}
-            <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-0.5 sm:py-1 rounded-xl border border-white/10">
+            <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium bg-surface-elevated px-2 sm:px-3 py-1 rounded-xl border border-hairline">
               <button
                 type="button"
                 onClick={handleBackToGallery}
-                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm text-xs sm:text-sm"
+                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer btn-tactile-white text-xs sm:text-sm font-sans"
               >
                 1. Modelos
               </button>
-              <span className="text-zinc-600">/</span>
+              <span className="text-muted">/</span>
               <button
                 type="button"
                 onClick={() => handleGoToCustomize()}
-                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5 text-xs sm:text-sm"
+                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer text-secondary hover:text-primary hover:bg-surface text-xs sm:text-sm font-sans"
               >
                 2. Personalização
               </button>
@@ -480,44 +474,43 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
 
           {/* Header (Clean, Big title with BlurText + subtle subtitle) */}
           <div className="text-center mb-4 sm:mb-8">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-[11px] sm:text-xs font-semibold mb-2 shadow-sm">
-              <Layers className="w-3 h-3 text-zinc-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-elevated border border-hairline text-secondary text-[11px] sm:text-xs font-semibold mb-2 shadow-sm font-sans">
+              <Layers className="w-3 h-3 text-accent-wine" />
               <span>Modelos Solenes</span>
             </div>
 
             <div className="mb-1.5">
               <BlurText
-                text="Selecione a imagem que você quer"
-                delay={50}
+                text="Selecione o modelo que deseja"
+                delay={40}
                 animateBy="words"
                 direction="top"
-                className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white font-sans inline-block"
+                className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-primary font-sans inline-block"
               />
             </div>
 
-            <p className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
-              Escolha o modelo visual da sua homenagem para avançar
+            <p className="text-xs sm:text-sm md:text-base text-secondary max-w-xl mx-auto leading-relaxed font-sans">
+              Escolha a identidade visual para confeccionar a homenagem com dignidade
             </p>
           </div>
 
           {/* UGC Gallery Grid (Clean 2 rows x 3 columns on desktop, 2 columns on mobile) */}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-24">
-            {TEMPLATES.map((tmpl) => {
+            {filteredTemplates.map((tmpl) => {
               const isSelected = selectedTemplate.id === tmpl.id;
-              const isStory = tmpl.ratio === '9:16';
 
               return (
                 <div
                   key={tmpl.id}
                   onClick={() => setSelectedTemplate(tmpl)}
                   onDoubleClick={() => handleGoToCustomize(tmpl)}
-                  className={`group relative rounded-[24px] cursor-pointer transition-all duration-300 select-none overflow-hidden aspect-[3/4] ${
+                  className={`group relative rounded-[24px] cursor-pointer transition-all duration-300 select-none overflow-hidden aspect-[3/4] card-tactile ${
                     isSelected
-                      ? 'border-[3px] border-white shadow-[0_0_28px_rgba(255,255,255,0.45)] ring-2 ring-white/25 scale-[1.01]'
-                      : 'border-[3px] border-transparent hover:border-white/25 bg-zinc-900/60 shadow-xl'
+                      ? 'border-[3px] border-accent-wine shadow-lg scale-[1.01]'
+                      : 'border-[3px] border-hairline hover:border-accent-wine/40 bg-surface shadow-sm'
                   }`}
                 >
-                  {/* Clean Visual Mockup of the Artwork (Full-Bleed, No excess text clutter) */}
+                  {/* Clean Visual Mockup of the Artwork */}
                   <div className="relative w-full h-full p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
                     {/* Background solemn gradient */}
                     <div
@@ -525,7 +518,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                     />
                     {/* Theme radial glow */}
                     <div
-                      className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl opacity-25 pointer-events-none transition-opacity duration-300 group-hover:opacity-40"
+                      className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl opacity-20 pointer-events-none transition-opacity duration-300 group-hover:opacity-35"
                       style={{ backgroundColor: tmpl.themeColor }}
                     />
                     {/* Fine solemn double border inside the card mockup */}
@@ -538,60 +531,63 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                       style={{ borderColor: tmpl.borderColor }}
                     />
 
-                    {/* Top mockup header */}
+                    {/* Top Content (Header Tag) */}
                     <div className="relative z-10 text-center pt-2">
                       <span
-                        className="text-[9px] sm:text-[11px] font-bold tracking-widest uppercase block truncate px-2"
+                        className="text-[9px] sm:text-[11px] font-bold tracking-widest uppercase block font-sans truncate px-2"
                         style={{ color: tmpl.themeColor }}
                       >
                         {tmpl.accentText}
                       </span>
-                      <div className="mt-1.5 h-[1px] w-12 mx-auto bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                     </div>
 
-                    {/* Center solemn emblem mockup */}
+                    {/* Center Icon/Emblem Showcase */}
                     <div className="relative z-10 flex flex-col items-center justify-center my-auto py-2">
                       <div
-                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 p-1.5 shadow-2xl flex items-center justify-center bg-[#101015]/85 backdrop-blur-sm group-hover:scale-105 transition-transform"
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 p-1.5 shadow-xl flex items-center justify-center bg-[#101015]/85 backdrop-blur-sm group-hover:scale-105 transition-transform"
                         style={{ borderColor: tmpl.themeColor }}
                       >
                         <img
                           src="/assets/dove-red-flower.svg"
-                          alt="Símbolo Solene"
-                          className="w-10 h-10 sm:w-12 sm:h-12 object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]"
+                          alt="Pomba da Paz"
+                          className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                         />
                       </div>
-
-                      {/* Mockup name & date placeholder lines */}
-                      <div className="mt-3 text-center px-2 w-full">
-                        <div className="h-2.5 w-24 sm:w-28 mx-auto rounded-full bg-white/25 mb-1.5" />
-                        <div className="h-1.5 w-16 sm:w-20 mx-auto rounded-full bg-white/15" />
-                      </div>
+                      <span className="mt-3 text-xs sm:text-sm font-bold text-white tracking-tight drop-shadow font-sans">
+                        Nome da Pessoa
+                      </span>
+                      <span
+                        className="text-[10px] sm:text-xs font-semibold tracking-wider font-mono"
+                        style={{ color: tmpl.themeColor }}
+                      >
+                        * 1954  † 2026
+                      </span>
                     </div>
 
-                    {/* Bottom simulated message lines */}
-                    <div className="relative z-10 px-2 pb-10 text-center space-y-1.5 opacity-65">
-                      <div className="h-1.5 w-3/4 mx-auto rounded-full bg-white/20" />
-                      <div className="h-1.5 w-1/2 mx-auto rounded-full bg-white/10" />
+                    {/* Bottom Message preview */}
+                    <div className="relative z-10 text-center pb-2">
+                      <p className="text-[10px] sm:text-xs italic font-serif text-zinc-300 line-clamp-2 px-1">
+                        "{tmpl.quote}"
+                      </p>
                     </div>
 
                     {/* Top Right Format Tag Badge */}
                     <div className="absolute top-3.5 right-3.5 z-20">
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-black/70 border border-white/15 text-zinc-300 backdrop-blur-md">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-surface/90 border border-hairline text-primary backdrop-blur-md font-sans">
                         {tmpl.tag}
                       </span>
                     </div>
 
-                    {/* Bottom Left Discreet Uppercase Label (Mandatory UGC style) */}
+                    {/* Bottom Left Discreet Uppercase Label */}
                     <div className="absolute bottom-3.5 left-3.5 z-20">
-                      <span className="inline-block px-3 py-1.5 rounded-lg bg-black/85 backdrop-blur-md border border-white/15 text-xs font-black tracking-wider text-white uppercase shadow-lg">
+                      <span className="inline-block px-3 py-1.5 rounded-lg bg-surface/90 backdrop-blur-md border border-hairline text-xs font-bold tracking-wider text-primary uppercase shadow-md font-sans">
                         {tmpl.label}
                       </span>
                     </div>
 
                     {/* Top Left Selected Checkmark Badge */}
                     {isSelected && (
-                      <div className="absolute top-3.5 left-3.5 z-20 w-7 h-7 rounded-full bg-red-600 border border-white/50 flex items-center justify-center shadow-lg animate-scale-in">
+                      <div className="absolute top-3.5 left-3.5 z-20 w-7 h-7 rounded-full bg-red-600 border border-white/50 flex items-center justify-center shadow-md">
                         <Check className="w-4 h-4 text-white stroke-[3]" />
                       </div>
                     )}
@@ -602,24 +598,24 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
           </div>
 
           {/* Sticky Bottom Action Bar with High Contrast Next Button */}
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#101014]/95 backdrop-blur-xl border-t border-white/10 px-4 sm:px-8 py-3.5 shadow-2xl">
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl border-t border-hairline px-4 sm:px-8 py-3.5 shadow-lg transition-colors">
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div
                   className="w-3.5 h-3.5 rounded-full"
                   style={{ backgroundColor: selectedTemplate.themeColor }}
                 />
-                <div className="text-xs sm:text-sm text-zinc-300">
+                <div className="text-xs sm:text-sm text-secondary font-sans">
                   <span>Modelo selecionado: </span>
-                  <span className="font-bold text-white">{selectedTemplate.name}</span>
-                  <span className="text-zinc-500 ml-1.5 hidden sm:inline">({selectedTemplate.tag})</span>
+                  <span className="font-bold text-primary">{selectedTemplate.name}</span>
+                  <span className="text-muted ml-1.5 hidden sm:inline">({selectedTemplate.tag})</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleGoToCustomize()}
-                  className="btn-tactile-white font-bold px-6 sm:px-8 py-3 rounded-full shadow-2xl flex items-center gap-2 text-sm sm:text-base cursor-pointer hover:bg-zinc-200 active:scale-95 transition-all"
+                  className="btn-tactile-white font-bold px-6 sm:px-8 py-3 rounded-full shadow-md flex items-center gap-2 text-sm sm:text-base cursor-pointer font-sans"
                 >
                   <span>Avançar para Personalizar</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -632,30 +628,30 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
         /* ========================================================================= */
         /* VIEW 2: CUSTOMIZE & PREVIEW STAGE                                         */
         /* ========================================================================= */
-        <div className="flex flex-col flex-1 animate-fade-in">
+        <div className="flex flex-col flex-1 animate-fadeIn">
           {/* Breadcrumb Navigation Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-3 border-b border-white/5">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-3 border-b border-hairline">
             <button
               onClick={handleBackToGallery}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-secondary hover:text-primary transition-all cursor-pointer font-sans"
             >
-              <ArrowLeft className="w-4 h-4 text-red-400" />
+              <ArrowLeft className="w-4 h-4 text-accent-wine" />
               <span>← Voltar aos Modelos</span>
             </button>
             
             {/* Interactive Breadcrumb */}
-            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-white/10">
+            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-surface-elevated px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-hairline">
               <button
                 type="button"
                 onClick={handleBackToGallery}
-                className="px-3 py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5"
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer text-secondary hover:text-primary hover:bg-surface font-sans"
               >
                 1. Modelos
               </button>
-              <span className="text-zinc-600">/</span>
+              <span className="text-muted">/</span>
               <button
                 type="button"
-                className="px-3 py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm"
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer btn-tactile-white text-xs sm:text-sm font-sans"
               >
                 2. Personalização
               </button>
@@ -664,10 +660,10 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
 
           {/* Heading */}
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-primary tracking-tight font-sans">
               Personalizar Homenagem
             </h1>
-            <p className="mt-1 text-sm sm:text-base text-zinc-400">
+            <p className="mt-1 text-sm sm:text-base text-secondary font-sans">
               Preencha os dados da pessoa homenageada e veja a prévia em tempo real ao lado.
             </p>
           </div>
@@ -677,12 +673,12 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
             {/* Left Column: Form Controls (7 cols on lg) */}
             <div className="lg:col-span-7 space-y-6">
               {/* Photo Section */}
-              <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 shadow-lg">
-                <label className="block text-sm font-bold text-white mb-3">
+              <div className="p-6 rounded-2xl bg-surface border border-hairline shadow-sm card-tactile">
+                <label className="block text-sm font-bold text-primary mb-3 font-sans">
                   1. Foto da Pessoa Homenageada
                 </label>
                 <div className="flex flex-wrap items-center gap-4">
-                  <div className="w-20 h-20 rounded-2xl border-2 border-white/20 bg-zinc-950 overflow-hidden flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-2xl border border-hairline bg-surface-elevated overflow-hidden flex items-center justify-center">
                     {photoUrl ? (
                       <img
                         src={photoUrl}
@@ -690,7 +686,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <ImageIcon className="w-8 h-8 text-zinc-600" />
+                      <ImageIcon className="w-8 h-8 text-secondary" />
                     )}
                   </div>
 
@@ -699,9 +695,9 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-semibold text-white hover:bg-zinc-800 transition-all flex items-center gap-2 cursor-pointer"
+                        className="px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-semibold text-primary transition-all flex items-center gap-2 cursor-pointer font-sans"
                       >
-                        <ImageIcon className="w-4 h-4 text-red-400" />
+                        <ImageIcon className="w-4 h-4 text-accent-wine" />
                         <span>Carregar da Galeria</span>
                       </button>
 
@@ -709,14 +705,14 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                         <button
                           type="button"
                           onClick={() => setRawPhotoToCrop(photoUrl)}
-                          className="px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
+                          className="px-4 py-2 rounded-xl btn-tactile text-xs sm:text-sm font-semibold text-secondary hover:text-primary transition-all flex items-center gap-1.5 cursor-pointer font-sans"
                         >
-                          <Move className="w-3.5 h-3.5 text-zinc-400" />
+                          <Move className="w-3.5 h-3.5 text-accent-wine" />
                           <span>Ajustar Toque</span>
                         </button>
                       )}
                     </div>
-                    <span className="text-[11px] text-zinc-500 font-sans">
+                    <span className="text-[11px] text-muted font-sans">
                       Formatos aceitos: JPG, PNG, WebP
                     </span>
                   </div>
@@ -724,13 +720,13 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
               </div>
 
               {/* Text Fields */}
-              <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 shadow-lg space-y-4">
-                <label className="block text-sm font-bold text-white">
+              <div className="p-6 rounded-2xl bg-surface border border-hairline shadow-sm card-tactile space-y-4">
+                <label className="block text-sm font-bold text-primary font-sans">
                   2. Dados da Homenagem
                 </label>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-400 mb-1">
+                  <label className="block text-xs font-semibold text-secondary mb-1 font-sans">
                     Nome Completo
                   </label>
                   <input
@@ -738,12 +734,12 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
                     placeholder="Ex: João da Silva"
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors"
+                    className="w-full px-4 py-2.5 rounded-xl bg-surface-elevated border border-hairline text-primary placeholder:text-muted text-base focus:border-accent-wine focus:outline-none transition-colors font-sans"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-400 mb-1">
+                  <label className="block text-xs font-semibold text-secondary mb-1 font-sans">
                     Datas (Nascimento e Falecimento)
                   </label>
                   <input
@@ -751,22 +747,22 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                     value={datas}
                     onChange={(e) => setDatas(e.target.value)}
                     placeholder="Ex: * 15/04/1954  † 20/11/2026"
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors font-mono"
+                    className="w-full px-4 py-2.5 rounded-xl bg-surface-elevated border border-hairline text-primary placeholder:text-muted text-base focus:border-accent-wine focus:outline-none transition-colors font-mono"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-semibold text-zinc-400">
+                    <label className="block text-xs font-semibold text-secondary font-sans">
                       Mensagem de Conforto
                     </label>
-                    <span className="text-[10px] text-zinc-500">Sugestões rápidas abaixo</span>
+                    <span className="text-[10px] text-muted font-sans">Sugestões rápidas abaixo</span>
                   </div>
                   <textarea
                     rows={3}
                     value={mensagem}
                     onChange={(e) => setMensagem(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl bg-surface-elevated border border-hairline text-primary placeholder:text-muted text-base focus:border-accent-wine focus:outline-none transition-colors resize-none font-sans"
                   />
 
                   {/* Quick message pills */}
@@ -778,7 +774,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                           'Combati o bom combate, acabei a carreira, guardei a fé. Sua memória viverá eternamente em nossos corações.'
                         )
                       }
-                      className="px-2.5 py-1 rounded-lg bg-zinc-800/80 text-[11px] text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-surface-elevated border border-hairline text-[11px] text-secondary hover:text-primary transition-colors font-sans cursor-pointer"
                     >
                       "Combati o bom combate..."
                     </button>
@@ -789,7 +785,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                           'Aqueles que amamos nunca morrem, apenas partem antes de nós. O amor é infinito.'
                         )
                       }
-                      className="px-2.5 py-1 rounded-lg bg-zinc-800/80 text-[11px] text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-surface-elevated border border-hairline text-[11px] text-secondary hover:text-primary transition-colors font-sans cursor-pointer"
                     >
                       "Aqueles que amamos..."
                     </button>
@@ -800,7 +796,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                           'Sua presença continuará guiando nossos passos. Descanse na paz eterna do Senhor.'
                         )
                       }
-                      className="px-2.5 py-1 rounded-lg bg-zinc-800/80 text-[11px] text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-surface-elevated border border-hairline text-[11px] text-secondary hover:text-primary transition-colors font-sans cursor-pointer"
                     >
                       "Descanse na paz eterna..."
                     </button>
@@ -808,7 +804,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-400 mb-1">
+                  <label className="block text-xs font-semibold text-secondary mb-1 font-sans">
                     Cerimônia / Local (Opcional)
                   </label>
                   <input
@@ -816,7 +812,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                     value={cerimonia}
                     onChange={(e) => setCerimonia(e.target.value)}
                     placeholder="Ex: Velório Municipal • Sala 02 — Sepultamento às 16h"
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/15 text-white text-sm focus:border-red-500 focus:outline-none transition-colors"
+                    className="w-full px-4 py-2.5 rounded-xl bg-surface-elevated border border-hairline text-primary placeholder:text-muted text-base focus:border-accent-wine focus:outline-none transition-colors font-sans"
                   />
                 </div>
               </div>
@@ -827,16 +823,16 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                   type="button"
                   onClick={handleDownloadArt}
                   disabled={isGenerating}
-                  className="w-full sm:flex-1 py-4 px-6 rounded-2xl btn-tactile-white text-zinc-950 font-bold text-base flex items-center justify-center gap-2.5 shadow-2xl hover:bg-zinc-200 active:scale-98 transition-all cursor-pointer"
+                  className="w-full sm:flex-1 py-4 px-6 rounded-2xl btn-tactile-white font-bold text-base flex items-center justify-center gap-2.5 shadow-md cursor-pointer font-sans"
                 >
                   {isGenerating ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin text-zinc-900" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                       <span>Gerando Homenagem...</span>
                     </>
                   ) : (
                     <>
-                      <Download className="w-5 h-5 text-zinc-900 stroke-[2.5]" />
+                      <Download className="w-5 h-5 stroke-[2.5]" />
                       <span>Baixar Arte Pronta (PNG 1080px)</span>
                     </>
                   )}
@@ -845,15 +841,15 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                 <button
                   type="button"
                   onClick={handleBackToGallery}
-                  className="w-full sm:w-auto px-6 py-4 rounded-2xl btn-tactile text-zinc-300 hover:text-white font-semibold text-sm transition-all"
+                  className="w-full sm:w-auto px-6 py-4 rounded-2xl btn-tactile text-secondary hover:text-primary font-semibold text-sm transition-all font-sans cursor-pointer"
                 >
                   Trocar Modelo
                 </button>
               </div>
 
               {downloadSuccess && (
-                <div className="p-4 rounded-xl bg-green-950/60 border border-green-500/40 text-green-300 text-xs sm:text-sm flex items-center gap-2.5 animate-scale-in">
-                  <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+                <div className="p-4 rounded-xl bg-surface-elevated border border-hairline text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm flex items-center gap-2.5 animate-fadeIn font-sans">
+                  <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
                   <span>
                     Arte baixada com sucesso e arquivada em <b>Meu Histórico</b>.
                   </span>
@@ -863,20 +859,20 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
 
             {/* Right Column: Live Realistic Preview (5 cols on lg) */}
             <div className="lg:col-span-5 sticky top-8">
-              <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/60 border border-white/10 shadow-2xl flex flex-col items-center">
+              <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-hairline shadow-sm flex flex-col items-center card-tactile">
                 <div className="w-full flex items-center justify-between mb-3 px-1">
-                  <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Eye className="w-3.5 h-3.5 text-red-400" />
+                  <span className="text-xs font-bold text-secondary uppercase tracking-wider flex items-center gap-1.5 font-sans">
+                    <Eye className="w-3.5 h-3.5 text-accent-wine" />
                     <span>Prévia em Tempo Real</span>
                   </span>
-                  <span className="text-[11px] font-mono text-zinc-500">
+                  <span className="text-[11px] font-mono text-muted">
                     Proporção {selectedTemplate.tag}
                   </span>
                 </div>
 
                 {/* Simulated Container Preview with true aspect ratio */}
                 <div
-                  className={`relative w-full rounded-xl overflow-hidden shadow-2xl border-2 flex flex-col justify-between p-4 sm:p-6 ${
+                  className={`relative w-full rounded-xl overflow-hidden shadow-xl border-2 flex flex-col justify-between p-4 sm:p-6 ${
                     selectedTemplate.ratio === '9:16' ? 'aspect-[9/16]' : 'aspect-[3/4]'
                   }`}
                   style={{
@@ -899,7 +895,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                   {/* Header text */}
                   <div className="relative z-10 text-center pt-2">
                     <span
-                      className="text-[10px] sm:text-xs font-bold tracking-widest uppercase block"
+                      className="text-[10px] sm:text-xs font-bold tracking-widest uppercase block font-sans"
                       style={{ color: selectedTemplate.themeColor }}
                     >
                       {selectedTemplate.accentText}
@@ -928,7 +924,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                       )}
                     </div>
 
-                    <h2 className="mt-3 text-base sm:text-lg font-bold text-white text-center tracking-tight truncate max-w-full px-2">
+                    <h2 className="mt-3 text-base sm:text-lg font-bold text-white text-center tracking-tight truncate max-w-full px-2 font-sans">
                       {nome || 'Nome da Pessoa'}
                     </h2>
                     <span
@@ -941,7 +937,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
 
                   {/* Message & Ceremony */}
                   <div className="relative z-10 text-center px-2 pb-2">
-                    <p className="text-xs sm:text-sm italic font-cursive text-zinc-300 line-clamp-3 leading-relaxed">
+                    <p className="text-xs sm:text-sm italic font-serif text-zinc-300 line-clamp-3 leading-relaxed">
                       "{mensagem || selectedTemplate.quote}"
                     </p>
                     {cerimonia && (

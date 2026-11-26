@@ -147,9 +147,6 @@ export const ImageTouchModal: React.FC<ImageTouchModalProps> = ({
     ctx.translate(position.x * ratioX, position.y * ratioY);
     ctx.scale(scale, scale);
 
-    const renderedWidth = containerRect.width * (img.naturalWidth / img.width);
-    const renderedHeight = containerRect.height * (img.naturalHeight / img.height);
-    
     // Draw image centered
     const drawW = img.width * ratioX;
     const drawH = img.height * ratioY;
@@ -164,26 +161,26 @@ export const ImageTouchModal: React.FC<ImageTouchModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-[#141418] border border-white/10 rounded-2xl shadow-2xl overflow-hidden card-tactile flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/85 backdrop-blur-md animate-fadeIn select-none font-sans">
+      <div className="relative w-full max-w-lg bg-surface border border-hairline rounded-3xl shadow-2xl overflow-hidden card-tactile flex flex-col max-h-[92vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#17171F]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-hairline bg-surface-elevated">
           <div className="flex items-center space-x-2">
-            <Move className="w-5 h-5 text-red-500" />
-            <h3 className="text-base font-semibold text-white tracking-wide">{title}</h3>
+            <Move className="w-5 h-5 text-accent-wine" />
+            <h3 className="text-base font-bold text-primary tracking-tight font-sans">{title}</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+            className="p-1.5 text-secondary hover:text-primary rounded-xl hover:bg-surface transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Framing Instructions */}
-        <div className="px-6 py-2 bg-zinc-950/60 border-b border-white/5 flex items-center justify-between text-xs text-zinc-400">
+        <div className="px-6 py-2 bg-surface-elevated/70 border-b border-hairline flex items-center justify-between text-xs text-secondary font-sans">
           <span>Arraste para mover • Pinça ou botões para zoom</span>
-          <span className="text-red-400 font-mono">Zoom: {Math.round(scale * 100)}%</span>
+          <span className="text-accent-wine font-mono font-bold">Zoom: {Math.round(scale * 100)}%</span>
         </div>
 
         {/* Viewport Area */}
@@ -220,11 +217,11 @@ export const ImageTouchModal: React.FC<ImageTouchModalProps> = ({
         </div>
 
         {/* Zoom Controls */}
-        <div className="p-4 bg-[#17171F] border-t border-white/10 flex flex-col space-y-3">
+        <div className="p-4 sm:p-5 bg-surface-elevated border-t border-hairline flex flex-col space-y-3 font-sans">
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setScale((s) => Math.max(s - 0.15, 0.6))}
-              className="p-2 btn-tactile text-zinc-300 rounded-lg hover:text-white"
+              className="p-2 btn-tactile text-secondary hover:text-primary rounded-xl cursor-pointer"
               title="Diminuir Zoom"
             >
               <ZoomOut className="w-4 h-4" />
@@ -236,11 +233,11 @@ export const ImageTouchModal: React.FC<ImageTouchModalProps> = ({
               step="0.05"
               value={scale}
               onChange={(e) => setScale(parseFloat(e.target.value))}
-              className="flex-1 accent-red-600 cursor-pointer h-1.5 bg-zinc-800 rounded-lg"
+              className="flex-1 accent-red-600 cursor-pointer h-2 bg-surface rounded-lg"
             />
             <button
               onClick={() => setScale((s) => Math.min(s + 0.15, 3))}
-              className="p-2 btn-tactile text-zinc-300 rounded-lg hover:text-white"
+              className="p-2 btn-tactile text-secondary hover:text-primary rounded-xl cursor-pointer"
               title="Aumentar Zoom"
             >
               <ZoomIn className="w-4 h-4" />
@@ -250,7 +247,7 @@ export const ImageTouchModal: React.FC<ImageTouchModalProps> = ({
                 setScale(1);
                 setPosition({ x: 0, y: 0 });
               }}
-              className="p-2 btn-tactile text-zinc-400 hover:text-white rounded-lg"
+              className="p-2 btn-tactile text-secondary hover:text-primary rounded-xl cursor-pointer"
               title="Resetar"
             >
               <RotateCcw className="w-4 h-4" />
@@ -262,14 +259,14 @@ export const ImageTouchModal: React.FC<ImageTouchModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold text-zinc-300 btn-tactile hover:text-white"
+              className="flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-secondary btn-tactile hover:text-primary cursor-pointer font-sans"
             >
               Cancelar
             </button>
             <button
               type="button"
               onClick={handleApply}
-              className="flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold text-white btn-tactile-red flex items-center justify-center space-x-2"
+              className="flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold btn-tactile-white flex items-center justify-center space-x-2 cursor-pointer font-sans shadow-sm"
             >
               <Check className="w-4 h-4" />
               <span>Confirmar Enquadramento</span>

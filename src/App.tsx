@@ -89,7 +89,7 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-floral-solemn text-zinc-100 font-sans antialiased selection:bg-red-900 selection:text-white">
+    <div className="flex flex-col md:flex-row min-h-screen md:h-screen md:max-h-screen bg-floral-solemn text-primary font-sans antialiased selection:bg-red-800 selection:text-white md:overflow-hidden">
       {/* Mobile Top Header (Sticky with 48x48 hamburger and full screen menu) */}
       <MobileHeader
         currentScreen={currentScreen}
@@ -105,7 +105,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Screen Content Body */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+      <main className="flex-1 flex flex-col min-h-screen md:min-h-0 md:h-full overflow-x-hidden overflow-y-auto scrollbar-none">
         {currentScreen === 'home' && (
           <HomeScreen
             onNavigate={handleNavigate}
@@ -151,7 +151,7 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Persistent Floating PIX Button with Micro-Interaction / Glow (Oculto na tela do Chat para dar lugar ao botão integrado na barra) */}
+      {/* Persistent Floating PIX Button with Micro-Interaction (Oculto na tela do Chat para dar lugar ao botão integrado na barra) */}
       {currentScreen !== 'chat' && (
         <FloatingPixButton onOpen={() => setIsPixOpen(true)} />
       )}

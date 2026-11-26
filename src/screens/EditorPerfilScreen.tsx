@@ -3,15 +3,11 @@ import {
   ArrowLeft, 
   Upload, 
   Download, 
-  Sliders, 
-  Image as ImageIcon, 
   Check, 
-  Bookmark,
-  Layers,
-  ArrowRight,
-  Move,
-  ZoomIn,
-  Sparkles
+  Bookmark, 
+  Layers, 
+  ArrowRight, 
+  Move
 } from 'lucide-react';
 import { ScreenId, HistoryItem } from '../types';
 import BlurText from '../components/BlurText/BlurText';
@@ -441,7 +437,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
   };
 
   return (
-    <div className="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-8 pt-3 sm:pt-6 pb-6 sm:pb-10 animate-fade-in select-none font-sans">
+    <div className="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-8 pt-3 sm:pt-6 pb-6 sm:pb-10 animate-fadeIn select-none font-sans">
       {/* Hidden file input */}
       <input
         type="file"
@@ -476,29 +472,29 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
       {viewMode === 'gallery' ? (
         <div className="flex flex-col flex-1">
           {/* Top Bar with Breadcrumbs */}
-          <div className="flex flex-wrap items-center justify-between gap-2.5 mb-3 sm:mb-6 pb-2 sm:pb-3 border-b border-white/5">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 mb-3 sm:mb-6 pb-2 sm:pb-3 border-b border-hairline">
             <button
               onClick={() => onNavigate('artes-submenu')}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-secondary hover:text-primary transition-all cursor-pointer font-sans"
             >
-              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400" />
+              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-wine" />
               <span>Voltar para Formatos</span>
             </button>
 
             {/* Interactive Breadcrumb */}
-            <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-0.5 sm:py-1 rounded-xl border border-white/10">
+            <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium bg-surface-elevated px-2 sm:px-3 py-1 rounded-xl border border-hairline">
               <button
                 type="button"
                 onClick={handleBackToGallery}
-                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm text-xs sm:text-sm"
+                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer btn-tactile-white text-xs sm:text-sm font-sans"
               >
                 1. Estilos
               </button>
-              <span className="text-zinc-600">/</span>
+              <span className="text-muted">/</span>
               <button
                 type="button"
                 onClick={() => handleGoToCustomize()}
-                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5 text-xs sm:text-sm"
+                className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg transition-all cursor-pointer text-secondary hover:text-primary hover:bg-surface text-xs sm:text-sm font-sans"
               >
                 2. Personalização
               </button>
@@ -507,22 +503,22 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
           {/* Header */}
           <div className="text-center mb-4 sm:mb-8">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#16161B] border border-white/10 text-zinc-300 text-[11px] sm:text-xs font-semibold mb-2 shadow-sm">
-              <Layers className="w-3 h-3 text-zinc-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-elevated border border-hairline text-secondary text-[11px] sm:text-xs font-semibold mb-2 shadow-sm font-sans">
+              <Layers className="w-3 h-3 text-accent-wine" />
               <span>Molduras Solenes</span>
             </div>
 
             <div className="mb-1.5">
               <BlurText
-                text="Selecione o estilo que você quer"
-                delay={50}
+                text="Selecione o estilo que deseja"
+                delay={40}
                 animateBy="words"
                 direction="top"
-                className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white font-sans inline-block"
+                className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-primary font-sans inline-block"
               />
             </div>
 
-            <p className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-secondary max-w-xl mx-auto leading-relaxed font-sans">
               Escolha a moldura de respeito para foto de perfil do WhatsApp e redes sociais
             </p>
           </div>
@@ -537,10 +533,10 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                   key={f.id}
                   onClick={() => setFrame(f.id)}
                   onDoubleClick={() => handleGoToCustomize(f.id)}
-                  className={`group relative rounded-[24px] cursor-pointer transition-all duration-300 select-none overflow-hidden aspect-square ${
+                  className={`group relative rounded-[24px] cursor-pointer transition-all duration-300 select-none overflow-hidden aspect-square card-tactile ${
                     isSelected
-                      ? 'border-[3px] border-white shadow-[0_0_28px_rgba(255,255,255,0.45)] ring-2 ring-white/25 scale-[1.01]'
-                      : 'border-[3px] border-transparent hover:border-white/25 bg-zinc-900/60 shadow-xl'
+                      ? 'border-[3px] border-accent-wine shadow-lg scale-[1.01]'
+                      : 'border-[3px] border-hairline hover:border-accent-wine/40 bg-surface shadow-sm'
                   }`}
                 >
                   {/* Clean Visual Mockup of the Frame */}
@@ -557,7 +553,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                     {/* Circular Mockup in Center */}
                     <div className="relative z-10 flex flex-col items-center justify-center my-auto">
                       <div
-                        className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full flex items-center justify-center bg-black/80 shadow-2xl transition-transform duration-300 group-hover:scale-105"
+                        className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full flex items-center justify-center bg-black/80 shadow-xl transition-transform duration-300 group-hover:scale-105"
                         style={{
                           boxShadow: `0 0 25px ${f.borderColor}`
                         }}
@@ -584,11 +580,11 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                           <img
                             src="/assets/dove-red-flower.svg"
                             alt="Paz"
-                            className="w-12 h-12 object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                            className="w-12 h-12 object-contain"
                           />
                         ) : (
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-zinc-800/90 flex items-center justify-center text-zinc-500">
-                            <span className="text-xl sm:text-2xl font-bold opacity-40">RIP</span>
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-zinc-800/90 flex items-center justify-center text-zinc-400">
+                            <span className="text-xl sm:text-2xl font-bold opacity-60">RIP</span>
                           </div>
                         )}
 
@@ -603,22 +599,22 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
                     {/* Top Right Format Tag Badge */}
                     <div className="absolute top-3.5 right-3.5 z-20">
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-black/70 border border-white/15 text-zinc-300 backdrop-blur-md">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-surface/90 border border-hairline text-primary backdrop-blur-md font-sans">
                         {f.tag}
                       </span>
                     </div>
 
-                    {/* Bottom Left Discreet Uppercase Label (Mandatory UGC style) */}
+                    {/* Bottom Left Discreet Uppercase Label */}
                     <div className="absolute bottom-3.5 left-3.5 z-20">
-                      <span className="inline-block px-3 py-1.5 rounded-lg bg-black/85 backdrop-blur-md border border-white/15 text-xs font-black tracking-wider text-white uppercase shadow-lg">
+                      <span className="inline-block px-3 py-1.5 rounded-lg bg-surface/90 backdrop-blur-md border border-hairline text-xs font-bold tracking-wider text-primary uppercase shadow-md font-sans">
                         {f.label}
                       </span>
                     </div>
 
                     {/* Top Left Selected Checkmark Badge */}
                     {isSelected && (
-                      <div className="absolute top-3.5 left-3.5 z-20 w-7 h-7 rounded-full bg-white text-zinc-950 border border-white/50 flex items-center justify-center shadow-lg">
-                        <Check className="w-4 h-4 stroke-[3]" />
+                      <div className="absolute top-3.5 left-3.5 z-20 w-7 h-7 rounded-full bg-red-600 border border-white/50 flex items-center justify-center shadow-md">
+                        <Check className="w-4 h-4 stroke-[3] text-white" />
                       </div>
                     )}
                   </div>
@@ -628,24 +624,24 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
           </div>
 
           {/* Sticky Bottom Action Bar with Highlighted Next Button */}
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#101014]/95 backdrop-blur-xl border-t border-white/10 px-4 sm:px-8 py-3.5 shadow-2xl">
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl border-t border-hairline px-4 sm:px-8 py-3.5 shadow-lg transition-colors">
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div
                   className="w-3.5 h-3.5 rounded-full"
                   style={{ backgroundColor: currentFrameObj.themeColor }}
                 />
-                <div className="text-xs sm:text-sm text-zinc-300">
+                <div className="text-xs sm:text-sm text-secondary font-sans">
                   <span>Estilo selecionado: </span>
-                  <span className="font-bold text-white">{currentFrameObj.name}</span>
-                  <span className="text-zinc-500 ml-1.5 hidden sm:inline">({currentFrameObj.tag})</span>
+                  <span className="font-bold text-primary">{currentFrameObj.name}</span>
+                  <span className="text-muted ml-1.5 hidden sm:inline">({currentFrameObj.tag})</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleGoToCustomize()}
-                  className="btn-tactile-white font-bold px-6 sm:px-8 py-3 rounded-full shadow-2xl flex items-center gap-2 text-sm sm:text-base cursor-pointer hover:bg-zinc-200 active:scale-95 transition-all text-zinc-950"
+                  className="btn-tactile-white font-bold px-6 sm:px-8 py-3 rounded-full shadow-md flex items-center gap-2 text-sm sm:text-base cursor-pointer font-sans"
                 >
                   <span>Avançar para Personalizar</span>
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -658,30 +654,30 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
         /* ========================================================================= */
         /* VIEW 2: CUSTOMIZE & TOUCH EDIT STAGE                                      */
         /* ========================================================================= */
-        <div className="flex flex-col flex-1 animate-fade-in">
+        <div className="flex flex-col flex-1 animate-fadeIn">
           {/* Top Bar with Breadcrumbs */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-3 border-b border-white/5">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-3 border-b border-hairline">
             <button
               onClick={handleBackToGallery}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer font-sans"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl btn-tactile text-xs sm:text-sm font-medium text-secondary hover:text-primary transition-all cursor-pointer font-sans"
             >
-              <ArrowLeft className="w-4 h-4 text-red-400" />
+              <ArrowLeft className="w-4 h-4 text-accent-wine" />
               <span>← Voltar aos Estilos</span>
             </button>
 
             {/* Interactive Breadcrumb */}
-            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-zinc-900/80 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-white/10">
+            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-surface-elevated px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-hairline">
               <button
                 type="button"
                 onClick={handleBackToGallery}
-                className="px-3 py-1 rounded-lg transition-all cursor-pointer text-zinc-400 hover:text-white hover:bg-white/5"
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer text-secondary hover:text-primary hover:bg-surface font-sans"
               >
                 1. Estilos
               </button>
-              <span className="text-zinc-600">/</span>
+              <span className="text-muted">/</span>
               <button
                 type="button"
-                className="px-3 py-1 rounded-lg transition-all cursor-pointer bg-white/15 text-white font-bold shadow-sm"
+                className="px-3 py-1 rounded-lg transition-all cursor-pointer btn-tactile-white text-xs sm:text-sm font-sans"
               >
                 2. Personalização
               </button>
@@ -690,10 +686,10 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
           {/* Heading */}
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-primary tracking-tight font-sans">
               Personalizar Foto de Perfil
             </h1>
-            <p className="mt-1 text-sm sm:text-base text-zinc-400">
+            <p className="mt-1 text-sm sm:text-base text-secondary font-sans">
               Faça o upload da foto, ajuste o enquadramento touch e personalize os detalhes da homenagem.
             </p>
           </div>
@@ -701,8 +697,8 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
           {/* Main Grid: Live Canvas Preview + Control Panel */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
             {/* Left Col: Live Preview Canvas (5 cols) */}
-            <div className="lg:col-span-5 flex flex-col items-center p-6 rounded-3xl bg-[#16161B]/90 border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-              <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden border-2 border-white/20 shadow-[0_0_30px_rgba(220,38,38,0.2)] bg-black mb-6">
+            <div className="lg:col-span-5 flex flex-col items-center p-6 rounded-3xl bg-surface border border-hairline shadow-sm card-tactile">
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden border-2 border-hairline shadow-md bg-black mb-6">
                 <canvas
                   ref={canvasRef}
                   className="w-full h-full object-cover"
@@ -713,9 +709,9 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl btn-tactile text-white text-xs sm:text-sm font-semibold transition-all active:scale-95 cursor-pointer font-sans"
+                  className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl btn-tactile text-primary text-xs sm:text-sm font-semibold transition-all cursor-pointer font-sans"
                 >
-                  <Upload className="w-4 h-4 text-red-400" />
+                  <Upload className="w-4 h-4 text-accent-wine" />
                   <span>Carregar Outra Foto</span>
                 </button>
 
@@ -723,9 +719,9 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                   <button
                     type="button"
                     onClick={() => setRawPhotoToCrop(imageSrc)}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl btn-tactile text-zinc-300 hover:text-white text-xs sm:text-sm font-medium transition-all active:scale-95 cursor-pointer font-sans"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl btn-tactile text-secondary hover:text-primary text-xs sm:text-sm font-medium transition-all cursor-pointer font-sans"
                   >
-                    <Move className="w-4 h-4 text-red-400" />
+                    <Move className="w-4 h-4 text-accent-wine" />
                     <span>Ajustar Enquadramento Touch</span>
                   </button>
                 )}
@@ -733,7 +729,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                 <button
                   type="button"
                   onClick={handleDownload}
-                  className="flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-xl btn-tactile-red text-white text-xs sm:text-sm font-semibold transition-all active:scale-95 cursor-pointer font-sans"
+                  className="flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-xl btn-tactile-white text-xs sm:text-sm font-semibold transition-all cursor-pointer font-sans"
                 >
                   <Download className="w-4 h-4" />
                   <span>Baixar Foto Pronta (PNG 1080px)</span>
@@ -743,16 +739,16 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                   type="button"
                   onClick={handleSaveToHistory}
                   disabled={isSaved}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl btn-tactile text-zinc-300 hover:text-white text-xs font-medium transition-all active:scale-95 cursor-pointer font-sans"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl btn-tactile text-secondary hover:text-primary text-xs font-medium transition-all cursor-pointer font-sans"
                 >
                   {isSaved ? (
                     <>
-                      <Check className="w-4 h-4 text-emerald-400" />
-                      <span className="text-emerald-400">Salvo no Histórico</span>
+                      <Check className="w-4 h-4 text-emerald-500" />
+                      <span className="text-emerald-500 font-semibold">Salvo no Histórico</span>
                     </>
                   ) : (
                     <>
-                      <Bookmark className="w-4 h-4 text-zinc-400" />
+                      <Bookmark className="w-4 h-4 text-accent-wine" />
                       <span>Salvar no Histórico Local</span>
                     </>
                   )}
@@ -761,10 +757,10 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
             </div>
 
             {/* Right Col: Customization Controls (7 cols) */}
-            <div className="lg:col-span-7 flex flex-col gap-6 p-6 sm:p-8 rounded-3xl bg-[#16161B]/90 border border-white/10 card-tactile">
+            <div className="lg:col-span-7 flex flex-col gap-6 p-6 sm:p-8 rounded-3xl bg-surface border border-hairline card-tactile shadow-sm">
               {/* Section 1: Estilo de Moldura */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-red-400 mb-3 font-sans">
+                <label className="block text-xs font-bold uppercase tracking-wider text-accent-wine mb-3 font-sans">
                   1. Moldura de Homenagem
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-sans">
@@ -775,8 +771,8 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                       onClick={() => setFrame(f.id)}
                       className={`p-3 rounded-xl border text-xs font-medium transition-all cursor-pointer font-sans ${
                         frame === f.id
-                          ? 'btn-tactile-red text-white'
-                          : 'btn-tactile text-zinc-400 hover:text-white'
+                          ? 'btn-tactile-white'
+                          : 'btn-tactile text-secondary hover:text-primary'
                       }`}
                     >
                       {f.name}
@@ -787,7 +783,7 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
 
               {/* Section 2: Filtro de Imagem */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-red-400 mb-3 font-sans">
+                <label className="block text-xs font-bold uppercase tracking-wider text-accent-wine mb-3 font-sans">
                   2. Filtro Fotográfico
                 </label>
                 <div className="grid grid-cols-3 gap-2.5 font-sans">
@@ -802,8 +798,8 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                       onClick={() => setFilter(fil.id as FilterType)}
                       className={`p-3 rounded-xl border text-xs font-medium transition-all cursor-pointer font-sans ${
                         filter === fil.id
-                          ? 'btn-tactile-red text-white'
-                          : 'btn-tactile text-zinc-400 hover:text-white'
+                          ? 'btn-tactile-white'
+                          : 'btn-tactile text-secondary hover:text-primary'
                       }`}
                     >
                       {fil.label}
@@ -813,13 +809,13 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
               </div>
 
               {/* Section 3: Ajustes de Enquadramento (Zoom & Pan) */}
-              <div className="space-y-4 pt-4 border-t border-white/10">
-                <label className="block text-xs font-bold uppercase tracking-wider text-red-400">
+              <div className="space-y-4 pt-4 border-t border-hairline">
+                <label className="block text-xs font-bold uppercase tracking-wider text-accent-wine font-sans">
                   3. Ajuste Fino de Zoom e Posição
                 </label>
 
                 <div>
-                  <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                  <div className="flex justify-between text-xs text-secondary mb-1 font-sans">
                     <span>Zoom da Imagem</span>
                     <span>{zoom.toFixed(1)}x</span>
                   </div>
@@ -830,13 +826,13 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                     step="0.05"
                     value={zoom}
                     onChange={(e) => setZoom(parseFloat(e.target.value))}
-                    className="w-full h-1.5 bg-[#2A2A36] rounded-lg appearance-none cursor-pointer accent-red-500"
+                    className="w-full h-2 bg-surface-elevated rounded-lg appearance-none cursor-pointer accent-red-600"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                    <div className="flex justify-between text-xs text-secondary mb-1 font-sans">
                       <span>Mover Horizontal (X)</span>
                       <span>{panX}px</span>
                     </div>
@@ -847,12 +843,12 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                       step="5"
                       value={panX}
                       onChange={(e) => setPanX(parseInt(e.target.value))}
-                      className="w-full h-1.5 bg-[#2A2A36] rounded-lg appearance-none cursor-pointer accent-red-500"
+                      className="w-full h-2 bg-surface-elevated rounded-lg appearance-none cursor-pointer accent-red-600"
                     />
                   </div>
 
                   <div>
-                    <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                    <div className="flex justify-between text-xs text-secondary mb-1 font-sans">
                       <span>Mover Vertical (Y)</span>
                       <span>{panY}px</span>
                     </div>
@@ -863,49 +859,49 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
                       step="5"
                       value={panY}
                       onChange={(e) => setPanY(parseInt(e.target.value))}
-                      className="w-full h-1.5 bg-[#2A2A36] rounded-lg appearance-none cursor-pointer accent-red-500"
+                      className="w-full h-2 bg-surface-elevated rounded-lg appearance-none cursor-pointer accent-red-600"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Section 4: Textos Opcionais */}
-              <div className="space-y-3 pt-4 border-t border-white/10">
-                <label className="block text-xs font-bold uppercase tracking-wider text-red-400">
+              <div className="space-y-3 pt-4 border-t border-hairline">
+                <label className="block text-xs font-bold uppercase tracking-wider text-accent-wine font-sans">
                   4. Textos Gravados na Foto
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <span className="text-[11px] text-zinc-400 mb-1 block">Selo Superior</span>
+                    <span className="text-[11px] text-secondary mb-1 block font-sans">Selo Superior</span>
                     <input
                       type="text"
                       value={badgeText}
                       onChange={(e) => setBadgeText(e.target.value)}
                       placeholder="Ex: LUTO"
-                      className="w-full px-3 py-2 rounded-xl bg-[#0C0C0F] border border-white/10 text-xs text-white placeholder-zinc-500 focus:border-red-500/60 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-xl bg-surface-elevated border border-hairline text-base text-primary placeholder:text-muted focus:border-accent-wine focus:outline-none font-sans"
                     />
                   </div>
 
                   <div>
-                    <span className="text-[11px] text-zinc-400 mb-1 block">Nome do Ente</span>
+                    <span className="text-[11px] text-secondary mb-1 block font-sans">Nome do Ente</span>
                     <input
                       type="text"
                       value={nameText}
                       onChange={(e) => setNameText(e.target.value)}
                       placeholder="Ex: Maria Pereira"
-                      className="w-full px-3 py-2 rounded-xl bg-[#0C0C0F] border border-white/10 text-xs text-white placeholder-zinc-500 focus:border-red-500/60 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-xl bg-surface-elevated border border-hairline text-base text-primary placeholder:text-muted focus:border-accent-wine focus:outline-none font-sans"
                     />
                   </div>
 
                   <div>
-                    <span className="text-[11px] text-zinc-400 mb-1 block">Anos / Datas</span>
+                    <span className="text-[11px] text-secondary mb-1 block font-sans">Anos / Datas</span>
                     <input
                       type="text"
                       value={datesText}
                       onChange={(e) => setDatesText(e.target.value)}
                       placeholder="Ex: 1948 - 2026"
-                      className="w-full px-3 py-2 rounded-xl bg-[#0C0C0F] border border-white/10 text-xs text-white placeholder-zinc-500 focus:border-red-500/60 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-xl bg-surface-elevated border border-hairline text-base text-primary placeholder:text-muted focus:border-accent-wine focus:outline-none font-sans"
                     />
                   </div>
                 </div>

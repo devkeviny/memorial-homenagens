@@ -1,6 +1,7 @@
 import React from 'react';
 import { Home, Mic, Image, History, Info, Shield, Sparkles } from 'lucide-react';
 import { ScreenId } from '../types';
+import { ThemeToggle } from './ThemeToggle';
 
 interface SidebarProps {
   currentScreen: ScreenId;
@@ -8,7 +9,7 @@ interface SidebarProps {
   onOpenPix?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onOpenPix }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate }) => {
   const navItems = [
     { id: 'home' as ScreenId, label: 'Início', icon: Home },
     { id: 'chat' as ScreenId, label: 'Criar Vinheta', icon: Mic },
@@ -19,24 +20,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-[#0C0C0F]/80 border-r border-white/5 p-5 backdrop-blur-2xl z-30 select-none">
+    <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-surface/90 border-r border-hairline p-5 backdrop-blur-2xl z-30 select-none">
       {/* Brand Header */}
       <div 
         onClick={() => onNavigate('home')}
         className="flex items-center gap-3.5 mb-8 cursor-pointer group"
       >
-        <div className="relative w-11 h-11 rounded-2xl bg-[#16161D] border border-white/10 flex items-center justify-center p-2 card-tactile shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:border-white/20 transition-all">
+        <div className="relative w-11 h-11 rounded-2xl bg-surface-elevated border border-hairline flex items-center justify-center p-2 card-tactile group-hover:border-zinc-400 dark:group-hover:border-white/20 transition-all">
           <img 
             src="/assets/dove-red-flower.svg" 
             alt="Pomba com flor vermelha" 
-            className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]"
+            className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(220,38,38,0.35)]"
           />
         </div>
         <div>
-          <h1 className="text-lg font-bold tracking-tight text-white font-sans">
+          <h1 className="text-lg font-bold tracking-tight text-primary font-sans">
             Memorial
           </h1>
-          <p className="text-sm text-zinc-400 font-cursive italic tracking-wide">
+          <p className="text-sm text-secondary font-cursive italic tracking-wide">
             Homenagens Solenes
           </p>
         </div>
@@ -52,27 +53,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onNavigate, onO
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex items-center gap-4 px-4 py-3 rounded-full text-sm font-semibold transition-all duration-200 group font-sans cursor-pointer ${
+              className={`flex items-center gap-4 px-4 py-3 rounded-full text-sm font-semibold transition-all duration-150 group font-sans cursor-pointer ${
                 isActive
-                  ? 'btn-menu-active-clean font-bold text-white'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  ? 'btn-menu-active-clean font-bold'
+                  : 'text-secondary hover:text-primary hover:bg-surface-elevated'
               }`}
             >
-              <Icon className={`w-5 h-5 transition-transform group-hover:scale-105 shrink-0 ${isActive ? 'text-white stroke-[2.2]' : 'text-zinc-400'}`} />
+              <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'stroke-[2.2]' : 'text-muted'}`} />
               <span className="tracking-wide">{item.label}</span>
             </button>
           );
         })}
       </nav>
 
-      {/* Bottom Footer Info */}
-      <div className="pt-6 border-t border-white/10">
-        <div className="p-3.5 rounded-2xl bg-[#141418] border border-white/5 text-center card-tactile">
-          <p className="text-[11px] text-zinc-400 leading-tight font-sans">
+      {/* Bottom Footer with Theme Selector */}
+      <div className="pt-4 border-t border-hairline flex flex-col gap-3">
+        {/* Theme Selector (Sistema / Escuro / Claro) */}
+        <div>
+          <span className="block text-[10px] font-bold text-muted uppercase tracking-wider mb-1.5 px-1 font-sans">
+            Aparência
+          </span>
+          <ThemeToggle />
+        </div>
+
+        {/* Quiet Info Box */}
+        <div className="p-3 rounded-2xl bg-surface-elevated border border-hairline text-center card-tactile">
+          <p className="text-[11px] text-muted leading-tight font-sans">
             Em memória daqueles que permanecem vivos em nossos corações.
           </p>
-          <span className="inline-flex items-center gap-1 mt-2 text-[10px] text-zinc-400 font-bold uppercase tracking-wider font-sans">
-            <Sparkles className="w-2.5 h-2.5" />
+          <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] text-muted font-bold uppercase tracking-wider font-sans">
+            <Sparkles className="w-2.5 h-2.5 text-accent-wine" />
             Gratuito & Aberto
           </span>
         </div>

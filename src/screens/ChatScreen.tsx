@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Mic, 
   Send, 
-  Paperclip, 
   Play, 
   Pause, 
   Download, 
@@ -11,13 +10,9 @@ import {
   ArrowLeft, 
   CheckCircle2, 
   Edit3, 
-  RotateCcw, 
-  Sparkles, 
-  Square, 
   Heart,
   ImageIcon,
-  X,
-  Radio
+  X
 } from 'lucide-react';
 import { ScreenId, ChatMessage, HistoryItem } from '../types';
 import { DynamicOrb } from '../components/DynamicOrb';
@@ -396,36 +391,36 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         onClose={() => setRawPhotoToCrop(null)}
       />
 
-      {/* Top Header Bar - Full Width Horizontal & Transparent Backdrop */}
-      <div className="w-full flex items-center justify-between px-4 sm:px-8 py-3.5 bg-[#121217]/60 border-b border-white/10 backdrop-blur-xl z-20">
+      {/* Top Header Bar - Full Width Horizontal & Semantic Backdrop */}
+      <div className="w-full flex items-center justify-between px-4 sm:px-8 py-3.5 bg-surface/85 border-b border-hairline backdrop-blur-xl z-20 transition-colors">
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNavigate('home')}
-            className="p-2 rounded-xl btn-tactile text-zinc-400 hover:text-white transition-all cursor-pointer font-sans"
+            className="p-2 rounded-xl btn-tactile text-secondary hover:text-primary transition-all cursor-pointer font-sans"
             title="Voltar ao Início"
           >
-            <ArrowLeft className="w-5 h-5 text-white" />
+            <ArrowLeft className="w-5 h-5 text-accent-wine" />
           </button>
           <div>
             <div className="flex items-center gap-2">
               <BlurText
                 text="Assistente Solene"
-                delay={60}
+                delay={40}
                 animateBy="words"
                 direction="top"
-                className="text-base sm:text-lg font-bold text-white font-sans tracking-tight inline-block"
+                className="text-base sm:text-lg font-bold text-primary font-sans tracking-tight inline-block"
               />
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
             </div>
-            <p className="text-xs sm:text-sm text-zinc-400 font-sans">
+            <p className="text-xs sm:text-sm text-secondary font-sans">
               Vinheta em Áudio Narrado & Postagens Integradas
             </p>
           </div>
         </div>
 
         {/* Status Badge */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300 font-sans shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-elevated border border-hairline text-xs font-semibold text-secondary font-sans shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent-wine" />
           <span>Atendimento Solene</span>
         </div>
       </div>
@@ -441,15 +436,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           return (
             <div
               key={msg.id}
-              className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'} items-start animate-fade-in font-sans`}
+              className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'} items-start animate-fadeIn font-sans`}
             >
               {/* Agent Avatar */}
               {!isUser && (
-                <div className="w-10 h-10 rounded-full bg-[#18181E] border border-white/10 flex items-center justify-center shrink-0 shadow-md p-1.5 mt-0.5">
+                <div className="w-10 h-10 rounded-full bg-surface-elevated border border-hairline flex items-center justify-center shrink-0 shadow-sm p-1.5 mt-0.5">
                   <img
                     src="/assets/dove-red-flower.svg"
                     alt="Assistente Solene"
-                    className="w-full h-full object-contain filter drop-shadow-[0_0_6px_rgba(220,38,38,0.4)]"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               )}
@@ -460,8 +455,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 <div
                   className={`p-4 sm:p-5 rounded-2xl shadow-sm ${
                     isUser
-                      ? 'bg-white text-zinc-950 font-medium rounded-tr-sm shadow-md'
-                      : 'bg-[#141418] border border-white/10 text-zinc-200 rounded-tl-sm card-tactile'
+                      ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-medium rounded-tr-sm shadow-md'
+                      : 'bg-surface border border-hairline text-primary rounded-tl-sm card-tactile'
                   }`}
                 >
                   <div className="text-base sm:text-lg leading-relaxed whitespace-pre-line font-sans">
@@ -470,21 +465,21 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
                   {/* Structured Confirmation Card */}
                   {msg.isConfirmationCard && msg.confirmationData && (
-                    <div className="mt-4 p-4 rounded-xl bg-black/50 border border-white/10 space-y-2 card-tactile font-sans text-white">
-                      <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                        <span className="text-xs font-semibold text-red-400 uppercase tracking-wider font-sans">
+                    <div className="mt-4 p-4 rounded-xl bg-surface-elevated border border-hairline space-y-2 card-tactile font-sans text-primary">
+                      <div className="flex items-center justify-between pb-2 border-b border-hairline">
+                        <span className="text-xs font-semibold text-accent-wine uppercase tracking-wider font-sans">
                           Dados Extraídos
                         </span>
-                        <span className="text-[11px] text-zinc-400 font-sans">Etapa de Verificação</span>
+                        <span className="text-[11px] text-secondary font-sans">Etapa de Verificação</span>
                       </div>
 
-                      <div className="text-sm sm:text-base space-y-1.5 text-zinc-300 font-sans">
-                        <p><strong className="text-white">Nome:</strong> {msg.confirmationData.nome}</p>
-                        <p><strong className="text-white">Nascimento:</strong> {msg.confirmationData.nascimento}</p>
-                        <p><strong className="text-white">Falecimento:</strong> {msg.confirmationData.falecimento}</p>
-                        <p><strong className="text-white">Velório:</strong> {msg.confirmationData.velorio}</p>
-                        <p><strong className="text-white">Sepultamento:</strong> {msg.confirmationData.sepultamento}</p>
-                        <p className="italic text-zinc-400 pt-1 border-t border-white/5 font-cursive text-lg">
+                      <div className="text-sm sm:text-base space-y-1.5 text-secondary font-sans">
+                        <p><strong className="text-primary font-semibold">Nome:</strong> {msg.confirmationData.nome}</p>
+                        <p><strong className="text-primary font-semibold">Nascimento:</strong> {msg.confirmationData.nascimento}</p>
+                        <p><strong className="text-primary font-semibold">Falecimento:</strong> {msg.confirmationData.falecimento}</p>
+                        <p><strong className="text-primary font-semibold">Velório:</strong> {msg.confirmationData.velorio}</p>
+                        <p><strong className="text-primary font-semibold">Sepultamento:</strong> {msg.confirmationData.sepultamento}</p>
+                        <p className="italic text-secondary pt-1 border-t border-hairline font-serif text-base sm:text-lg">
                           {msg.confirmationData.mensagem}
                         </p>
                       </div>
@@ -492,16 +487,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                       <div className="pt-3 flex flex-col sm:flex-row gap-2">
                         <button
                           onClick={() => handleConfirmAndGenerate(msg.confirmationData!)}
-                          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl btn-tactile-red text-white text-xs sm:text-sm font-semibold transition-all cursor-pointer font-sans"
+                          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl btn-tactile-white text-xs sm:text-sm font-semibold transition-all cursor-pointer font-sans"
                         >
-                          <CheckCircle2 className="w-4 h-4" />
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                           <span>Confirmar & Gerar Homenagem</span>
                         </button>
                         <button
                           onClick={() => setInputText(`Corrigir nome para ${msg.confirmationData?.nome}: `)}
-                          className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl btn-tactile text-zinc-300 hover:text-white text-xs font-medium transition-colors cursor-pointer font-sans"
+                          className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl btn-tactile text-secondary hover:text-primary text-xs font-medium transition-colors cursor-pointer font-sans"
                         >
-                          <Edit3 className="w-3.5 h-3.5" />
+                          <Edit3 className="w-3.5 h-3.5 text-accent-wine" />
                           <span>Ajustar</span>
                         </button>
                       </div>
@@ -510,42 +505,42 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
                   {/* Audio Deliverable Card */}
                   {msg.isAudioResult && (
-                    <div className="mt-4 p-4 sm:p-5 rounded-xl bg-black/60 border border-red-500/40 shadow-[0_4px_25px_rgba(220,38,38,0.25)] card-tactile font-sans">
+                    <div className="mt-4 p-4 sm:p-5 rounded-xl bg-surface-elevated border border-hairline shadow-sm card-tactile font-sans text-primary">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 rounded-xl bg-red-950/80 border border-red-500/50 flex items-center justify-center text-red-400 card-tactile">
+                          <div className="w-9 h-9 rounded-xl bg-surface border border-hairline flex items-center justify-center text-accent-wine card-tactile">
                             <Volume2 className="w-5 h-5" />
                           </div>
                           <div>
-                            <h4 className="text-sm sm:text-base font-bold text-white font-sans">
+                            <h4 className="text-sm sm:text-base font-bold text-primary font-sans">
                               {msg.audioTitle || 'Vinheta Solene em Áudio'}
                             </h4>
-                            <span className="text-xs text-zinc-400 font-sans">Duração: {msg.audioDuration || '00:42'}</span>
+                            <span className="text-xs text-secondary font-sans">Duração: {msg.audioDuration || '00:42'}</span>
                           </div>
                         </div>
 
                         <button
                           onClick={() => handlePlayAudio(msg.id, msg.audioTitle)}
-                          className="w-10 h-10 rounded-xl btn-tactile-red flex items-center justify-center text-white transition-all cursor-pointer"
+                          className="w-10 h-10 rounded-xl btn-tactile-white flex items-center justify-center transition-all cursor-pointer"
                           title={playingMessageId === msg.id ? 'Pausar áudio' : 'Ouvir vinheta'}
                         >
                           {playingMessageId === msg.id ? (
-                            <Pause className="w-4 h-4 fill-white" />
+                            <Pause className="w-4 h-4" />
                           ) : (
-                            <Play className="w-4 h-4 fill-white translate-x-0.5" />
+                            <Play className="w-4 h-4 fill-current translate-x-0.5" />
                           )}
                         </button>
                       </div>
 
                       {/* Audio Waveform visualization bar */}
-                      <div className="flex items-center gap-1 h-6 py-1 px-2 rounded-lg bg-white/5 mb-3 card-tactile">
+                      <div className="flex items-center gap-1 h-6 py-1 px-2 rounded-lg bg-surface mb-3 card-tactile border border-hairline">
                         {Array.from({ length: 24 }).map((_, i) => (
                           <div
                             key={i}
                             className={`flex-1 rounded-full transition-all duration-300 ${
                               playingMessageId === msg.id
-                                ? 'bg-red-500 animate-pulse'
-                                : 'bg-zinc-600'
+                                ? 'bg-red-600'
+                                : 'bg-zinc-300 dark:bg-zinc-700'
                             }`}
                             style={{
                               height: playingMessageId === msg.id
@@ -556,20 +551,20 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                         ))}
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                      <div className="flex items-center justify-between pt-2 border-t border-hairline">
                         <button
                           onClick={() => handleDownloadAudio(msg.audioTitle)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl btn-tactile text-white text-xs font-semibold transition-all cursor-pointer font-sans"
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl btn-tactile text-primary text-xs font-semibold transition-all cursor-pointer font-sans"
                         >
-                          <Download className="w-3.5 h-3.5 text-red-400" />
+                          <Download className="w-3.5 h-3.5 text-accent-wine" />
                           <span>Baixar Áudio (.wav)</span>
                         </button>
 
                         <button
                           onClick={onOpenPix}
-                          className="text-xs text-red-300 hover:text-white flex items-center gap-1 font-sans cursor-pointer"
+                          className="text-xs text-accent-wine hover:underline flex items-center gap-1 font-sans cursor-pointer"
                         >
-                          <Heart className="w-3 h-3 fill-red-400 text-red-400" />
+                          <Heart className="w-3 h-3 fill-current" />
                           <span>Apoiar Projeto</span>
                         </button>
                       </div>
@@ -578,12 +573,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
                   {/* Visual Arts Deliverable Card */}
                   {msg.isArtResult && (
-                    <div className="mt-4 p-4 sm:p-5 rounded-xl bg-black/60 border border-white/10 card-tactile font-sans">
-                      <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
-                        <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-sans">
+                    <div className="mt-4 p-4 sm:p-5 rounded-xl bg-surface-elevated border border-hairline card-tactile font-sans text-primary">
+                      <div className="flex items-center justify-between mb-4 pb-2 border-b border-hairline">
+                        <span className="text-xs font-semibold text-secondary uppercase tracking-wider font-sans">
                           Artes Oficiais de Homenagem
                         </span>
-                        <span className="text-[11px] text-emerald-400 font-sans flex items-center gap-1">
+                        <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-sans flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>Prontas</span>
                         </span>
@@ -591,8 +586,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
                       <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
                         {/* Feed 3:4 */}
-                        <div className="flex flex-col items-center p-2 rounded-xl bg-[#09090B] border border-white/10 card-tactile">
-                          <div className="w-full aspect-[3/4] rounded-lg overflow-hidden bg-zinc-900 border border-white/10 mb-2 relative group">
+                        <div className="flex flex-col items-center p-2.5 rounded-xl bg-surface border border-hairline card-tactile">
+                          <div className="w-full aspect-[3/4] rounded-lg overflow-hidden bg-black/10 dark:bg-zinc-950 border border-hairline mb-2 relative group">
                             {msg.artRatio34Url ? (
                               <img
                                 src={msg.artRatio34Url}
@@ -600,12 +595,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs">
+                              <div className="w-full h-full flex items-center justify-center text-secondary text-xs">
                                 Feed 3:4
                               </div>
                             )}
                           </div>
-                          <span className="text-xs font-semibold text-zinc-300 mb-2 font-sans">
+                          <span className="text-xs font-semibold text-primary mb-2 font-sans">
                             Feed (3:4)
                           </span>
                           <button
@@ -613,16 +608,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                               msg.artRatio34Url &&
                               handleDownloadImage(msg.artRatio34Url, 'homenagem-feed.png')
                             }
-                            className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg btn-tactile text-white text-[11px] font-medium transition-colors font-sans"
+                            className="w-full flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg btn-tactile text-primary text-[11px] font-medium transition-colors font-sans cursor-pointer"
                           >
-                            <Download className="w-3 h-3 text-white" />
+                            <Download className="w-3 h-3 text-accent-wine" />
                             <span>Baixar</span>
                           </button>
                         </div>
 
                         {/* Story 9:16 */}
-                        <div className="flex flex-col items-center p-2 rounded-xl bg-[#09090B] border border-white/10 card-tactile">
-                          <div className="w-full aspect-[9/16] rounded-lg overflow-hidden bg-zinc-900 border border-white/10 mb-2 relative group">
+                        <div className="flex flex-col items-center p-2.5 rounded-xl bg-surface border border-hairline card-tactile">
+                          <div className="w-full aspect-[9/16] rounded-lg overflow-hidden bg-black/10 dark:bg-zinc-950 border border-hairline mb-2 relative group">
                             {msg.artRatio916Url ? (
                               <img
                                 src={msg.artRatio916Url}
@@ -630,12 +625,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs">
+                              <div className="w-full h-full flex items-center justify-center text-secondary text-xs">
                                 Story 9:16
                               </div>
                             )}
                           </div>
-                          <span className="text-xs font-semibold text-zinc-300 mb-2 font-sans">
+                          <span className="text-xs font-semibold text-primary mb-2 font-sans">
                             Stories (9:16)
                           </span>
                           <button
@@ -643,9 +638,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                               msg.artRatio916Url &&
                               handleDownloadImage(msg.artRatio916Url, 'homenagem-story.png')
                             }
-                            className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg btn-tactile text-white text-[11px] font-medium transition-colors font-sans"
+                            className="w-full flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg btn-tactile text-primary text-[11px] font-medium transition-colors font-sans cursor-pointer"
                           >
-                            <Download className="w-3 h-3 text-white" />
+                            <Download className="w-3 h-3 text-accent-wine" />
                             <span>Baixar</span>
                           </button>
                         </div>
@@ -655,7 +650,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 </div>
 
                 {/* Date & Time Timestamp Below Balloon */}
-                <div className="px-2 mt-1.5 text-[11px] text-zinc-500 font-sans tracking-tight flex items-center gap-1.5">
+                <div className="px-2 mt-1.5 text-[11px] text-muted font-sans tracking-tight flex items-center gap-1.5">
                   <span>{dateStr}</span>
                   <span>•</span>
                   <span>{timeStr}</span>
@@ -667,7 +662,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
         {/* Processing Indicator with Dynamic Orb */}
         {isProcessing && (
-          <div className="flex items-center gap-3 p-4 rounded-2xl bg-[#16161D] border border-white/10 w-fit max-w-[85%] card-tactile font-sans">
+          <div className="flex items-center gap-3 p-4 rounded-2xl bg-surface border border-hairline w-fit max-w-[85%] card-tactile font-sans">
             <DynamicOrb stage={processingStage} />
           </div>
         )}
@@ -682,11 +677,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            className="px-6 py-4 bg-[#14141A] border-t border-red-500/40 flex items-center justify-between z-30 shadow-[0_-10px_30px_rgba(220,38,38,0.2)] font-sans"
+            className="px-6 py-4 bg-surface border-t border-hairline flex items-center justify-between z-30 shadow-lg font-sans"
           >
             <div className="flex items-center gap-3">
-              <span className="w-3 h-3 rounded-full bg-red-500 animate-ping" />
-              <span className="text-xs sm:text-sm font-semibold text-white font-sans">
+              <span className="w-3 h-3 rounded-full bg-red-600 animate-pulse" />
+              <span className="text-xs sm:text-sm font-semibold text-primary font-sans">
                 Gravando áudio solene... ({formatTime(recordingSeconds)})
               </span>
             </div>
@@ -694,15 +689,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsRecording(false)}
-                className="px-3.5 py-1.5 rounded-xl btn-tactile text-zinc-400 hover:text-white text-xs font-sans cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl btn-tactile text-secondary hover:text-primary text-xs font-sans cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSendVoice}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl btn-tactile-red text-white text-xs font-semibold cursor-pointer font-sans"
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl btn-tactile-white text-xs font-semibold cursor-pointer font-sans"
               >
-                <CheckCircle2 className="w-4 h-4" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                 <span>Enviar Áudio</span>
               </button>
             </div>
@@ -712,18 +707,18 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
       {/* Attached Photo Preview Pill */}
       {attachedPhoto && (
-        <div className="px-6 py-2.5 bg-[#14141A] border-t border-white/10 flex items-center justify-between z-20 font-sans">
+        <div className="px-6 py-2.5 bg-surface border-t border-hairline flex items-center justify-between z-20 font-sans">
           <div className="flex items-center gap-3">
             <img
               src={attachedPhoto}
               alt="Anexo selecionado"
-              className="w-9 h-9 rounded-xl object-cover border border-red-500/40 card-tactile"
+              className="w-9 h-9 rounded-xl object-cover border border-hairline card-tactile"
             />
-            <span className="text-xs text-zinc-300 font-sans">Foto ajustada e pronta para a homenagem</span>
+            <span className="text-xs text-secondary font-sans">Foto ajustada e pronta para a homenagem</span>
           </div>
           <button
             onClick={() => setAttachedPhoto(null)}
-            className="p-1.5 rounded-xl btn-tactile text-zinc-400 hover:text-white cursor-pointer"
+            className="p-1.5 rounded-xl btn-tactile text-secondary hover:text-primary cursor-pointer"
             title="Remover foto"
           >
             <X className="w-4 h-4" />
@@ -731,9 +726,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         </div>
       )}
 
-      {/* Bottom Input Bar - Caffeine Pill Shape (from img_67fecc06ed6a) */}
-      <div className="w-full px-4 sm:px-8 py-3.5 bg-[#121217]/60 border-t border-white/10 backdrop-blur-xl z-20 font-sans">
-        <div className="flex items-center gap-3 max-w-4xl mx-auto rounded-full bg-[#16161D] border border-white/15 px-3 py-1.5 shadow-[0_4px_25px_rgba(0,0,0,0.5)]">
+      {/* Bottom Input Bar - Tactile Pill Shape with Min 16px font to prevent iOS zoom */}
+      <div className="w-full px-4 sm:px-8 py-3.5 bg-surface/85 border-t border-hairline backdrop-blur-xl z-20 font-sans transition-colors">
+        <div className="flex items-center gap-3 max-w-4xl mx-auto rounded-full bg-surface-elevated border border-hairline px-3 py-1.5 shadow-sm">
           {/* Photo Attachment Picker */}
           <input
             type="file"
@@ -744,14 +739,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-zinc-300 hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0 font-sans"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-secondary hover:text-primary hover:bg-surface transition-all cursor-pointer shrink-0 font-sans"
             title="Anexar foto"
             aria-label="Anexar foto"
           >
-            <ImageIcon className="w-5 h-5 text-white" />
+            <ImageIcon className="w-5 h-5" />
           </button>
 
-          {/* Text Input */}
+          {/* Text Input - minimum 16px to prevent iOS auto-zoom */}
           <div className="relative flex-1">
             <input
               type="text"
@@ -764,7 +759,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 }
               }}
               placeholder="Escreva aqui ou toque no microfone..."
-              className="w-full bg-transparent border-none focus:outline-none text-white placeholder-zinc-400 text-sm sm:text-base font-sans"
+              className="w-full bg-transparent border-none focus:outline-none text-primary placeholder:text-muted text-base font-sans"
             />
           </div>
 
@@ -772,31 +767,31 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           <button
             type="button"
             onClick={onOpenPix}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/60 hover:text-emerald-200 hover:border-emerald-400 transition-all text-xs font-bold tracking-wide uppercase shrink-0 cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.25)] font-sans"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface border border-hairline text-accent-wine hover:text-red-700 dark:hover:text-red-400 transition-all text-xs font-bold tracking-wide uppercase shrink-0 cursor-pointer shadow-sm font-sans"
             title="Fazer contribuição via PIX"
           >
-            <Heart className="w-3.5 h-3.5 text-emerald-400 fill-emerald-500/30" />
+            <Heart className="w-3.5 h-3.5 fill-current" />
             <span>Doe Pix</span>
           </button>
 
-          {/* Exclusivity: Mic Button with Circular Red Glow Border (exact Caffeine reference) vs Send Arrow */}
+          {/* Mic Button vs Send Arrow */}
           {inputText.trim().length === 0 && !attachedPhoto ? (
             <button
               onClick={() => setIsRecording(true)}
-              className="relative w-11 h-11 flex items-center justify-center rounded-full bg-[#201518] border-2 border-red-500 text-white transition-all shrink-0 cursor-pointer shadow-[0_0_15px_rgba(239,68,68,0.6)] hover:scale-105 active:scale-95"
+              className="relative w-11 h-11 flex items-center justify-center rounded-full btn-tactile text-accent-wine transition-all shrink-0 cursor-pointer shadow-sm"
               title="Falar por voz"
               aria-label="Gravar áudio"
             >
-              <Mic className="w-5 h-5 text-white" />
+              <Mic className="w-5 h-5" />
             </button>
           ) : (
             <button
               onClick={handleSendMessage}
-              className="relative w-11 h-11 flex items-center justify-center rounded-full bg-red-600 border border-red-400 text-white transition-all shrink-0 cursor-pointer shadow-[0_0_15px_rgba(220,38,38,0.5)] hover:scale-105 active:scale-95"
+              className="relative w-11 h-11 flex items-center justify-center rounded-full btn-tactile-white transition-all shrink-0 cursor-pointer shadow-sm"
               title="Enviar mensagem"
               aria-label="Enviar"
             >
-              <Send className="w-5 h-5 text-white ml-0.5" />
+              <Send className="w-5 h-5 ml-0.5" />
             </button>
           )}
         </div>

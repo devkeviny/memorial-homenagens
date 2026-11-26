@@ -1,24 +1,28 @@
 import React from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface DynamicOrbProps {
   stage: string;
 }
 
+/**
+ * Status Indicator - Solene & Anti-Slop (Substitui o antigo DynamicOrb com orbes flutuantes/pulsantes)
+ * Indicador de status limpo, sóbrio e estático para etapas de processamento.
+ */
 export const DynamicOrb: React.FC<DynamicOrbProps> = ({ stage }) => {
   return (
-    <div className="flex items-center gap-3.5 px-5 py-3 rounded-full bg-[#18181F]/90 border border-red-500/30 backdrop-blur-md shadow-[0_0_20px_rgba(220,38,38,0.25)] animate-fade-in my-3 w-fit">
-      {/* Animated Orb */}
-      <div className="relative flex items-center justify-center w-6 h-6">
-        <span className="absolute w-full h-full rounded-full bg-red-600/40 animate-ping" />
-        <span className="relative w-4 h-4 rounded-full bg-gradient-to-tr from-red-600 to-amber-200 shadow-[0_0_12px_#DC2626] animate-pulse" />
+    <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-surface border border-hairline shadow-sm animate-fade-in my-2 w-fit">
+      {/* Sóbrio indicador de atividade com loader sutil */}
+      <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-surface-elevated border border-hairline text-red-600 dark:text-red-500 shrink-0">
+        <Loader2 className="w-3.5 h-3.5 animate-spin" />
       </div>
-      
-      {/* Dynamic Text */}
+
+      {/* Texto de Status */}
       <div className="flex flex-col">
-        <span className="text-sm font-medium text-white tracking-wide">
+        <span className="text-xs sm:text-sm font-semibold text-primary tracking-tight">
           {stage}
         </span>
-        <span className="text-[11px] text-zinc-400">
+        <span className="text-[10px] text-muted">
           Processamento da Homenagem Solene
         </span>
       </div>
