@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test:artes": "node scripts/generate_test_artes.js"
+    "test:artes": "node scripts/generate_test_artes.js",
+    "test:supabase": "node scripts/test_supabase_integration.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",
