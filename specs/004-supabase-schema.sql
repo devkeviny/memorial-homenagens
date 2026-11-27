@@ -41,3 +41,10 @@ ON public.homenagens
 FOR INSERT
 TO anon, authenticated
 WITH CHECK (true);
+
+-- Exclusão de homenagem do próprio usuário/dispositivo
+CREATE POLICY "Exclusão pública de homenagens"
+ON public.homenagens
+FOR DELETE
+TO anon, authenticated
+USING (true);

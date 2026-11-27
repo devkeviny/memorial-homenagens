@@ -20,6 +20,7 @@ import {
   TemplateItem,
   renderSolemnArtAsync
 } from '../utils/canvasHelper';
+import { saveHomenagem } from '../lib/supabase';
 
 interface TemplatesArtesScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -122,7 +123,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
       link.href = dataUrl;
       link.click();
 
-      // Save to memorial_historico
+      // Save to Supabase and memorial_historico
       try {
         const histItem: HistoryItem = {
           id: 'arte-' + Date.now(),
@@ -140,12 +141,11 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
             sepultamento: cerimonia
           }
         };
-        const existing = localStorage.getItem('memorial_historico');
-        const list: HistoryItem[] = existing ? JSON.parse(existing) : [];
-        list.unshift(histItem);
-        localStorage.setItem('memorial_historico', JSON.stringify(list));
-      } catch {
-        // ignore storage quota errors
+        saveHomenagem(histItem).catch((e) => {
+          console.warn('Erro ao salvar no Supabase/localStorage:', e);
+        });
+      } catch (e) {
+        console.warn('Erro ao salvar no histórico:', e);
       }
 
       setIsGenerating(false);

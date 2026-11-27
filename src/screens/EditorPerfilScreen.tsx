@@ -12,6 +12,7 @@ import {
 import { ScreenId, HistoryItem } from '../types';
 import BlurText from '../components/BlurText/BlurText';
 import { ImageTouchModal } from '../components/ImageTouchModal';
+import { saveHomenagem } from '../lib/supabase';
 
 interface EditorPerfilScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -425,10 +426,9 @@ export const EditorPerfilScreen: React.FC<EditorPerfilScreenProps> = ({ onNaviga
     };
 
     try {
-      const existing = localStorage.getItem('memorial_historico');
-      const list: HistoryItem[] = existing ? JSON.parse(existing) : [];
-      list.unshift(item);
-      localStorage.setItem('memorial_historico', JSON.stringify(list));
+      saveHomenagem(item).catch((err) => {
+        console.warn('Erro ao salvar no Supabase:', err);
+      });
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 3000);
     } catch (e) {

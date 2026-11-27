@@ -10,10 +10,20 @@ import {
   ArrowLeft, 
   ImageIcon, 
   LayoutGrid, 
-  Calendar
+  Calendar,
+  Cloud,
+  Database as DbIcon,
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 import { ScreenId, HistoryItem } from '../types';
 import { createSolemnAudioBlob } from '../utils/canvasHelper';
+import { 
+  fetchHomenagens, 
+  deleteHomenagem, 
+  clearAllHomenagens, 
+  isSupabaseConfigured 
+} from '../lib/supabase';
 
 interface HistoricoScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -23,60 +33,69 @@ interface HistoricoScreenProps {
 export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate }) => {
   const [items, setItems] = useState<HistoryItem[]>([]);
   const [playingItemId, setPlayingItemId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [isCloudActive, setIsCloudActive] = useState<boolean>(isSupabaseConfigured());
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     loadHistory();
   }, []);
 
-  const loadHistory = () => {
+  const loadHistory = async (isManualRefresh: boolean = false) => {
+    if (isManualRefresh) {
+      setIsRefreshing(true);
+    } else {
+      setIsLoading(true);
+    }
     try {
-      const stored = localStorage.getItem('memorial_historico');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setItems(parsed);
-          return;
-        }
-      }
-
-      // Sample fallback item so the screen immediately illustrates saved media
-      const sample: HistoryItem[] = [
-        {
-          id: 'sample_01',
-          type: 'vinheta',
-          name: 'Dona Helena Silveira',
-          dateStr: '20/11/2026 14:30',
-          timestamp: Date.now() - 86400000,
-          audioDuration: '00:42',
-          audioTitle: 'Vinheta Solene - Dona Helena Silveira',
-          details: {
-            nascimento: '10/03/1939',
-            falecimento: '19/11/2026',
-            velorio: 'Memorial Esperança - Sala 1',
-            sepultamento: 'Cemitério da Saudade',
-            mensagem: '“Sua bondade continuará iluminando os passos de todos nós.”'
+      const homenagens = await fetchHomenagens();
+      if (homenagens && homenagens.length > 0) {
+        setItems(homenagens);
+      } else {
+        // Sample fallback item so the screen immediately illustrates saved media
+        const sample: HistoryItem[] = [
+          {
+            id: 'sample_01',
+            type: 'vinheta',
+            name: 'Dona Helena Silveira',
+            dateStr: '20/11/2026 14:30',
+            timestamp: Date.now() - 86400000,
+            audioDuration: '00:42',
+            audioTitle: 'Vinheta Solene - Dona Helena Silveira',
+            details: {
+              nascimento: '10/03/1939',
+              falecimento: '19/11/2026',
+              velorio: 'Memorial Esperança - Sala 1',
+              sepultamento: 'Cemitério da Saudade',
+              mensagem: '“Sua bondade continuará iluminando os passos de todos nós.”'
+            },
+            source: 'local'
           }
-        }
-      ];
-      setItems(sample);
+        ];
+        setItems(sample);
+      }
+      setIsCloudActive(isSupabaseConfigured());
     } catch (e) {
       console.error('Error loading history:', e);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
-  const handleClearHistory = () => {
+  const handleClearHistory = async () => {
     if (window.confirm('Tem certeza de que deseja limpar todo o histórico de homenagens salvas neste dispositivo?')) {
       if (audioRef.current) {
         audioRef.current.pause();
       }
       setPlayingItemId(null);
-      localStorage.removeItem('memorial_historico');
+      await clearAllHomenagens();
       setItems([]);
     }
   };
 
-  const handleDeleteItem = (id: string, e: React.MouseEvent) => {
+  const handleDeleteItem = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (playingItemId === id && audioRef.current) {
       audioRef.current.pause();
@@ -84,11 +103,7 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate }) 
     }
     const updated = items.filter((item) => item.id !== id);
     setItems(updated);
-    try {
-      localStorage.setItem('memorial_historico', JSON.stringify(updated));
-    } catch (err) {
-      console.error('Error saving updated history:', err);
-    }
+    await deleteHomenagem(id);
   };
 
   // Play audio preview
@@ -106,8 +121,12 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate }) 
         audioRef.current.pause();
       }
 
-      const audioBlob = createSolemnAudioBlob();
-      const audioUrl = URL.createObjectURL(audioBlob);
+      let audioUrl = item.audioUrl;
+      if (!audioUrl || audioUrl.startsWith('audio:')) {
+        const audioBlob = createSolemnAudioBlob();
+        audioUrl = URL.createObjectURL(audioBlob);
+      }
+
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
@@ -160,32 +179,61 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate }) 
             <ArrowLeft className="w-3.5 h-3.5 text-accent-wine" />
             <span>Voltar ao Início</span>
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight font-sans inline-block">
               Meu Histórico de Homenagens
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-elevated border border-hairline text-secondary font-sans">
               {items.length} {items.length === 1 ? 'salva' : 'salvas'}
             </span>
+            {isCloudActive ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-sans">
+                <Cloud className="w-3 h-3" />
+                <span>Nuvem Supabase Ativa</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-surface-elevated border border-hairline text-secondary font-sans">
+                <DbIcon className="w-3 h-3" />
+                <span>Armazenamento Local Seguro</span>
+              </span>
+            )}
           </div>
           <p className="text-xs sm:text-sm text-secondary mt-1 font-sans">
-            Suas criações salvas com áudios e imagens acessíveis diretamente neste dispositivo.
+            Suas criações salvas com áudios e imagens acessíveis diretamente neste dispositivo e sincronizadas na nuvem quando disponível.
           </p>
         </div>
 
-        {items.length > 0 && (
+        <div className="flex items-center gap-2 self-end sm:self-auto">
           <button
-            onClick={handleClearHistory}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-secondary hover:text-red-600 dark:hover:text-red-400 btn-tactile transition-colors cursor-pointer font-sans"
+            onClick={() => loadHistory(true)}
+            disabled={isRefreshing}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-secondary hover:text-primary btn-tactile transition-colors cursor-pointer font-sans disabled:opacity-50"
+            title="Atualizar histórico"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Limpar Histórico</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Atualizando...' : 'Atualizar'}</span>
           </button>
-        )}
+
+          {items.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-secondary hover:text-red-600 dark:hover:text-red-400 btn-tactile transition-colors cursor-pointer font-sans"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Limpar Histórico</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Main List */}
-      {items.length === 0 ? (
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center p-12 text-center rounded-3xl bg-surface border border-hairline card-tactile my-auto">
+          <Loader2 className="w-8 h-8 text-accent-wine animate-spin mb-3" />
+          <p className="text-sm font-bold text-primary font-sans">Carregando homenagens...</p>
+          <span className="text-xs text-secondary mt-1 font-sans">Consultando persistência local e nuvem Supabase</span>
+        </div>
+      ) : items.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 text-center rounded-3xl bg-surface border border-hairline card-tactile my-auto">
           <div className="w-16 h-16 rounded-full bg-surface-elevated border border-hairline flex items-center justify-center text-accent-wine mb-4 shadow-sm">
             <Radio className="w-8 h-8" />
@@ -237,6 +285,12 @@ export const HistoricoScreen: React.FC<HistoricoScreenProps> = ({ onNavigate }) 
                         {isRecent && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-elevated border border-hairline text-secondary">
                             Mais Recente
+                          </span>
+                        )}
+                        {item.source === 'supabase' && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+                            <Cloud className="w-2.5 h-2.5" />
+                            <span>Nuvem</span>
                           </span>
                         )}
                       </div>

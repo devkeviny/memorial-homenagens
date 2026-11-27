@@ -20,6 +20,7 @@ import { TutorialModal } from '../components/TutorialModal';
 import { ImageTouchModal } from '../components/ImageTouchModal';
 import BlurText from '../components/BlurText/BlurText';
 import { drawFeedImage, drawStoryImage, createSolemnAudioBlob, MemorialData } from '../utils/canvasHelper';
+import { saveHomenagem } from '../lib/supabase';
 
 interface ChatScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -299,16 +300,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     }
   };
 
-  // Save to History helper
+  // Save to History helper (persiste no Supabase com fallback seguro no localStorage)
   const saveToHistory = (item: HistoryItem) => {
-    try {
-      const existing = localStorage.getItem('memorial_historico');
-      const list: HistoryItem[] = existing ? JSON.parse(existing) : [];
-      list.unshift(item);
-      localStorage.setItem('memorial_historico', JSON.stringify(list));
-    } catch (e) {
-      console.error('Failed to save to memorial_historico:', e);
-    }
+    saveHomenagem(item).catch((e) => {
+      console.error('Failed to save to Supabase/memorial_historico:', e);
+    });
   };
 
   // Real Audio Playback using generated WAV Blob & SpeechSynthesis
