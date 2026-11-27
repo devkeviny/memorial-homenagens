@@ -9,111 +9,22 @@ import {
   ArrowRight, 
   CheckCircle2, 
   Layers,
-  Loader2
+  Loader2,
+  Filter
 } from 'lucide-react';
 import { ScreenId, HistoryItem } from '../types';
 import BlurText from '../components/BlurText/BlurText';
 import { ImageTouchModal } from '../components/ImageTouchModal';
+import {
+  SOLEMN_TEMPLATES,
+  TemplateItem,
+  renderSolemnArtAsync
+} from '../utils/canvasHelper';
 
 interface TemplatesArtesScreenProps {
   onNavigate: (screen: ScreenId) => void;
   onOpenPix?: () => void;
 }
-
-interface TemplateItem {
-  id: string;
-  label: string;
-  name: string;
-  ratio: '3:4' | '9:16';
-  tag: string;
-  description: string;
-  themeColor: string;
-  borderColor: string;
-  accentText: string;
-  quote: string;
-  bgGradient: string;
-}
-
-const TEMPLATES: TemplateItem[] = [
-  {
-    id: 'gold-classic-feed',
-    label: 'CLÁSSICO DOURADO',
-    name: 'Solene Clássico Dourado',
-    ratio: '3:4',
-    tag: 'Feed 3:4',
-    description: 'Bordas douradas nobres, fundo preto aveludado profundo e tipografia comemorativa de honra.',
-    themeColor: '#D4AF37',
-    borderColor: 'rgba(212, 175, 55, 0.5)',
-    accentText: '★ EM MEMÓRIA E ETERNA SAUDADE ✝',
-    quote: 'Sua lembrança permanecerá viva em cada coração que tocou.',
-    bgGradient: 'from-[#1a1708] via-[#0f0e07] to-[#09090b]'
-  },
-  {
-    id: 'candle-light-story',
-    label: 'LUZ DE VELA',
-    name: 'Luz de Vela Noturna',
-    ratio: '9:16',
-    tag: 'Stories 9:16',
-    description: 'Atmosfera de vigília suave, iluminação central solene e reverência eterna.',
-    themeColor: '#FFFFFF',
-    borderColor: 'rgba(255, 255, 255, 0.45)',
-    accentText: '✦ QUE BRILHE A LUZ ETERNA ✦',
-    quote: 'Aqueles que amamos nunca morrem, apenas partem antes de nós.',
-    bgGradient: 'from-[#181826] via-[#101018] to-[#09090b]'
-  },
-  {
-    id: 'silver-minimal-feed',
-    label: 'PRATA MINIMALISTA',
-    name: 'Prata Minimalista',
-    ratio: '3:4',
-    tag: 'Feed 3:4',
-    description: 'Acabamento contemporâneo, linhas finas em prata acetinada e serenidade sóbria.',
-    themeColor: '#E4E4E7',
-    borderColor: 'rgba(228, 228, 231, 0.4)',
-    accentText: 'COM CARINHO E GRATIDÃO',
-    quote: 'O amor não acaba com a despedida, ele se torna eterno na memória.',
-    bgGradient: 'from-[#18181f] via-[#111116] to-[#09090b]'
-  },
-  {
-    id: 'rose-whisper-story',
-    label: 'ROSA SOLENE',
-    name: 'Rosa Solene & Pétalas',
-    ratio: '9:16',
-    tag: 'Stories 9:16',
-    description: 'Toque de amor eterno, pétalas em carmesim de respeito fúnebre e afeto profundo.',
-    themeColor: '#EF4444',
-    borderColor: 'rgba(239, 68, 68, 0.5)',
-    accentText: 'ETERNAMENTE EM NOSSOS CORAÇÕES',
-    quote: 'Para sempre guardado nas nossas melhores lembranças e orações.',
-    bgGradient: 'from-[#220d0f] via-[#14080a] to-[#09090b]'
-  },
-  {
-    id: 'serene-peace-feed',
-    label: 'PAZ CELESTIAL',
-    name: 'Paz Celestial Branca',
-    ratio: '3:4',
-    tag: 'Feed 3:4',
-    description: 'Alvura etérea, raios de luz suave, serenidade eterna e consolo espiritual.',
-    themeColor: '#60A5FA',
-    borderColor: 'rgba(96, 165, 250, 0.45)',
-    accentText: 'DESCANSO EM PAZ E LUZ',
-    quote: 'Descansou nos braços da paz e vive para sempre no amor divino.',
-    bgGradient: 'from-[#0d1b2a] via-[#09111c] to-[#09090b]'
-  },
-  {
-    id: 'eternal-memory-story',
-    label: 'MEMÓRIA ETERNA',
-    name: 'Memória Eterna Noturna',
-    ratio: '9:16',
-    tag: 'Stories 9:16',
-    description: 'Tons noturnos aveludados com chama perpétua de ouro âmbar e honra solene.',
-    themeColor: '#F59E0B',
-    borderColor: 'rgba(245, 158, 11, 0.5)',
-    accentText: 'LEMBRANÇA VIVA PARA SEMPRE',
-    quote: 'A saudade é o amor que fica. Sua história é o nosso maior legado.',
-    bgGradient: 'from-[#201509] via-[#140c05] to-[#09090b]'
-  }
-];
 
 export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({ 
   onNavigate 
@@ -123,8 +34,8 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
     return window.location.hash.includes('customizar') ? 'customize' : 'gallery';
   });
 
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem>(TEMPLATES[0]);
-  const [formatFilter] = useState<'todos' | '3:4' | '9:16'>('todos');
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem>(SOLEMN_TEMPLATES[0]);
+  const [formatFilter, setFormatFilter] = useState<'todos' | '3:4' | '9:16'>('todos');
 
   // Form Fields
   const [nome, setNome] = useState('João da Silva');
@@ -186,230 +97,67 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
     }
   };
 
-  // Render High Resolution Art to Canvas and Download
+  // Render High Resolution Art to Canvas and Download (1080x1440 Feed or 1080x1920 Story with 150px safe area)
   const handleDownloadArt = async () => {
     setIsGenerating(true);
     try {
-      const canvas = document.createElement('canvas');
-      const isStory = selectedTemplate.ratio === '9:16';
-      const width = 1080;
-      const height = isStory ? 1920 : 1440; // 3:4 is 1080x1440, 9:16 is 1080x1920
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      const dataUrl = await renderSolemnArtAsync({
+        ratio: selectedTemplate.ratio,
+        templateId: selectedTemplate.id,
+        data: {
+          nome,
+          nascimento: datas,
+          falecimento: datas,
+          velorio: cerimonia,
+          sepultamento: cerimonia,
+          mensagem
+        },
+        photoUrl,
+        rawDatas: datas,
+        cerimoniaRaw: cerimonia
+      });
 
-      // 1. Dark solemn gradient background
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-      if (selectedTemplate.id === 'gold-classic-feed') {
-        bgGrad.addColorStop(0, '#1c1809');
-        bgGrad.addColorStop(0.5, '#0e0d08');
-        bgGrad.addColorStop(1, '#08080a');
-      } else if (selectedTemplate.id === 'rose-whisper-story') {
-        bgGrad.addColorStop(0, '#240d10');
-        bgGrad.addColorStop(0.5, '#14080a');
-        bgGrad.addColorStop(1, '#08080a');
-      } else if (selectedTemplate.id === 'serene-peace-feed') {
-        bgGrad.addColorStop(0, '#0c1a29');
-        bgGrad.addColorStop(0.5, '#08101a');
-        bgGrad.addColorStop(1, '#08080a');
-      } else if (selectedTemplate.id === 'eternal-memory-story') {
-        bgGrad.addColorStop(0, '#211508');
-        bgGrad.addColorStop(0.5, '#130c05');
-        bgGrad.addColorStop(1, '#08080a');
-      } else {
-        bgGrad.addColorStop(0, '#161622');
-        bgGrad.addColorStop(0.5, '#0e0e14');
-        bgGrad.addColorStop(1, '#08080a');
-      }
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, width, height);
+      const link = document.createElement('a');
+      link.download = `homenagem-${selectedTemplate.id}-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
 
-      // 2. Subtle radial glow behind center
-      const radial = ctx.createRadialGradient(width / 2, height * 0.38, 20, width / 2, height * 0.38, 420);
-      radial.addColorStop(0, selectedTemplate.themeColor + '25');
-      radial.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = radial;
-      ctx.fillRect(0, 0, width, height);
-
-      // 3. Noble double borders
-      ctx.strokeStyle = selectedTemplate.themeColor;
-      ctx.lineWidth = 4;
-      ctx.strokeRect(36, 36, width - 72, height - 72);
-
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(48, 48, width - 96, height - 96);
-
-      // Corner ornaments
-      const drawCorner = (x: number, y: number, angle: number) => {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-        ctx.strokeStyle = selectedTemplate.themeColor;
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.moveTo(0, 24);
-        ctx.lineTo(0, 0);
-        ctx.lineTo(24, 0);
-        ctx.stroke();
-        ctx.restore();
-      };
-      drawCorner(60, 60, 0);
-      drawCorner(width - 60, 60, Math.PI / 2);
-      drawCorner(width - 60, height - 60, Math.PI);
-      drawCorner(60, height - 60, -Math.PI / 2);
-
-      // 4. Header title
-      ctx.fillStyle = selectedTemplate.themeColor;
-      ctx.font = '700 24px "Plus Jakarta Sans", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.letterSpacing = '6px';
-      ctx.fillText(selectedTemplate.accentText, width / 2, isStory ? 170 : 130);
-
-      // Fine rule
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(width / 2 - 120, isStory ? 200 : 155);
-      ctx.lineTo(width / 2 + 120, isStory ? 200 : 155);
-      ctx.stroke();
-
-      // 5. Draw Photo or Dove Emblem
-      const photoSize = isStory ? 380 : 340;
-      const photoY = isStory ? 450 : 370;
-
-      const finishDrawing = () => {
-        // Name
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '800 52px "Plus Jakarta Sans", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(nome.toUpperCase(), width / 2, photoY + photoSize / 2 + 80);
-
-        // Dates
-        ctx.fillStyle = selectedTemplate.themeColor;
-        ctx.font = '600 28px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(datas, width / 2, photoY + photoSize / 2 + 130);
-
-        // Divider
-        ctx.strokeStyle = selectedTemplate.themeColor + '40';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(width / 2 - 140, photoY + photoSize / 2 + 165);
-        ctx.lineTo(width / 2 + 140, photoY + photoSize / 2 + 165);
-        ctx.stroke();
-
-        // Message
-        ctx.fillStyle = '#E4E4E7';
-        ctx.font = 'italic 400 32px "Cormorant Garamond", serif';
-        const maxWidth = width - 240;
-        const words = (mensagem || selectedTemplate.quote).split(' ');
-        let line = '';
-        let currentY = photoY + photoSize / 2 + 225;
-        const lineHeight = 44;
-
-        for (let n = 0; n < words.length; n++) {
-          const testLine = line + words[n] + ' ';
-          const metrics = ctx.measureText(testLine);
-          if (metrics.width > maxWidth && n > 0) {
-            ctx.fillText(line.trim(), width / 2, currentY);
-            line = words[n] + ' ';
-            currentY += lineHeight;
-          } else {
-            line = testLine;
+      // Save to memorial_historico
+      try {
+        const histItem: HistoryItem = {
+          id: 'arte-' + Date.now(),
+          type: 'post-duplo',
+          name: nome || 'Homenagem Póstuma',
+          dateStr: new Date().toLocaleDateString('pt-BR'),
+          timestamp: Date.now(),
+          previewUrl: dataUrl,
+          artRatio34Url: selectedTemplate.ratio === '3:4' ? dataUrl : undefined,
+          artRatio916Url: selectedTemplate.ratio === '9:16' ? dataUrl : undefined,
+          details: {
+            nascimento: datas,
+            mensagem: mensagem,
+            velorio: cerimonia,
+            sepultamento: cerimonia
           }
-        }
-        ctx.fillText(line.trim(), width / 2, currentY);
-
-        // Ceremony details if present
-        if (cerimonia) {
-          ctx.fillStyle = '#A1A1AA';
-          ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
-          ctx.fillText(cerimonia, width / 2, isStory ? height - 120 : height - 90);
-        }
-
-        // Export and Download
-        const dataUrl = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = `homenagem-${selectedTemplate.id}-${Date.now()}.png`;
-        link.href = dataUrl;
-        link.click();
-
-        // Save to memorial_historico
-        try {
-          const histItem: HistoryItem = {
-            id: 'arte-' + Date.now(),
-            type: 'post-duplo',
-            name: nome || 'Homenagem Póstuma',
-            dateStr: new Date().toLocaleDateString('pt-BR'),
-            timestamp: Date.now(),
-            previewUrl: dataUrl,
-            details: {
-              nascimento: datas,
-              mensagem: mensagem,
-              velorio: cerimonia
-            }
-          };
-          const existing = localStorage.getItem('memorial_historico');
-          const list = existing ? JSON.parse(existing) : [];
-          list.unshift(histItem);
-          localStorage.setItem('memorial_historico', JSON.stringify(list));
-        } catch {
-          // ignore storage quota errors
-        }
-
-        setIsGenerating(false);
-        setDownloadSuccess(true);
-        setTimeout(() => setDownloadSuccess(false), 4000);
-      };
-
-      if (photoUrl) {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          ctx.save();
-          ctx.beginPath();
-          ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
-          ctx.clip();
-          ctx.drawImage(img, (width / 2) - photoSize / 2, photoY - photoSize / 2, photoSize, photoSize);
-          ctx.restore();
-
-          // Border ring
-          ctx.beginPath();
-          ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
-          ctx.strokeStyle = selectedTemplate.themeColor;
-          ctx.lineWidth = 6;
-          ctx.stroke();
-
-          finishDrawing();
         };
-        img.onerror = () => finishDrawing();
-        img.src = photoUrl;
-      } else {
-        // Draw elegant dove placeholder circle
-        ctx.beginPath();
-        ctx.arc(width / 2, photoY, photoSize / 2, 0, Math.PI * 2);
-        ctx.fillStyle = '#14141A';
-        ctx.fill();
-        ctx.strokeStyle = selectedTemplate.themeColor;
-        ctx.lineWidth = 5;
-        ctx.stroke();
-
-        const doveImg = new Image();
-        doveImg.src = '/assets/dove-red-flower.svg';
-        doveImg.onload = () => {
-          ctx.drawImage(doveImg, (width / 2) - 60, photoY - 60, 120, 120);
-          finishDrawing();
-        };
-        doveImg.onerror = () => finishDrawing();
+        const existing = localStorage.getItem('memorial_historico');
+        const list: HistoryItem[] = existing ? JSON.parse(existing) : [];
+        list.unshift(histItem);
+        localStorage.setItem('memorial_historico', JSON.stringify(list));
+      } catch {
+        // ignore storage quota errors
       }
+
+      setIsGenerating(false);
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 4000);
     } catch (err) {
       console.error('Erro ao gerar arte:', err);
       setIsGenerating(false);
     }
   };
 
-  const filteredTemplates = TEMPLATES.filter((tmpl) => {
+  const filteredTemplates = SOLEMN_TEMPLATES.filter((tmpl) => {
     if (formatFilter === 'todos') return true;
     return tmpl.ratio === formatFilter;
   });
@@ -476,7 +224,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
           <div className="text-center mb-4 sm:mb-8">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-elevated border border-hairline text-secondary text-[11px] sm:text-xs font-semibold mb-2 shadow-sm font-sans">
               <Layers className="w-3 h-3 text-accent-wine" />
-              <span>Modelos Solenes</span>
+              <span>Modelos Solenes Oficiais</span>
             </div>
 
             <div className="mb-1.5">
@@ -490,8 +238,45 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
             </div>
 
             <p className="text-xs sm:text-sm md:text-base text-secondary max-w-xl mx-auto leading-relaxed font-sans">
-              Escolha a identidade visual para confeccionar a homenagem com dignidade
+              Modelos de alta resolução para Feed (1080x1440) e Stories (1080x1920 com safe area de 150px)
             </p>
+
+            {/* Filter Pills */}
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <button
+                type="button"
+                onClick={() => setFormatFilter('todos')}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer font-sans ${
+                  formatFilter === 'todos'
+                    ? 'btn-tactile-white shadow-sm'
+                    : 'bg-surface-elevated text-secondary hover:text-primary border border-hairline'
+                }`}
+              >
+                Todos ({SOLEMN_TEMPLATES.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormatFilter('3:4')}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer font-sans ${
+                  formatFilter === '3:4'
+                    ? 'btn-tactile-white shadow-sm'
+                    : 'bg-surface-elevated text-secondary hover:text-primary border border-hairline'
+                }`}
+              >
+                Feed 3:4 (1080x1440)
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormatFilter('9:16')}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer font-sans ${
+                  formatFilter === '9:16'
+                    ? 'btn-tactile-white shadow-sm'
+                    : 'bg-surface-elevated text-secondary hover:text-primary border border-hairline'
+                }`}
+              >
+                Stories 9:16 (1080x1920)
+              </button>
+            </div>
           </div>
 
           {/* UGC Gallery Grid (Clean 2 rows x 3 columns on desktop, 2 columns on mobile) */}
@@ -514,7 +299,10 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                   <div className="relative w-full h-full p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
                     {/* Background solemn gradient */}
                     <div
-                      className={`absolute inset-0 bg-gradient-to-b ${tmpl.bgGradient} pointer-events-none`}
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: `linear-gradient(to bottom, ${tmpl.bgGradient[0]} 0%, ${tmpl.bgGradient[1]} 50%, ${tmpl.bgGradient[2]} 100%)`
+                      }}
                     />
                     {/* Theme radial glow */}
                     <div
@@ -615,7 +403,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleGoToCustomize()}
-                  className="btn-tactile-white font-bold px-6 sm:px-8 py-3 rounded-full shadow-md flex items-center gap-2 text-sm sm:text-base cursor-pointer font-sans"
+                  className="btn-tactile-white font-bold px-6 sm:px-8 py-3 rounded-full shadow-md flex items-center gap-2 text-sm sm:base cursor-pointer font-sans"
                 >
                   <span>Avançar para Personalizar</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -661,10 +449,10 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
           {/* Heading */}
           <div className="mb-8">
             <h1 className="text-2xl sm:text-4xl font-extrabold text-primary tracking-tight font-sans">
-              Personalizar Homenagem
+              Personalizar Homenagem ({selectedTemplate.tag})
             </h1>
             <p className="mt-1 text-sm sm:text-base text-secondary font-sans">
-              Preencha os dados da pessoa homenageada e veja a prévia em tempo real ao lado.
+              Preencha os dados e gere a imagem em alta resolução ({selectedTemplate.ratio === '9:16' ? '1080x1920 com safe area de 150px' : '1080x1440'}).
             </p>
           </div>
 
@@ -828,12 +616,12 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                   {isGenerating ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Gerando Homenagem...</span>
+                      <span>Gerando Homenagem em Alta Resolução...</span>
                     </>
                   ) : (
                     <>
                       <Download className="w-5 h-5 stroke-[2.5]" />
-                      <span>Baixar Arte Pronta (PNG 1080px)</span>
+                      <span>Baixar Arte Pronta ({selectedTemplate.tag} — PNG)</span>
                     </>
                   )}
                 </button>
@@ -866,7 +654,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                     <span>Prévia em Tempo Real</span>
                   </span>
                   <span className="text-[11px] font-mono text-muted">
-                    Proporção {selectedTemplate.tag}
+                    {selectedTemplate.tag} ({selectedTemplate.ratio === '9:16' ? '1080x1920' : '1080x1440'})
                   </span>
                 </div>
 
@@ -877,7 +665,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                   }`}
                   style={{
                     borderColor: selectedTemplate.borderColor,
-                    background: `linear-gradient(to bottom, #181822 0%, #0d0d12 100%)`
+                    background: `linear-gradient(to bottom, ${selectedTemplate.bgGradient[0]} 0%, ${selectedTemplate.bgGradient[1]} 50%, ${selectedTemplate.bgGradient[2]} 100%)`
                   }}
                 >
                   {/* Background Radial Glow */}
@@ -886,14 +674,23 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                     style={{ backgroundColor: selectedTemplate.themeColor }}
                   />
 
+                  {/* Stories Safe Area Guideline Note */}
+                  {selectedTemplate.ratio === '9:16' && (
+                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/40 border border-white/10 text-[9px] font-mono text-zinc-400 pointer-events-none">
+                      Safe Area 150px
+                    </div>
+                  )}
+
                   {/* Fine double border mockup */}
                   <div
-                    className="absolute inset-3 rounded-lg border pointer-events-none opacity-60"
+                    className={`absolute rounded-lg border pointer-events-none opacity-60 ${
+                      selectedTemplate.ratio === '9:16' ? 'inset-x-3 top-6 bottom-6' : 'inset-3'
+                    }`}
                     style={{ borderColor: selectedTemplate.borderColor }}
                   />
 
                   {/* Header text */}
-                  <div className="relative z-10 text-center pt-2">
+                  <div className={`relative z-10 text-center ${selectedTemplate.ratio === '9:16' ? 'pt-4' : 'pt-2'}`}>
                     <span
                       className="text-[10px] sm:text-xs font-bold tracking-widest uppercase block font-sans"
                       style={{ color: selectedTemplate.themeColor }}
@@ -936,7 +733,7 @@ export const TemplatesArtesScreen: React.FC<TemplatesArtesScreenProps> = ({
                   </div>
 
                   {/* Message & Ceremony */}
-                  <div className="relative z-10 text-center px-2 pb-2">
+                  <div className={`relative z-10 text-center px-2 ${selectedTemplate.ratio === '9:16' ? 'pb-4' : 'pb-2'}`}>
                     <p className="text-xs sm:text-sm italic font-serif text-zinc-300 line-clamp-3 leading-relaxed">
                       "{mensagem || selectedTemplate.quote}"
                     </p>
