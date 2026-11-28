@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test:artes": "node scripts/generate_test_artes.js",
     "test:supabase": "node scripts/test_supabase_integration.js",
-    "test:audio:trava": "python3 scripts/test_audio_flow.py --dry-run"
+    "test:audio:trava": "python3 scripts/test_audio_flow.py --dry-run",
+    "test:perfil:instalador": "python3 scripts/test_install_memorial_profile.py"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",
