@@ -25,9 +25,17 @@ import wave
 from pathlib import Path
 
 # Configurações do serviço de áudio
-AUDIO_SERVICE_URL = os.environ.get("AUDIO_SERVICE_URL", "http://10.0.9.1:18080").rstrip("/")
-AUDIO_API_KEY = os.environ.get("AUDIO_API_KEY", "53K1vogEWqOYh6BviU_ugTdPCSxsau3IkbW_WFN-R88")
-OUTPUT_AUDIO_PATH = Path("/opt/data/audio/memorial-teste-etapa3.wav")
+# A URL e a credencial NUNCA são fixadas no código: ambas vêm do ambiente.
+# Default unificado com o cliente de atendimento (mesmo host sslip.io).
+AUDIO_SERVICE_URL = os.environ.get("AUDIO_SERVICE_URL", "http://10.0.9.1.sslip.io:18080").rstrip("/")
+AUDIO_API_KEY = os.environ.get("AUDIO_API_KEY", "")
+OUTPUT_AUDIO_PATH = Path(os.environ.get("MEMORIAL_AUDIO_OUTPUT", "/opt/data/audio/memorial-teste-etapa3.wav"))
+
+if not AUDIO_API_KEY:
+    raise SystemExit(
+        "AUDIO_API_KEY ausente. Exporte a credencial do audio-service no ambiente "
+        "antes de executar este teste (nunca a commite no repositório)."
+    )
 
 
 def build_confirmation_card(data: dict) -> dict:
@@ -174,7 +182,10 @@ def run_e2e_flow():
     poll_url = f"{AUDIO_SERVICE_URL}/v1/jobs/{job_id}"
     print(f"\n[FASE 6] Acompanhando processamento via polling em {poll_url}...")
 
-    max_attempts = 90  # Até 3 minutos
+    # Timeout de polling: fallback local OmniVoice em CPU consome ~420s +
+    # cold-start de 40-60s. O teto mínimo é 480-600s (regra do skill
+    # solemn-memorial-audio-pipeline). 240s causariam falso timeout.
+    max_attempts = 300  # 300 x 2s = 600s
     job_result = None
 
     for attempt in range(max_attempts):
