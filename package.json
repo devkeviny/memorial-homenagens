@@ -10,7 +10,8 @@
     "test:artes": "node scripts/generate_test_artes.js",
     "test:supabase": "node scripts/test_supabase_integration.js",
     "test:audio:trava": "python3 scripts/test_audio_flow.py --dry-run",
-    "test:perfil:instalador": "python3 scripts/test_install_memorial_profile.py"
+    "test:perfil:instalador": "python3 scripts/test_install_memorial_profile.py",
+    "test:adhoc:instalador": "python3 /home/hermes/.hermes/profiles/coder/cache/scratch/run_adhoc_installer.py"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",
