@@ -15,6 +15,7 @@ Validações executadas:
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -31,11 +32,26 @@ AUDIO_SERVICE_URL = os.environ.get("AUDIO_SERVICE_URL", "http://10.0.9.1.sslip.i
 AUDIO_API_KEY = os.environ.get("AUDIO_API_KEY", "")
 OUTPUT_AUDIO_PATH = Path(os.environ.get("MEMORIAL_AUDIO_OUTPUT", "/opt/data/audio/memorial-teste-etapa3.wav"))
 
-if not AUDIO_API_KEY:
-    raise SystemExit(
-        "AUDIO_API_KEY ausente. Exporte a credencial do audio-service no ambiente "
-        "antes de executar este teste (nunca a commite no repositório)."
+
+def parse_args(argv=None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Teste E2E do fluxo de atendimento e síntese do Memorial (Etapa 3)"
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Executa coleta, card e trava sem chamar o audio-service "
+             "(não exige AUDIO_API_KEY e não gera áudio).",
+    )
+    parser.add_argument(
+        "--decide",
+        choices=["confirm_generate", "edit_info"],
+        default=None,
+        help="Decisão simulada do usuário no card de confirmação. "
+             "Se omitido, é lida de CONFIRMATION_DECISION no ambiente "
+             "(padrão: edit_info, ou seja, trava atuando).",
+    )
+    return parser.parse_args(argv)
 
 
 def build_confirmation_card(data: dict) -> dict:
@@ -65,6 +81,26 @@ def build_confirmation_card(data: dict) -> dict:
     }
 
 
+def confirm_or_abort(card: dict, decision: str) -> bool:
+    """Barreira real de confirmação.
+
+    Nenhuma ação neste módulo chama o audio-service antes que a decisão seja
+    explicitamente 'confirm_generate'. A decisão NÃO é hardcoded nesta função:
+    vem da linha de comando (--decide) ou da variável CONFIRMATION_DECISION, que
+    representa o clique do usuário no Card de Confirmação (correspondência 1:1
+    com os action_ids do card). Qualquer outro valor → aborta sem síntese.
+    """
+    if decision not in {"confirm_generate", "edit_info"}:
+        raise SystemExit(
+            f"Decisão inválida {decision!r}: use 'confirm_generate' ou 'edit_info'."
+        )
+    if decision == "edit_info":
+        print("  ✋ Trava atuando: usuário pediu alteração — nenhuma síntese disparada.")
+        return False
+    print("  ✓ Confirmação explícita recebida: trava liberada.")
+    return True
+
+
 def format_solemn_script(data: dict) -> str:
     """
     Monta o roteiro solene respeitoso para síntese vocal.
@@ -92,7 +128,9 @@ def resolve_voice_design(voice_profile: str) -> dict:
     }
 
 
-def run_e2e_flow():
+def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
+    if args is None:
+        args = parse_args()
     sep = "=" * 60
     print(sep)
     print("INICIANDO TESTE E2E: ATENDIMENTO MEMORIAL & SÍNTESE DE ÁUDIO")
