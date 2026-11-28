@@ -84,6 +84,28 @@
     `AUDIO_API_KEY` é responsabilidade de @sysops/@platform no Coolify, e o
     `memorial_client.py` do perfil `memorial-atendimento` (fora do Git) ainda
     precisa ter o `DEFAULT_API_KEY` removido pelo perfil com acesso ao path.
+  - **Instalador fail-closed para a sincronização do perfil (commit `d55f1d4`,
+    pushado em `origin/main`):** `scripts/install_memorial_profile.py` executa
+    por um perfil COM acesso ao path do `memorial-atendimento` e faz, em ordem:
+    (1) detecta literais de credencial por **padrão** (nenhum literal real fica
+    no repo — o valor específico é passado em runtime via `--old-key`, nunca
+    impresso); (2) sanitiza os arquivos com segredo **sem criar backup** (backup
+    preservaria a credencial em disco — decisão registrada no relatório);
+    (3) converte `memorial_client.py` para env-only **fail-closed**, sem
+    fallback silencioso para default; (4) sincroniza o `test_audio_flow.py` do
+    perfil com a versão segura (`--decide`/`--dry-run`/`confirm_or_abort`);
+    (5) ajusta o `.env` do perfil para `0600` e sinaliza a necessidade da
+    credencial NOVA; (6) `--verify` re-checagem de tudo, com exit != 0 enquanto
+    houver pendência.
+    Uso: `python3 scripts/install_memorial_profile.py --check` (diagnóstico) →
+    `--apply --verify` (aplica e valida).
+    Prova real (2026-11-28, exit 0): `npm run test:perfil:instalador` →
+    `INSTALLER_TEST_OK`, com fixture isolado no scratch cobrindo: `--check`
+    detecta 3 arquivos com credencial + versão pré-fix do fluxo e **não escreve
+    nada**; `--apply --verify` remove os literais, converte o cliente, sincroniza
+    o fluxo, ajusta `.env` para 0600 e sai com 1 enquanto falta a credencial nova
+    no `.env` (fail-closed) e com 0 depois que a credencial nova está presente
+    (idempotente na 2ª execução). `npm run build` → exit 0.
 
 - [ ] **T3.5 — Parada de aprovação (Kevinny Gate)**
   - Apresentar áudio gerado, evidências de isolamento e aguardar OK para Etapa 4 (Imagens).
