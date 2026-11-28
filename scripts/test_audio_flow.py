@@ -6,11 +6,23 @@ Validações executadas:
 1. Coleta guiada e estruturação dos dados memoriais com fuso oficial America/Sao_Paulo.
 2. Emissão mandatória do Card de Confirmação com opções padronizadas:
    '✓ Tudo certo, gerar vinheta' e '✎ Alterar dados'.
-3. Trava de segurança mandatória: NENHUMA síntese é iniciada sem confirmação explícita.
+3. Trava de segurança real: NENHUMA síntese é iniciada sem a decisão explícita
+   do usuário ('confirm_generate'). A decisão vem de --decide ou da variável
+   CONFIRMATION_DECISION — nunca é auto-aprovada dentro do script.
 4. Submissão assíncrona ao audio-service via POST /v1/tts/jobs com voice_design solene.
 5. Acompanhamento resiliente via polling em GET /v1/jobs/{job_id} até status 'done'.
 6. Download do áudio efêmero e gravação persistente em /opt/data/audio/memorial-teste-etapa3.wav.
 7. Inspeção técnica do artefato: verificação de cabeçalho WAV (RIFF/WAVE), PCM 16-bit, 24kHz Mono, duração e SHA256.
+
+Uso:
+  # prova a barreira: nenhuma chamada externa é feita
+  python3 scripts/test_audio_flow.py --dry-run
+
+  # fluxo completo (exige AUDIO_API_KEY no ambiente)
+  AUDIO_API_KEY=... python3 scripts/test_audio_flow.py --decide confirm_generate
+
+  # simula o usuário pedindo alteração (trava deve barrar)
+  AUDIO_API_KEY=... python3 scripts/test_audio_flow.py --decide edit_info
 """
 
 from __future__ import annotations
@@ -47,9 +59,8 @@ def parse_args(argv=None) -> argparse.Namespace:
         "--decide",
         choices=["confirm_generate", "edit_info"],
         default=None,
-        help="Decisão simulada do usuário no card de confirmação. "
-             "Se omitido, é lida de CONFIRMATION_DECISION no ambiente "
-             "(padrão: edit_info, ou seja, trava atuando).",
+        help="Decisão do usuário no card de confirmação. Se omitido, é lida de "
+             "CONFIRMATION_DECISION no ambiente (padrão: 'edit_info' = trava acting).",
     )
     return parser.parse_args(argv)
 
@@ -84,20 +95,21 @@ def build_confirmation_card(data: dict) -> dict:
 def confirm_or_abort(card: dict, decision: str) -> bool:
     """Barreira real de confirmação.
 
-    Nenhuma ação neste módulo chama o audio-service antes que a decisão seja
-    explicitamente 'confirm_generate'. A decisão NÃO é hardcoded nesta função:
-    vem da linha de comando (--decide) ou da variável CONFIRMATION_DECISION, que
-    representa o clique do usuário no Card de Confirmação (correspondência 1:1
-    com os action_ids do card). Qualquer outro valor → aborta sem síntese.
+    Nenhuma chamada ao audio-service acontece antes que a decisão seja
+    explicitamente 'confirm_generate'. A decisão NÃO é auto-aprovada dentro do
+    script: ela chega por --decide ou por CONFIRMATION_DECISION, que representa
+    o clique real do usuário no Card de Confirmação (1:1 com os action_ids do
+    card). Qualquer valor fora do conjunto → aborta sem síntese.
     """
-    if decision not in {"confirm_generate", "edit_info"}:
+    valid_ids = {action["id"] for action in card.get("actions", [])}
+    if decision not in valid_ids:
         raise SystemExit(
-            f"Decisão inválida {decision!r}: use 'confirm_generate' ou 'edit_info'."
+            f"Decisão inválida {decision!r}: esperado um dos action_ids do card {sorted(valid_ids)}."
         )
-    if decision == "edit_info":
-        print("  ✋ Trava atuando: usuário pediu alteração — nenhuma síntese disparada.")
+    if decision != "confirm_generate":
+        print(f"  ✋ Trava atuando: decisão '{decision}' — nenhuma síntese disparada.")
         return False
-    print("  ✓ Confirmação explícita recebida: trava liberada.")
+    print("  ✓ Confirmação explícita recebida ('confirm_generate'): trava liberada.")
     return True
 
 
@@ -136,7 +148,7 @@ def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
     print("INICIANDO TESTE E2E: ATENDIMENTO MEMORIAL & SÍNTESE DE ÁUDIO")
     print(sep)
 
-    # 1. Simulação da Coleta Guiada (Fuso America/Sao_Paulo)
+    # 1. Coleta guiada (fuso America/Sao_Paulo)
     memorial_data = {
         "nome": "Dona Maria Francisca",
         "data_nascimento": "12/03/1945",
@@ -152,31 +164,43 @@ def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
     for k, v in memorial_data.items():
         print(f"  • {k}: {v}")
 
-    # 2. Geração do Card de Confirmação
+    # 2. Card de Confirmação
     card = build_confirmation_card(memorial_data)
     print("\n[FASE 2] Card de Confirmação Estruturado:")
     print(json.dumps(card, indent=2, ensure_ascii=False))
 
-    # Validação dos elementos do card
     assert card["type"] == "confirmation_card", "Tipo de card incorreto"
     action_ids = [a["id"] for a in card["actions"]]
     assert "confirm_generate" in action_ids, "Opção de confirmação ausente"
     assert "edit_info" in action_ids, "Opção de edição ausente"
     print("  ✓ Validação do Card de Confirmação: APROVADO")
 
-    # 3. Trava de Confirmação Mandatória
-    # Teste 3.1: Validação de bloqueio antes da confirmação
+    # 3. Trava de Confirmação (barreira real, decisão externa ao script)
     print("\n[FASE 3.1] Testando Trava de Segurança Pré-Confirmação...")
-    user_decision = "edit_info"  # Simula usuário pedindo alteração
-    if user_decision != "confirm_generate":
-        print("  ✓ Trava atuando corretamente: Nenhuma síntese disparada para ação 'edit_info'.")
+    decision = args.decide or os.environ.get("CONFIRMATION_DECISION", "edit_info")
+    if not confirm_or_abort(card, decision):
+        print("\n" + sep)
+        print("TESTE E2E ENCERRADO NA TRAVA DE CONFIRMAÇÃO (nenhuma síntese efetuada).")
+        print(sep)
+        return 0
 
-    # Teste 3.2: Liberação consciente após clique de confirmação
-    user_decision = "confirm_generate"  # Usuário clica em '✓ Tudo certo, gerar vinheta'
-    print(f"\n[FASE 3.2] Confirmação do Usuário Recebida ({user_decision}).")
+    print("\n[FASE 3.2] Confirmação do Usuário Recebida.")
     print("  → Trava liberada: Autorizando chamada ao audio-service...")
 
-    # 4. Formatação do Roteiro
+    if args.dry_run:
+        print("\n[FASE 4] --dry-run: nenhuma chamada externa será feita.")
+        print("\n" + sep)
+        print("TESTE E2E (DRY-RUN) CONCLUÍDO: card e barreira validados.")
+        print(sep)
+        return 0
+
+    if not AUDIO_API_KEY:
+        raise SystemExit(
+            "AUDIO_API_KEY ausente. Exporte a credencial do audio-service no ambiente "
+            "antes de executar a síntese (nunca a commite no repositório)."
+        )
+
+    # 4. Roteiro solene
     script_text = format_solemn_script(memorial_data)
     print(f"\n[FASE 4] Roteiro Solene Gerado ({len(script_text)} caracteres):")
     print(f'  "{script_text}"')
@@ -191,7 +215,7 @@ def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
         "response_format": "wav",
     }
 
-    # 5. Chamada HTTP ao audio-service (POST /v1/tts/jobs)
+    # 5. POST /v1/tts/jobs
     headers = {
         "Authorization": f"Bearer {AUDIO_API_KEY}",
         "Content-Type": "application/json",
@@ -214,9 +238,9 @@ def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
             print(f"  ✓ Job submetido com sucesso! ID: {job_id} (status: {job_info.get('status')})")
     except Exception as exc:
         print(f"  ✗ Erro ao submeter job ao audio-service: {exc}")
-        sys.exit(1)
+        return 1
 
-    # 6. Polling do Job (GET /v1/jobs/{job_id})
+    # 6. Polling
     poll_url = f"{AUDIO_SERVICE_URL}/v1/jobs/{job_id}"
     print(f"\n[FASE 6] Acompanhando processamento via polling em {poll_url}...")
 
@@ -229,27 +253,31 @@ def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
     for attempt in range(max_attempts):
         time.sleep(2)
         poll_req = urllib.request.Request(poll_url, headers=headers)
-        with urllib.request.urlopen(poll_req, timeout=10) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            status = data.get("status")
-            stage = data.get("stage")
-            progress = data.get("progress", 0.0)
+        try:
+            with urllib.request.urlopen(poll_req, timeout=10) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+        except Exception as exc:
+            print(f"  ✗ Erro no polling: {exc}")
+            return 1
+        status = data.get("status")
+        stage = data.get("stage")
+        progress = data.get("progress", 0.0)
 
-            if attempt % 5 == 0 or status in ("done", "failed"):
-                print(f"  [{attempt * 2}s] status={status} | stage={stage} | progress={progress:.1%}")
+        if attempt % 5 == 0 or status in ("done", "failed"):
+            print(f"  [{attempt * 2}s] status={status} | stage={stage} | progress={progress:.1%}")
 
-            if status == "done":
-                job_result = data
-                break
-            if status == "failed":
-                print(f"  ✗ Falha na síntese: {data.get('error')}")
-                sys.exit(1)
+        if status == "done":
+            job_result = data
+            break
+        if status == "failed":
+            print(f"  ✗ Falha na síntese: {data.get('error')}")
+            return 1
 
     if not job_result:
         print("  ✗ Timeout aguardando conclusão da síntese")
-        sys.exit(1)
+        return 1
 
-    # 7. Download do Áudio Efêmero
+    # 7. Download do áudio
     artifacts = job_result.get("artifacts", [])
     assert artifacts, "Nenhum artefato retornado pelo job"
     download_rel_path = artifacts[0]["download"]
@@ -262,12 +290,12 @@ def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
 
     print(f"  ✓ Download concluído: {len(audio_bytes):,} bytes recebidos.")
 
-    # 8. Salvamento no destino exigido
+    # 8. Persistência
     OUTPUT_AUDIO_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_AUDIO_PATH.write_bytes(audio_bytes)
     print(f"\n[FASE 8] Áudio gravado com sucesso em: {OUTPUT_AUDIO_PATH}")
 
-    # 9. Verificação Técnica do Arquivo
+    # 9. Verificação técnica
     assert OUTPUT_AUDIO_PATH.is_file(), "Arquivo não existe no disco"
     file_size = OUTPUT_AUDIO_PATH.stat().st_size
     assert file_size > 50_000, f"Arquivo muito pequeno ({file_size} bytes)"
@@ -291,14 +319,15 @@ def run_e2e_flow(args: argparse.Namespace | None = None) -> int:
     print(sep)
     print(f"  • Caminho:    {OUTPUT_AUDIO_PATH.resolve()}")
     print(f"  • Tamanho:    {file_size:,} bytes ({file_size / 1024:.1f} KB)")
-    print(f"  • Formato:    PCM WAV (16-bit, 24kHz Mono, RIFF/WAVE confirmado)")
+    print("  • Formato:    PCM WAV (16-bit, 24kHz Mono, RIFF/WAVE confirmado)")
     print(f"  • Duração:    {duration:.2f} segundos")
     print(f"  • SHA256:     {sha256_hash}")
     print(f"  • Job ID:     {job_id}")
     print(sep)
     print("TESTE E2E CONCLUÍDO COM SUCESSO TOTAL!")
     print(sep)
+    return 0
 
 
 if __name__ == "__main__":
-    run_e2e_flow()
+    sys.exit(run_e2e_flow())
