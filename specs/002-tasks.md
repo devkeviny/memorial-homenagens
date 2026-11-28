@@ -58,13 +58,32 @@
     Suíte do gateway do `audio-service`: `tests/test_tts_async.py` → 8 passed;
     `gateway/tests/` completo → 92 passed, 3 warnings (deprecation de `on_event`
     do FastAPI, pré-existente).
-  - **Correção aplicada pelo @coder no mesmo dia:** `scripts/test_audio_flow.py`
-    deixou de embutir a credencial do audio-service no código (a chave estava
-    hardcoded e published no repositório público) e passou a exigir
-    `AUDIO_API_KEY` do ambiente; default de URL unificado em
-    `http://10.0.9.1.sslip.io:18080`; timeout de polling elevado de 180s para
-    600s, conforme a regra do skill `solemn-memorial-audio-pipeline` (o fallback
-    local OmniVoice em CPU consome ~420s + cold-start).
+  - **Correção aplicada pelo @coder no mesmo dia (commit `06a4ca3`, pushado em
+    `origin/main`):** `scripts/test_audio_flow.py` deixou de embutir a credencial
+    do audio-service no código (a chave estava hardcoded e published no repositório
+    público) e passou a exigir `AUDIO_API_KEY` do ambiente; default de URL
+    unificado em `http://10.0.9.1.sslip.io:18080`; timeout de polling elevado de
+    180s para 600s, conforme a regra do skill `solemn-memorial-audio-pipeline`
+    (o fallback local OmniVoice em CPU consome ~420s + cold-start).
+  - **Trava de confirmação real (não auto-aprovada):** a decisão do usuário não
+    é mais hardcoded dentro do script. `confirm_or_abort()` valida a decisão
+    contra os `action_ids` do próprio card (`confirm_generate` | `edit_info`) e
+    aborta **antes** de qualquer chamada HTTP quando a decisão não é
+    `confirm_generate`. A decisão chega por `--decide` ou pela variável
+    `CONFIRMATION_DECISION` (padrão: `edit_info` → trava).
+    Prova real (2026-11-28, exit 0):
+    `npm run test:audio:trava` → `✋ Trava atuando: decisão 'edit_info' — nenhuma
+    síntese disparada.` → `TESTE E2E ENCERRADO NA TRAVA DE CONFIRMAÇÃO`;
+    `npm run test:audio:trava -- --decide confirm_generate` → `✓ Confirmação
+    explícita recebida ('confirm_generate'): trava liberada.` com `--dry-run`
+    (nenhuma chamada externa). `npm run build` → `tsc && vite build` exit 0.
+  - **Pendência de segurança aberta (não resolvida pelo @coder):** a credencial
+    antiga permanece legível no **histórico** do repositório público
+    (`git show e5edf1c:scripts/test_audio_flow.py` → `f392235` é ancestral de
+    `origin/main`). Remover do código não rotaciona a chave: a rotação da
+    `AUDIO_API_KEY` é responsabilidade de @sysops/@platform no Coolify, e o
+    `memorial_client.py` do perfil `memorial-atendimento` (fora do Git) ainda
+    precisa ter o `DEFAULT_API_KEY` removido pelo perfil com acesso ao path.
 
 - [ ] **T3.5 — Parada de aprovação (Kevinny Gate)**
   - Apresentar áudio gerado, evidências de isolamento e aguardar OK para Etapa 4 (Imagens).
